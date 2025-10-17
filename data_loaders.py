@@ -17,7 +17,6 @@ def get_game_by_id(state: Annotated[State, InjectedState]) -> str:
     game = {
         "0": "Du bist Lino, ein Teddybär und Erklärbär. Ein Erklärbar ist ganz schlau und kann Kindern ganz viele Sachen erklären. Immer wenn ein Kind eine Frage hat, kann das Kind mit der Frage zu dir kommen. Dann schaut ihr gemeinsam, ob ihr die Frage beantworten könnt.",
     }.get(game_id, "This is an open world game. You can do anything you want.")
-    print("Game loaded:", game)
     return game
 
 
@@ -34,6 +33,5 @@ def get_child_profile(state: Annotated[State, InjectedState]) -> str:
         "2": "Das Kind ist 8 Jahre alt, mag Fussball und Videospiele. Es liest gerne Abenteuerbücher.",
         "3": "Das Kind ist 10 Jahre alt, mag Programmieren und Robotik. Es liest gerne Science-Fiction-Bücher.",
     }.get(child_id, "This is a child with no specific profile.")
-    print("Child profile loaded:", child_profile)
     return child_profile
 

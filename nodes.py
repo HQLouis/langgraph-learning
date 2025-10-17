@@ -35,7 +35,13 @@ def masterChatbot(state: State, llm):
     system_message = SystemMessage(content=system_context)
     messages = [system_message] + state["messages"]
 
-    return {"messages": state["messages"] + [llm.invoke(messages)]}
+    # Stream the response
+    response_content = ""
+    for chunk in llm.stream(messages):
+        if hasattr(chunk, 'content'):
+            response_content += chunk.content
+
+    return {"messages": [AIMessage(content=response_content)]}
 
 
 def get_messages_history_from_immediate_graph_state(config) -> list:
@@ -50,7 +56,6 @@ def get_messages_history_from_immediate_graph_state(config) -> list:
     base_id = config["configurable"]["thread_id"].rsplit("_", 1)[0]
     snapshot = background_graph.get_state({"configurable": {"thread_id": base_id}})
     messages = snapshot.values.get("messages", [])
-    print(messages)
     return messages
 
 
@@ -113,6 +118,7 @@ def storytellingWorker(state: BackgroundState, config, llm):
         content=f"Analyze this conversation: {conversation_summary} Child profile: {child_profile} Game description: {game_description}"
     )
 
+    # Use invoke instead of stream for background processing - no need for streaming
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"story_analysis": response.content})
@@ -131,19 +137,23 @@ def format_response(state: State, llm) -> dict:
     raw_response = state["messages"][-1].content
     raw_message_id = state["messages"][-1].id
 
-    formatted = llm.invoke([
+    # Stream the formatted response
+    formatted_content = ""
+    for chunk in llm.stream([
         SystemMessage(content=(
             "You are a formatting assistant. Format the following text to be suitable "
             "for TTS. Remove all special characters such as emojis and make it easy to read aloud."
         )),
         HumanMessage(content=raw_response)
-    ]).content
+    ]):
+        if hasattr(chunk, 'content') and chunk.content:
+            formatted_content += chunk.content
 
     # Return both the formatted message and removal of the raw message
     return {
         "messages": [
             RemoveMessage(id=raw_message_id),  # Remove the raw response
-            AIMessage(content=formatted)        # Add the formatted response
+            AIMessage(content=formatted_content)        # Add the formatted response
         ]
     }
 
