@@ -47,4 +47,3 @@ def set_config(cfg):
     """Set the config for the graph."""
     global config
     config = cfg
-

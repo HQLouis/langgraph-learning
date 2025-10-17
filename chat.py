@@ -70,10 +70,10 @@ def start_chat():
 
             print("\n🤖 Lino: ", end="", flush=True)
 
-            # Track messages we've seen to avoid duplicates
+            # Track seen message IDs to avoid printing the same message twice
             seen_message_ids = set()
+            seen_content = ""
 
-            # Stream through the immediate graph with messages mode for token-by-token streaming
             for event in immediate_graph.stream(
                 {"messages": [user_message]},
                 config,
@@ -83,22 +83,24 @@ def start_chat():
                 if isinstance(event, tuple):
                     message, metadata = event
 
-                    # Skip if we've already seen this message
-                    if hasattr(message, 'id') and message.id in seen_message_ids:
-                        continue
-
-                    # Only process AI messages from format_response node
-                    # metadata contains 'langgraph_node' showing which node emitted it
-                    if (hasattr(message, 'type') and
-                        message.type == 'ai' and
-                        metadata.get('langgraph_node') == 'format_response'):
+                    # Only process messages from format_response node
+                    node = metadata.get('langgraph_node', '')
+                    if node == 'format_response':
+                        # Skip if we've already processed this exact message
+                        msg_id = getattr(message, 'id', None)
+                        if msg_id and msg_id in seen_message_ids:
+                            continue
 
                         if hasattr(message, 'content') and message.content:
-                            print(message.content, end="", flush=True)
+                            # Print only the NEW content (difference from what we've seen)
+                            if len(message.content) > len(seen_content):
+                                new_content = message.content[len(seen_content):]
+                                print(new_content, end="", flush=True)
+                                seen_content = message.content
 
-                            # Mark this message as seen
-                            if hasattr(message, 'id'):
-                                seen_message_ids.add(message.id)
+                            # Mark this message ID as seen
+                            if msg_id:
+                                seen_message_ids.add(msg_id)
 
             print()  # New line after complete message
 

@@ -129,6 +129,7 @@ def format_response(state: State, llm) -> dict:
     Formats the response of the agent to make it suitable for TTS.
     This shall be the last step before returning the response to the user.
     Removes the raw response from state to avoid overloading it.
+    Streams the formatted response token-by-token using custom events.
 
     :param state: Current state
     :param llm: Language model instance
@@ -137,7 +138,7 @@ def format_response(state: State, llm) -> dict:
     raw_response = state["messages"][-1].content
     raw_message_id = state["messages"][-1].id
 
-    # Stream the formatted response
+    # Stream the formatted response - we'll emit chunks via the LLM's streaming
     formatted_content = ""
     for chunk in llm.stream([
         SystemMessage(content=(
