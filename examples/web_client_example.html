@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingolino Chat - SSE Example</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .setup {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .setup input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100px;
+        }
+        .setup button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .setup button:hover {
+            background: #0056b3;
+        }
+        #chat {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user {
+            background: #007bff;
+            color: white;
+            text-align: right;
+        }
+        .ai {
+            background: #e9ecef;
+            color: #333;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #sendBtn {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #sendBtn:hover {
+            background: #218838;
+        }
+        #sendBtn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Lingolino Chat</h1>
+
+        <div class="setup">
+            <div>
+                <label>Child ID: <input type="text" id="childId" value="1"></label>
+                <label>Game ID: <input type="text" id="gameId" value="0"></label>
+                <button id="startBtn">Start Conversation</button>
+            </div>
+            <div id="status"></div>
+        </div>
+
+        <div id="chat"></div>
+
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+            <button id="sendBtn" disabled>Send</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let threadId = null;
+        let currentEventSource = null;
+
+        const childIdInput = document.getElementById('childId');
+        const gameIdInput = document.getElementById('gameId');
+        const startBtn = document.getElementById('startBtn');
+        const chatDiv = document.getElementById('chat');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const statusDiv = document.getElementById('status');
+
+        function showStatus(message, isError = false) {
+            statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
+        }
+
+        function addMessage(content, isUser = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            msgDiv.textContent = content;
+            chatDiv.appendChild(msgDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            return msgDiv;
+        }
+
+        async function startConversation() {
+            try {
+                const response = await fetch(`${API_BASE}/conversations`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        child_id: childIdInput.value,
+                        game_id: gameIdInput.value
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to create conversation');
+
+                const data = await response.json();
+                threadId = data.thread_id;
+
+                showStatus(`✅ Conversation started! ID: ${threadId.substring(0, 12)}...`);
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                startBtn.disabled = true;
+                messageInput.focus();
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || !threadId) return;
+
+            // Disable input while sending
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Add user message to chat
+            addMessage(message, true);
+            messageInput.value = '';
+
+            // Create AI message div that will be updated
+            const aiMsgDiv = addMessage('', false);
+            let fullResponse = '';
+
+            try {
+                // Use fetch for SSE streaming
+                const response = await fetch(`${API_BASE}/conversations/${threadId}/messages`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message})
+                });
+
+                if (!response.ok) throw new Error('Failed to send message');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.substring(6);
+                            if (data === '[DONE]') {
+                                break;
+                            }
+                            fullResponse += data;
+                            aiMsgDiv.textContent = fullResponse;
+                            chatDiv.scrollTop = chatDiv.scrollHeight;
+                        }
+                    }
+                }
+            } catch (error) {
+                aiMsgDiv.textContent = `❌ Error: ${error.message}`;
+                aiMsgDiv.style.background = '#f8d7da';
+            }
+
+            // Re-enable input
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startConversation);
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Show initial instructions
+        showStatus('👋 Enter Child ID and Game ID, then click "Start Conversation"');
+    </script>
+</body>
+</html>
+
