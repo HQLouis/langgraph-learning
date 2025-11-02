@@ -267,11 +267,9 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
     # TODO LNG: Make this conditional executed e.g. every third interaction.
     # TODO LNG: Add conditional edge if this node takes to much time.
     bg_thread_id = config["configurable"]["thread_id"] + "_analysis"
-    print("Loading analysis: ", bg_thread_id)
     snapshot = background_graph_instance.get_state({
         "configurable": {"thread_id": bg_thread_id}
     })
-    print(f"Snapshot values: {snapshot.values if snapshot else 'None'}")
     analyses = {
         "vocabulary_analysis": snapshot.values.get("vocabulary_analysis", ""),
         "grammar_analysis": snapshot.values.get("grammar_analysis", ""),
