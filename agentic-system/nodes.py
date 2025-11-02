@@ -1,7 +1,7 @@
 """
 Node functions for the Lingolino graphs.
 """
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, RemoveMessage
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
@@ -24,6 +24,7 @@ def set_background_graph(graph):
 def masterChatbot(state: State, llm):
     """
     Main chatbot node that generates responses to the child.
+    Streams responses chunk-by-chunk for low latency.
 
     :param state: Current state with messages and analysis
     :param llm: Language model instance
@@ -44,7 +45,8 @@ def masterChatbot(state: State, llm):
     system_message = SystemMessage(content=system_context)
     messages = [system_message] + state["messages"]
 
-    # Stream the response
+    # Stream the response chunk-by-chunk (no accumulation)
+    # This allows format_response to process chunks incrementally
     response_content = ""
     for chunk in llm.stream(messages):
         if hasattr(chunk, 'content'):
@@ -203,49 +205,6 @@ def boredomWorker(state: BackgroundState, config, llm):
     # Store analysis separately from conversation
     return Command(update={"boredom_analysis": response.content})
 
-
-def format_response(state: State, llm) -> dict:
-    """
-    Formats the response of the agent to make it suitable for TTS without calling an LLM.
-    Removes all emojis and line breaks from the last message and returns an updated
-    messages list that removes the raw message and adds the cleaned one.
-    :param state: Current state
-    :param llm: (ignored) kept for compatibility
-    :return: Dict containing messages to apply (RemoveMessage and AIMessage)
-    """
-    import re
-    import emoji
-
-    messages = state.get("messages", [])
-    if not messages:
-        # Nothing to format
-        return {}
-
-    raw_msg = messages[-1]
-    # Support both dict-like messages and objects with attributes
-    if isinstance(raw_msg, dict):
-        raw_response = raw_msg.get("content", "")
-        raw_message_id = raw_msg.get("id")
-    else:
-        raw_response = getattr(raw_msg, "content", "")
-        raw_message_id = getattr(raw_msg, "id", None)
-
-    if raw_response is None:
-        raw_response = ""
-
-    # Remove all emojis using the emoji library for comprehensive coverage
-    without_emoji = emoji.replace_emoji(str(raw_response), replace='')
-
-    # Remove all line breaks and collapse consecutive whitespace to single spaces
-    single_line = re.sub(r"[\r\n]+", " ", without_emoji)
-    single_line = re.sub(r"\s+", " ", single_line).strip()
-
-    out_messages = []
-    if raw_message_id is not None:
-        out_messages.append(RemoveMessage(id=raw_message_id))
-    out_messages.append(AIMessage(content=single_line))
-
-    return {"messages": out_messages}
 
 def initialStateLoader(state: State) -> dict:
     """

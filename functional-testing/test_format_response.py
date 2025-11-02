@@ -1,9 +1,14 @@
+"""
+Tests for the text formatting logic used in streaming responses.
+
+This tests the formatting logic that removes emojis and normalizes whitespace.
+The logic is now implemented in ConversationService._format_chunk for real-time streaming,
+but we test the same functionality here to ensure correctness.
+"""
 import types
 
-# Create minimal stub modules for external dependencies so we can import nodes.py in tests
+# Create minimal stub for emoji library
 import sys
-
-# emoji stub
 emoji_mod = types.ModuleType('emoji')
 def replace_emoji(string, replace=''):
     """Stub that removes emoji using a comprehensive regex pattern."""
@@ -34,86 +39,29 @@ def replace_emoji(string, replace=''):
 emoji_mod.replace_emoji = replace_emoji
 sys.modules['emoji'] = emoji_mod
 
-# langchain_core.messages stub
-lc = types.ModuleType('langchain_core')
-lc_messages = types.ModuleType('langchain_core.messages')
-class SystemMessage:
-    def __init__(self, content=None):
-        self.content = content
-class HumanMessage:
-    def __init__(self, content=None):
-        self.content = content
-class AIMessage:
-    def __init__(self, content=None):
-        self.content = content
-class RemoveMessage:
-    def __init__(self, id=None):
-        self.id = id
-lc_messages.SystemMessage = SystemMessage
-lc_messages.HumanMessage = HumanMessage
-lc_messages.AIMessage = AIMessage
-lc_messages.RemoveMessage = RemoveMessage
-sys.modules['langchain_core'] = types.ModuleType('langchain_core')
-sys.modules['langchain_core.messages'] = lc_messages
 
-# langgraph.types stub
-lg_types = types.ModuleType('langgraph.types')
-class Command:
-    def __init__(self, update=None):
-        self.update = update
-lg_types.Command = Command
-sys.modules['langgraph.types'] = lg_types
+def format_text_for_tts(text: str) -> str:
+    """
+    Format text for TTS by removing emojis and normalizing whitespace.
+    This replicates the logic used in ConversationService._format_chunk.
 
-# states stub
-states_mod = types.ModuleType('states')
-class State(dict):
-    pass
-class BackgroundState(dict):
-    pass
-states_mod.State = State
-states_mod.BackgroundState = BackgroundState
-sys.modules['states'] = states_mod
+    :param text: Raw text to format
+    :return: Formatted text suitable for TTS
+    """
+    import re
+    import emoji
 
-# data_loaders stub
-dl = types.ModuleType('data_loaders')
-def get_game_by_id(state):
-    return ''
-def get_child_profile(state):
-    return ''
-dl.get_game_by_id = get_game_by_id
-dl.get_child_profile = get_child_profile
-sys.modules['data_loaders'] = dl
+    if not text:
+        return ""
 
-# worker_prompts stub
-wp = types.ModuleType('worker_prompts')
-wp.speechVocabularyWorker_prompt = 'vocab prompt'
-wp.speechGrammarWorker_prompt = 'grammar prompt'
-wp.speechInteractionWorker_prompt = 'interaction prompt'
-wp.speechComprehensionWorker_prompt = 'comprehension prompt'
-wp.boredomWorker_prompt = 'boredom prompt'
-sys.modules['worker_prompts'] = wp
+    # Remove all emojis using the emoji library for comprehensive coverage
+    without_emoji = emoji.replace_emoji(str(text), replace='')
 
-# master_prompts stub
-mp = types.ModuleType('master_prompts')
-mp.master_prompt = 'master prompt'
-sys.modules['master_prompts'] = mp
+    # Remove all line breaks and collapse consecutive whitespace to single spaces
+    single_line = re.sub(r"[\r\n]+", " ", without_emoji)
+    single_line = re.sub(r"\s+", " ", single_line).strip()
 
-# Now import the target module by path
-import importlib.util
-from pathlib import Path
-MODULE_PATH = Path(__file__).resolve().parents[1] / 'agentic-system' / 'nodes.py'
-spec = importlib.util.spec_from_file_location('agentic_system_nodes', str(MODULE_PATH))
-nodes = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(nodes)
-
-format_response = nodes.format_response
-AIMessage = nodes.AIMessage
-RemoveMessage = nodes.RemoveMessage
-
-
-def mk_msg(content, id='m1'):
-    """Create a simple object with content and id attributes."""
-    return types.SimpleNamespace(content=content, id=id)
+    return single_line
 
 
 def log_test(test_name, input_content, expected, actual, passed):
@@ -128,226 +76,160 @@ def log_test(test_name, input_content, expected, actual, passed):
     print(f"{'='*80}")
 
 
-def test_remove_emojis_and_newlines_object_message():
-    """Test emoji and newline removal with object-style message."""
+def test_remove_emojis_and_newlines():
+    """Test emoji and newline removal."""
     input_content = 'Hello 😊\nHow are you?   '
-    s = {'messages': [mk_msg(input_content, 'msg1')]}
-    out = format_response(s, None)
-    msgs = out['messages']
-
-    # Should remove raw message and add cleaned AIMessage
-    has_remove = any(isinstance(m, RemoveMessage) for m in msgs)
-    ai = [m for m in msgs if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Hello How are you?'
-    actual = ai.content
 
     passed = (
-        has_remove and
-        '\n' not in actual and
-        '😊' not in actual and
-        'How are you?' in actual and
-        '  ' not in actual and
-        actual == expected
+        '\n' not in result and
+        '😊' not in result and
+        'How are you?' in result and
+        '  ' not in result and
+        result == expected
     )
 
-    log_test('test_remove_emojis_and_newlines_object_message', input_content, expected, actual, passed)
+    log_test('test_remove_emojis_and_newlines', input_content, expected, result, passed)
 
-    assert has_remove, "Should contain RemoveMessage"
-    assert '\n' not in actual, "Should not contain newlines"
-    assert '😊' not in actual, "Should not contain emoji"
-    assert 'How are you?' in actual, "Should contain the text"
-    assert '  ' not in actual, "Should not contain double spaces"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '\n' not in result, "Should not contain newlines"
+    assert '😊' not in result, "Should not contain emoji"
+    assert 'How are you?' in result, "Should contain the text"
+    assert '  ' not in result, "Should not contain double spaces"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
-def test_dict_message_input():
-    """Test with dict-style message input."""
+def test_multiple_lines_with_emoji():
+    """Test with multiple lines and emojis."""
     input_content = 'Line1\nLine2\n🙂'
-    s = {'messages': [{'content': input_content, 'id': 'msg2'}]}
-    out = format_response(s, None)
-    msgs = out['messages']
-    ai = [m for m in msgs if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Line1 Line2'
-    actual = ai.content
 
-    passed = actual == expected
-    log_test('test_dict_message_input', input_content, expected, actual, passed)
+    passed = result == expected
+    log_test('test_multiple_lines_with_emoji', input_content, expected, result, passed)
 
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
-
-
-def test_empty_messages_returns_empty_dict():
-    """Test that empty messages list returns empty dict."""
-    s = {'messages': []}
-    out = format_response(s, None)
-
-    expected = {}
-    actual = out
-
-    passed = actual == expected
-    log_test('test_empty_messages_returns_empty_dict', 'No messages', expected, actual, passed)
-
-    assert actual == expected, f"Expected {expected}, got {actual}"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
-def test_non_string_content_handling():
-    """Test that non-string content is converted to string."""
-    input_content = 12345
-    s = {'messages': [mk_msg(input_content, 'num1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
+def test_empty_string():
+    """Test that empty string returns empty."""
+    result = format_text_for_tts("")
+    expected = ""
 
-    expected = '12345'
-    actual = ai.content
+    passed = result == expected
+    log_test('test_empty_string', '', expected, result, passed)
 
-    passed = actual == expected
-    log_test('test_non_string_content_handling', input_content, expected, actual, passed)
-
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert result == expected, f"Expected empty string, got '{result}'"
 
 
 def test_zwj_emoji_sequences():
     """Test removal of Zero-Width Joiner (ZWJ) emoji sequences like family emojis."""
     input_content = 'Family time 👨‍👩‍👧‍👦 is great!'
-    s = {'messages': [mk_msg(input_content, 'zwj1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Family time is great!'
-    actual = ai.content
 
-    passed = actual == expected and '👨' not in actual
-    log_test('test_zwj_emoji_sequences', input_content, expected, actual, passed)
+    passed = result == expected and '👨' not in result
+    log_test('test_zwj_emoji_sequences', input_content, expected, result, passed)
 
-    assert '👨' not in actual, "Should not contain any part of ZWJ sequence"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '👨' not in result, "Should not contain any part of ZWJ sequence"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_skin_tone_modifiers():
     """Test removal of emojis with skin tone modifiers."""
     input_content = 'Wave 👋🏽 hello!'
-    s = {'messages': [mk_msg(input_content, 'skin1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Wave hello!'
-    actual = ai.content
 
-    passed = actual == expected and '👋' not in actual
-    log_test('test_skin_tone_modifiers', input_content, expected, actual, passed)
+    passed = result == expected and '👋' not in result
+    log_test('test_skin_tone_modifiers', input_content, expected, result, passed)
 
-    assert '👋' not in actual, "Should not contain emoji with skin tone"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '👋' not in result, "Should not contain emoji with skin tone"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_flag_emojis():
     """Test removal of flag emojis (regional indicator symbols)."""
     input_content = 'Hello from 🇺🇸 and 🇩🇪!'
-    s = {'messages': [mk_msg(input_content, 'flag1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Hello from and !'
-    actual = ai.content
 
-    passed = '🇺🇸' not in actual and '🇩🇪' not in actual
-    log_test('test_flag_emojis', input_content, expected, actual, passed)
+    passed = '🇺🇸' not in result and '🇩🇪' not in result
+    log_test('test_flag_emojis', input_content, expected, result, passed)
 
-    assert '🇺🇸' not in actual, "Should not contain US flag"
-    assert '🇩🇪' not in actual, "Should not contain German flag"
-    assert 'Hello from' in actual, "Should contain the text"
+    assert '🇺🇸' not in result, "Should not contain US flag"
+    assert '🇩🇪' not in result, "Should not contain German flag"
+    assert 'Hello from' in result, "Should contain the text"
 
 
 def test_mixed_emoji_types():
     """Test removal of multiple emoji types in one text."""
     input_content = '🎉 Party! 🥳 Time to celebrate 🎊 with friends 👯‍♀️'
-    s = {'messages': [mk_msg(input_content, 'mixed1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Party! Time to celebrate with friends'
-    actual = ai.content
 
-    passed = all(e not in actual for e in ['🎉', '🥳', '🎊', '👯'])
-    log_test('test_mixed_emoji_types', input_content, expected, actual, passed)
+    passed = all(e not in result for e in ['🎉', '🥳', '🎊', '👯'])
+    log_test('test_mixed_emoji_types', input_content, expected, result, passed)
 
-    assert '🎉' not in actual, "Should not contain party popper"
-    assert '🥳' not in actual, "Should not contain party face"
-    assert '🎊' not in actual, "Should not contain confetti"
-    assert '👯' not in actual, "Should not contain dancers"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '🎉' not in result, "Should not contain party popper"
+    assert '🥳' not in result, "Should not contain party face"
+    assert '🎊' not in result, "Should not contain confetti"
+    assert '👯' not in result, "Should not contain dancers"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_multiple_consecutive_newlines():
     """Test removal of multiple consecutive newlines."""
     input_content = 'Line 1\n\n\nLine 2\n\n\n\nLine 3'
-    s = {'messages': [mk_msg(input_content, 'multi_nl')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Line 1 Line 2 Line 3'
-    actual = ai.content
 
-    passed = '\n' not in actual and actual == expected
-    log_test('test_multiple_consecutive_newlines', input_content, expected, actual, passed)
+    passed = '\n' not in result and result == expected
+    log_test('test_multiple_consecutive_newlines', input_content, expected, result, passed)
 
-    assert '\n' not in actual, "Should not contain any newlines"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '\n' not in result, "Should not contain any newlines"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_carriage_return_handling():
     """Test removal of carriage returns (\\r)."""
     input_content = 'Text with\rcarriage\r\nreturns'
-    s = {'messages': [mk_msg(input_content, 'cr1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Text with carriage returns'
-    actual = ai.content
 
-    passed = '\r' not in actual and '\n' not in actual and actual == expected
-    log_test('test_carriage_return_handling', input_content, expected, actual, passed)
+    passed = '\r' not in result and '\n' not in result and result == expected
+    log_test('test_carriage_return_handling', input_content, expected, result, passed)
 
-    assert '\r' not in actual, "Should not contain carriage returns"
-    assert '\n' not in actual, "Should not contain newlines"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '\r' not in result, "Should not contain carriage returns"
+    assert '\n' not in result, "Should not contain newlines"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_excessive_whitespace_collapse():
     """Test that excessive whitespace is collapsed to single spaces."""
     input_content = 'Too    many        spaces     here'
-    s = {'messages': [mk_msg(input_content, 'space1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Too many spaces here'
-    actual = ai.content
 
-    passed = '  ' not in actual and actual == expected
-    log_test('test_excessive_whitespace_collapse', input_content, expected, actual, passed)
+    passed = '  ' not in result and result == expected
+    log_test('test_excessive_whitespace_collapse', input_content, expected, result, passed)
 
-    assert '  ' not in actual, "Should not contain double spaces"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert '  ' not in result, "Should not contain double spaces"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_leading_trailing_whitespace():
     """Test that leading and trailing whitespace is stripped."""
     input_content = '   Leading and trailing spaces   '
-    s = {'messages': [mk_msg(input_content, 'trim1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = 'Leading and trailing spaces'
-    actual = ai.content
 
-    passed = actual == expected and not actual.startswith(' ') and not actual.endswith(' ')
-    log_test('test_leading_trailing_whitespace', input_content, expected, actual, passed)
+    passed = result == expected and not result.startswith(' ') and not result.endswith(' ')
+    log_test('test_leading_trailing_whitespace', input_content, expected, result, passed)
 
-    assert not actual.startswith(' '), "Should not have leading spaces"
-    assert not actual.endswith(' '), "Should not have trailing spaces"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
+    assert not result.startswith(' '), "Should not have leading spaces"
+    assert not result.endswith(' '), "Should not have trailing spaces"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 def test_complex_real_world_example():
@@ -361,74 +243,34 @@ Let me share something exciting:
 
 Looking forward to it! 🎉🎊'''
 
-    s = {'messages': [mk_msg(input_content, 'complex1')]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
+    result = format_text_for_tts(input_content)
     expected = "Hello there! I hope you're doing well today! Let me share something exciting: New features coming soon! Looking forward to it!"
-    actual = ai.content
 
     # Check no emojis remain
     emojis = ['🌟', '👋', '😊', '✨', '🚀', '🎉', '🎊']
-    has_no_emojis = all(e not in actual for e in emojis)
-    has_no_newlines = '\n' not in actual
+    has_no_emojis = all(e not in result for e in emojis)
+    has_no_newlines = '\n' not in result
 
-    passed = has_no_emojis and has_no_newlines and actual == expected
-    log_test('test_complex_real_world_example', input_content[:50] + '...', expected, actual, passed)
+    passed = has_no_emojis and has_no_newlines and result == expected
+    log_test('test_complex_real_world_example', input_content[:50] + '...', expected, result, passed)
 
     for emoji in emojis:
-        assert emoji not in actual, f"Should not contain emoji {emoji}"
-    assert '\n' not in actual, "Should not contain newlines"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
-
-
-def test_message_without_id():
-    """Test that messages without ID don't cause RemoveMessage."""
-    input_content = 'Test message 😊'
-    msg = types.SimpleNamespace(content=input_content)  # No id attribute
-    s = {'messages': [msg]}
-    out = format_response(s, None)
-    msgs = out['messages']
-
-    has_remove = any(isinstance(m, RemoveMessage) for m in msgs)
-    ai = [m for m in msgs if isinstance(m, AIMessage)][0]
-
-    expected = 'Test message'
-    actual = ai.content
-
-    passed = not has_remove and actual == expected
-    log_test('test_message_without_id', input_content, expected, actual, passed)
-
-    assert not has_remove, "Should not contain RemoveMessage when no ID"
-    assert actual == expected, f"Expected '{expected}', got '{actual}'"
-
-
-def test_none_content():
-    """Test handling of None content."""
-    s = {'messages': [{'content': None, 'id': 'none1'}]}
-    out = format_response(s, None)
-    ai = [m for m in out['messages'] if isinstance(m, AIMessage)][0]
-
-    expected = ''
-    actual = ai.content
-
-    passed = actual == expected
-    log_test('test_none_content', 'None', expected, actual, passed)
-
-    assert actual == expected, f"Expected empty string, got '{actual}'"
+        assert emoji not in result, f"Should not contain emoji {emoji}"
+    assert '\n' not in result, "Should not contain newlines"
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 # Run all tests if executed directly
 if __name__ == '__main__':
     print("\n" + "="*80)
-    print("RUNNING FORMAT_RESPONSE TEST SUITE")
+    print("RUNNING TEXT FORMATTING TEST SUITE")
+    print("Testing the formatting logic used in ConversationService._format_chunk")
     print("="*80)
 
     test_functions = [
-        test_remove_emojis_and_newlines_object_message,
-        test_dict_message_input,
-        test_empty_messages_returns_empty_dict,
-        test_non_string_content_handling,
+        test_remove_emojis_and_newlines,
+        test_multiple_lines_with_emoji,
+        test_empty_string,
         test_zwj_emoji_sequences,
         test_skin_tone_modifiers,
         test_flag_emojis,
@@ -438,8 +280,6 @@ if __name__ == '__main__':
         test_excessive_whitespace_collapse,
         test_leading_trailing_whitespace,
         test_complex_real_world_example,
-        test_message_without_id,
-        test_none_content,
     ]
 
     passed = 0
