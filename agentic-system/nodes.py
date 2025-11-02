@@ -7,6 +7,7 @@ from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
 from worker_prompts import speechVocabularyWorker_prompt, speechGrammarWorker_prompt, speechInteractionWorker_prompt, \
     speechComprehensionWorker_prompt, boredomWorker_prompt
+from master_prompts import master_prompt
 
 # Global reference to background_graph (will be set after import)
 background_graph = None
@@ -28,11 +29,15 @@ def masterChatbot(state: State, llm):
     """
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
-    You are chatting with a child. Your output shall consider the guidance's and be the direct answer to the child.  Try to keep the story engaging and fun. For that if needed even go into a different direction if the educational analysis suggests that the child is bored.
-    Use this guidance:
+    {master_prompt}
     
-    Story Analysis: {state.get('story_analysis', '')}
-    Educational Analysis: {state.get('educational_analysis', '')}
+    Book story: {state.get('game_description', '')}
+    Vocabulary Analysis: {state.get('vocabulary_analysis', '')}
+    Grammar Analysis: {state.get('grammar_analysis', '')}
+    Interaction Analysis: {state.get('interaction_analysis', '')}
+    Comprehension Analysis: {state.get('comprehension_analysis', '')}
+    Boredom Analysis: {state.get('boredom_analysis', '')}
+    
     """
     system_message = SystemMessage(content=system_context)
     messages = [system_message] + state["messages"]
