@@ -5,7 +5,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Remo
 from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
-
+from worker_prompts import storytelling_prompt, educational_prompt
 
 # Global reference to background_graph (will be set after import)
 background_graph = None
@@ -25,6 +25,7 @@ def masterChatbot(state: State, llm):
     :param llm: Language model instance
     :return: Updated state with new message
     """
+    # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
     You are chatting with a child. Your output shall consider the guidance's and be the direct answer to the child.  Try to keep the story engaging and fun. For that if needed even go into a different direction if the educational analysis suggests that the child is bored.
     Use this guidance:
@@ -59,13 +60,6 @@ def get_messages_history_from_immediate_graph_state(config) -> list:
     return messages
 
 
-educational_prompt = (
-    "You are a educational advisor. Analyze the following conversation between an application and a child.\n"
-    "Provide analysis of:\n"
-    "1. Child's current emotional state\n"
-)
-
-
 def educationalWorker(state: BackgroundState, config, llm):
     """
     Analyzes the educational aspects of the conversation.
@@ -89,12 +83,6 @@ def educationalWorker(state: BackgroundState, config, llm):
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"educational_analysis": response.content})
-
-
-storytelling_prompt = (
-    "You are a storytelling advisor. Analyze the following conversation between an application and a child.\n"
-    "Provide three next story developments which makes sense to build a fun and engaging story.\n\n"
-)
 
 
 def storytellingWorker(state: BackgroundState, config, llm):
