@@ -5,7 +5,8 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Remo
 from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
-from worker_prompts import storytelling_prompt, educational_prompt
+from worker_prompts import speechVocabularyWorker_prompt, speechGrammarWorker_prompt, speechInteractionWorker_prompt, \
+    speechComprehensionWorker_prompt, boredomWorker_prompt
 
 # Global reference to background_graph (will be set after import)
 background_graph = None
@@ -60,41 +61,16 @@ def get_messages_history_from_immediate_graph_state(config) -> list:
     return messages
 
 
-def educationalWorker(state: BackgroundState, config, llm):
+def speechVocabularyWorker(state: BackgroundState, config, llm):
     """
-    Analyzes the educational aspects of the conversation.
+    Analyzes the speech and vocabulary aspects of the conversation. Based on that analysis creates possible tasks and interactions to support vocabulary development.
 
     :param state: Background state
     :param config: Configuration with thread_id
     :param llm: Language model instance
-    :return: Command with educational analysis update
+    :return: Command with speech analysis update
     """
-    system_message = SystemMessage(content=educational_prompt)
-
-    # Analyze the conversation without participating in it
-    conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
-    ])
-    child_profile = state.get('child_profile', '')
-    analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
-    )
-
-    response = llm.invoke([system_message, analysis_message])
-    # Store analysis separately from conversation
-    return Command(update={"educational_analysis": response.content})
-
-
-def storytellingWorker(state: BackgroundState, config, llm):
-    """
-    Analyzes the storytelling aspects and suggests story developments.
-
-    :param state: Background state
-    :param config: Configuration with thread_id
-    :param llm: Language model instance
-    :return: Command with story analysis update
-    """
-    system_message = SystemMessage(content=storytelling_prompt)
+    system_message = SystemMessage(content=speechVocabularyWorker_prompt)
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -103,13 +79,116 @@ def storytellingWorker(state: BackgroundState, config, llm):
     child_profile = state.get('child_profile', '')
     game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary} Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
     )
 
-    # Use invoke instead of stream for background processing - no need for streaming
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
-    return Command(update={"story_analysis": response.content})
+    return Command(update={"vocabulary_analysis": response.content})
+
+
+def speechGrammarWorker(state: BackgroundState, config, llm):
+    """
+    Analyzes the speech and grammar aspects of the conversation, based on that analysis creates possible task and interactions that teaches the child grammar playfully..
+
+    :param state: Background state
+    :param config: Configuration with thread_id
+    :param llm: Language model instance
+    :return: Command with speech analysis update
+    """
+    system_message = SystemMessage(content=speechGrammarWorker_prompt)
+
+    # Analyze the conversation without participating in it
+    conversation_summary = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+    ])
+    child_profile = state.get('child_profile', '')
+    game_description = state.get('game_description', '')
+    analysis_message = HumanMessage(
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+    )
+
+    response = llm.invoke([system_message, analysis_message])
+    # Store analysis separately from conversation
+    return Command(update={"grammar_analysis": response.content})
+
+
+def speechInteractionWorker(state: BackgroundState, config, llm):
+    """
+    Analyzes the interaction aspects of the conversation, based on that creates task that encourage the child's interaction.
+
+    :param state: Background state
+    :param config: Configuration with thread_id
+    :param llm: Language model instance
+    :return: Command with interaction analysis update
+    """
+    system_message = SystemMessage(content=speechInteractionWorker_prompt)
+
+    # Analyze the conversation without participating in it
+    conversation_summary = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+    ])
+    child_profile = state.get('child_profile', '')
+    game_description = state.get('game_description', '')
+    analysis_message = HumanMessage(
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+    )
+
+    response = llm.invoke([system_message, analysis_message])
+    # Store analysis separately from conversation
+    return Command(update={"interaction_analysis": response.content})
+
+
+def speechComprehensionWorker(state: BackgroundState, config, llm):
+    """
+    Analyzes the comprehension aspects of the conversation and creates  impulses that support the child's understanding.
+
+    :param state: Background state
+    :param config: Configuration with thread_id
+    :param llm: Language model instance
+    :return: Command with comprehension analysis update
+    """
+    system_message = SystemMessage(content=speechComprehensionWorker_prompt)
+
+    # Analyze the conversation without participating in it
+    conversation_summary = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+    ])
+    child_profile = state.get('child_profile', '')
+    game_description = state.get('game_description', '')
+    analysis_message = HumanMessage(
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+    )
+
+    response = llm.invoke([system_message, analysis_message])
+    # Store analysis separately from conversation
+    return Command(update={"comprehension_analysis": response.content})
+
+
+def boredomWorker(state: BackgroundState, config, llm):
+    """
+    Analyzes the overall conversation to provide boredom analysis and suggestions.
+
+    :param state: Background state
+    :param config: Configuration with thread_id
+    :param llm: Language model instance
+    :return: Command with border analysis update
+    """
+    system_message = SystemMessage(content=boredomWorker_prompt)
+
+    # Analyze the conversation without participating in it
+    conversation_summary = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+    ])
+    child_profile = state.get('child_profile', '')
+    game_description = state.get('game_description', '')
+    analysis_message = HumanMessage(
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+    )
+
+    response = llm.invoke([system_message, analysis_message])
+    # Store analysis separately from conversation
+    return Command(update={"boredom_analysis": response.content})
 
 
 def format_response(state: State, llm) -> dict:
@@ -130,8 +209,8 @@ def format_response(state: State, llm) -> dict:
     formatted_content = ""
     for chunk in llm.stream([
         SystemMessage(content=(
-            "You are a formatting assistant. Format the following text to be suitable "
-            "for TTS. Remove all special characters such as emojis and make it easy to read aloud."
+                "You are a formatting assistant. Format the following text to be suitable "
+                "for TTS. Remove all special characters such as emojis and make it easy to read aloud."
         )),
         HumanMessage(content=raw_response)
     ]):
@@ -142,7 +221,7 @@ def format_response(state: State, llm) -> dict:
     return {
         "messages": [
             RemoveMessage(id=raw_message_id),  # Remove the raw response
-            AIMessage(content=formatted_content)        # Add the formatted response
+            AIMessage(content=formatted_content)  # Add the formatted response
         ]
     }
 
@@ -156,10 +235,10 @@ def initialStateLoader(state: State) -> dict:
     """
     game_description = get_game_by_id(state)
     child_profile = get_child_profile(state)
-    return {
+    return Command(update={
         "game_description": game_description,
         "child_profile": child_profile
-    }
+    })
 
 
 def immediate_graph_needs_initial_state(state: State):
@@ -173,7 +252,7 @@ def background_graph_needs_initial_state(state: State):
     """Check if background graph needs to load initial state."""
     if not (state.get("game_description") and state.get("child_profile")):
         return "initialStateLoader"
-    return ["educationalWorker", "storytellingWorker"]
+    return ["speechVocabularyWorker", "speechGrammarWorker", "speechInteractionWorker", "speechComprehensionWorker", "boredomWorker"]
 
 
 def load_analysis(state: State, config, background_graph_instance) -> dict:
@@ -188,11 +267,16 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
     # TODO LNG: Make this conditional executed e.g. every third interaction.
     # TODO LNG: Add conditional edge if this node takes to much time.
     bg_thread_id = config["configurable"]["thread_id"] + "_analysis"
+    print("Loading analysis: ", bg_thread_id)
     snapshot = background_graph_instance.get_state({
         "configurable": {"thread_id": bg_thread_id}
     })
+    print(f"Snapshot values: {snapshot.values if snapshot else 'None'}")
     analyses = {
-        "story_analysis": snapshot.values.get("story_analysis", ""),
-        "educational_analysis": snapshot.values.get("educational_analysis", "")
+        "vocabulary_analysis": snapshot.values.get("vocabulary_analysis", ""),
+        "grammar_analysis": snapshot.values.get("grammar_analysis", ""),
+        "interaction_analysis": snapshot.values.get("interaction_analysis", ""),
+        "comprehension_analysis": snapshot.values.get("comprehension_analysis", ""),
+        "boredom_analysis": snapshot.values.get("boredom_analysis", "")
     }
     return analyses

@@ -16,8 +16,11 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     game_description: str
     child_profile: str
-    story_analysis: str
-    educational_analysis: str
+    vocabulary_analysis: str
+    grammar_analysis: str
+    interaction_analysis: str
+    comprehension_analysis: str
+    boredom_analysis: str
 
 
 class BackgroundState(TypedDict):
@@ -28,6 +31,9 @@ class BackgroundState(TypedDict):
     # For now go with the simple and promising variant of only having the most recent input in the state.
     game_description: str
     child_profile: str
-    story_analysis: str
-    educational_analysis: str
+    vocabulary_analysis: str
+    grammar_analysis: str
+    interaction_analysis: str
+    comprehension_analysis: str
+    boredom_analysis: str
 

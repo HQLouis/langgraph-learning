@@ -175,6 +175,7 @@ class ConversationService:
         """Run background analysis in a separate thread."""
         def run_analysis():
             bg_thread_id = thread_id + "_analysis"
+            print("running analysis: ", bg_thread_id)
             bg_config = {
                 "configurable": {"thread_id": bg_thread_id}
             }
