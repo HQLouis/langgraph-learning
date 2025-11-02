@@ -16,4 +16,5 @@ dependencies = [
     "pydantic>=2.9.0",
     "pydantic-settings>=2.6.0",
     "slowapi>=0.1.9",
+    "emoji>=2.14.0",
 ]

@@ -8,9 +8,11 @@ from data_loaders import get_game_by_id, get_child_profile
 from worker_prompts import speechVocabularyWorker_prompt, speechGrammarWorker_prompt, speechInteractionWorker_prompt, \
     speechComprehensionWorker_prompt, boredomWorker_prompt
 from master_prompts import master_prompt
+from typing import Any
+
 
 # Global reference to background_graph (will be set after import)
-background_graph = None
+background_graph: Any = None
 
 
 def set_background_graph(graph):
@@ -61,6 +63,12 @@ def get_messages_history_from_immediate_graph_state(config) -> list:
     """
     # Fetch the immediate-thread snapshot
     base_id = config["configurable"]["thread_id"].rsplit("_", 1)[0]
+    # If the background graph hasn't been set yet, return an empty history
+    if background_graph is None:
+        return []
+    # Ensure the background_graph exposes get_state before calling it
+    if not hasattr(background_graph, 'get_state'):
+        return []
     snapshot = background_graph.get_state({"configurable": {"thread_id": base_id}})
     messages = snapshot.values.get("messages", [])
     return messages
@@ -198,38 +206,46 @@ def boredomWorker(state: BackgroundState, config, llm):
 
 def format_response(state: State, llm) -> dict:
     """
-    Formats the response of the agent to make it suitable for TTS.
-    This shall be the last step before returning the response to the user.
-    Removes the raw response from state to avoid overloading it.
-    Streams the formatted response token-by-token using custom events.
-
+    Formats the response of the agent to make it suitable for TTS without calling an LLM.
+    Removes all emojis and line breaks from the last message and returns an updated
+    messages list that removes the raw message and adds the cleaned one.
     :param state: Current state
-    :param llm: Language model instance
-    :return: Formatted string of response and removal of raw message
+    :param llm: (ignored) kept for compatibility
+    :return: Dict containing messages to apply (RemoveMessage and AIMessage)
     """
-    raw_response = state["messages"][-1].content
-    raw_message_id = state["messages"][-1].id
+    import re
+    import emoji
 
-    # Stream the formatted response - we'll emit chunks via the LLM's streaming
-    formatted_content = ""
-    for chunk in llm.stream([
-        SystemMessage(content=(
-                "You are a formatting assistant. Format the following text to be suitable "
-                "for TTS. Remove all special characters such as emojis and make it easy to read aloud."
-        )),
-        HumanMessage(content=raw_response)
-    ]):
-        if hasattr(chunk, 'content') and chunk.content:
-            formatted_content += chunk.content
+    messages = state.get("messages", [])
+    if not messages:
+        # Nothing to format
+        return {}
 
-    # Return both the formatted message and removal of the raw message
-    return {
-        "messages": [
-            RemoveMessage(id=raw_message_id),  # Remove the raw response
-            AIMessage(content=formatted_content)  # Add the formatted response
-        ]
-    }
+    raw_msg = messages[-1]
+    # Support both dict-like messages and objects with attributes
+    if isinstance(raw_msg, dict):
+        raw_response = raw_msg.get("content", "")
+        raw_message_id = raw_msg.get("id")
+    else:
+        raw_response = getattr(raw_msg, "content", "")
+        raw_message_id = getattr(raw_msg, "id", None)
 
+    if raw_response is None:
+        raw_response = ""
+
+    # Remove all emojis using the emoji library for comprehensive coverage
+    without_emoji = emoji.replace_emoji(str(raw_response), replace='')
+
+    # Remove all line breaks and collapse consecutive whitespace to single spaces
+    single_line = re.sub(r"[\r\n]+", " ", without_emoji)
+    single_line = re.sub(r"\s+", " ", single_line).strip()
+
+    out_messages = []
+    if raw_message_id is not None:
+        out_messages.append(RemoveMessage(id=raw_message_id))
+    out_messages.append(AIMessage(content=single_line))
+
+    return {"messages": out_messages}
 
 def initialStateLoader(state: State) -> dict:
     """
