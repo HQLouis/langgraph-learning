@@ -109,18 +109,22 @@ class ConversationService:
         message: str
     ) -> AsyncIterator[str]:
         """
-        Send a message and stream the response.
+        Send a message and stream the response with real-time formatting.
+        Processes and formats chunks as they arrive for minimal latency.
 
         Args:
             thread_id: Thread ID of the conversation
             message: User's message
 
         Yields:
-            Chunks of the AI response as they are generated
+            Formatted chunks of the AI response as they are generated
 
         Raises:
             ValueError: If conversation not found
         """
+        import re
+        import emoji
+
         # Verify conversation exists
         conversation = self.get_conversation(thread_id)
         if not conversation:
@@ -137,7 +141,7 @@ class ConversationService:
 
         # Track streaming state
         seen_message_ids = set()
-        seen_content = ""
+        last_chunk_content = ""
 
         # Stream response from immediate graph
         for event in self.immediate_graph.stream(
@@ -149,20 +153,26 @@ class ConversationService:
             if isinstance(event, tuple):
                 msg, metadata = event
 
-                # Only process messages from format_response node
+                # Process messages from masterChatbot node (before format_response)
                 node = metadata.get('langgraph_node', '')
-                if node == 'format_response':
+                if node == 'masterChatbot':
                     # Skip if we've already processed this exact message
                     msg_id = getattr(msg, 'id', None)
                     if msg_id and msg_id in seen_message_ids:
                         continue
 
                     if hasattr(msg, 'content') and msg.content:
-                        # Yield only the NEW content
-                        if len(msg.content) > len(seen_content):
-                            new_content = msg.content[len(seen_content):]
-                            seen_content = msg.content
-                            yield new_content
+                        # Get only the NEW content since last chunk
+                        current_content = msg.content
+                        if len(current_content) > len(last_chunk_content):
+                            new_chunk = current_content[len(last_chunk_content):]
+                            last_chunk_content = current_content
+
+                            # Format the chunk in real-time
+                            formatted_chunk = ConversationService._format_chunk(new_chunk)
+
+                            if formatted_chunk:
+                                yield formatted_chunk
 
                         # Mark this message ID as seen
                         if msg_id:
@@ -171,10 +181,72 @@ class ConversationService:
         # Trigger background analysis asynchronously
         self._run_background_analysis(thread_id, conversation.child_id, conversation.game_id)
 
+    @staticmethod
+    def _format_chunk(chunk: str) -> str:
+        """
+        Format a chunk of text for TTS by removing emojis and normalizing whitespace.
+        Designed to work on incremental chunks while maintaining consistency.
+
+        Args:
+            chunk: Raw text chunk from LLM
+
+        Returns:
+            Formatted chunk suitable for TTS
+        """
+        import re
+        import emoji
+
+        if not chunk:
+            return ""
+
+        # Find all emoji spans (handles multi-codepoint sequences, ZWJ, skin tones, etc.)
+        spans = emoji.emoji_list(chunk)  # [{'emoji': '👨‍👩‍👧‍👦', 'match_start': i, 'match_end': j}, ...]
+
+        if spans:
+            # Build deletion ranges: [start_to_delete, end_of_emoji)
+            # If there's a space immediately before the emoji, include it in the deletion.
+            del_ranges = []
+            for item in spans:
+                start = item["match_start"]
+                end = item["match_end"]
+                # Include a single preceding space if present
+                if start > 0 and chunk[start - 1] == " ":
+                    start -= 1
+                del_ranges.append((start, end))
+
+            # Merge overlapping/adjacent deletion ranges to avoid index shifting issues
+            del_ranges.sort()
+            merged = []
+            for s, e in del_ranges:
+                if not merged or s > merged[-1][1]:
+                    merged.append([s, e])
+                else:
+                    merged[-1][1] = max(merged[-1][1], e)
+
+            # Reconstruct the string skipping the merged deletion ranges
+            parts = []
+            prev = 0
+            for s, e in merged:
+                parts.append(chunk[prev:s])
+                prev = e
+            parts.append(chunk[prev:])
+            without_emoji = "".join(parts)
+        else:
+            without_emoji = chunk
+
+        # Replace line breaks with spaces (don't strip yet)
+        without_linebreaks = re.sub(r"[\r\n]+", " ", without_emoji)
+
+        # Collapse multiple spaces to a single space
+        formatted = re.sub(r" +", " ", without_linebreaks)
+
+        return formatted
+
     def _run_background_analysis(self, thread_id: str, child_id: str, game_id: str):
         """Run background analysis in a separate thread."""
         def run_analysis():
             bg_thread_id = thread_id + "_analysis"
+            print("running analysis: ", bg_thread_id)
             bg_config = {
                 "configurable": {"thread_id": bg_thread_id}
             }
