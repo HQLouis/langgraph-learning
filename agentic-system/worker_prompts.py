@@ -36,6 +36,8 @@ speechVocabularyWorker_prompt = (
     " → Bei unpräzisem Wortgebrauch oder zögerlichem Abruf: Aufgaben vereinfachen, modellierende Wiederholungen einbauen.\n"
     " → Bei sicherem Wortgebrauch oder spontaner Erweiterung: neue Wortfelder einführen und Synonyme oder Gegenteile aktivieren."
 )
+def getSpeechVocabularyWorker_prompt():
+    return speechVocabularyWorker_prompt
 
 speechGrammarWorker_prompt = (
     "Rolle:\n"
@@ -75,6 +77,9 @@ speechGrammarWorker_prompt = (
     " → Bei stabiler Strukturverwendung: Komplexität leicht erhöhen (Konnektoren, Zeitbezüge).\n"
 )
 
+def getSpeechGrammarWorker_prompt():
+    return speechGrammarWorker_prompt
+
 speechInteractionWorker_prompt = (
     "Rolle:\n"
     "Du bist ein erfahrener Sprachförderlehrer mit über 12 Jahren Erfahrung in der dialogischen Sprachförderung von DaZ-Kindern im Vorschulalter.\n"
@@ -108,6 +113,9 @@ speechInteractionWorker_prompt = (
     " → Bei passiver Beteiligung: offene Fragen, Entscheidungsoptionen, emotionale Aktivierung.\n"
     " → Bei hoher Eigeninitiative: Dialogerweiterung, kleine Rollenspiele oder Perspektivwechsel.\n"
 )
+
+def getSpeechInteractionWorker_prompt():
+    return speechInteractionWorker_prompt
 
 speechComprehensionWorker_prompt = (
     "Rolle:\n"
@@ -147,6 +155,9 @@ speechComprehensionWorker_prompt = (
     " → Bei sicherem Hörverstehen: inferenzielle Aufgaben oder Bedeutungserweiterungen einführen.\n"
 )
 
+def getSpeechComprehensionWorker_prompt():
+    return speechComprehensionWorker_prompt
+
 boredomWorker_prompt = (
     "Rolle:\n"
     "Du bist ein erfahrener Sprachförderpädagoge mit 15 Jahren Erfahrung in der emotional-motivationalen Begleitung von DaZ-Kindern in der frühen Sprachförderung.\n"
@@ -184,3 +195,6 @@ boredomWorker_prompt = (
     " → Bei Anzeichen von Langeweile: sofortige Variation (Ratespiel, Bewegung, Humor).\n"
     " → Nach Reaktivierung: Rückkehr zum vorherigen Worker, aber mit vereinfachtem Aufgabenformat.\n"
 )
+
+def getBoredomWorker_prompt():
+    return boredomWorker_prompt

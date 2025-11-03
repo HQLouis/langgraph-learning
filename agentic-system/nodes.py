@@ -5,11 +5,11 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
-from worker_prompts import speechVocabularyWorker_prompt, speechGrammarWorker_prompt, speechInteractionWorker_prompt, \
-    speechComprehensionWorker_prompt, boredomWorker_prompt
+from worker_prompts import getSpeechVocabularyWorker_prompt, \
+    getSpeechGrammarWorker_prompt, getSpeechInteractionWorker_prompt, getSpeechComprehensionWorker_prompt, \
+    getBoredomWorker_prompt
 from master_prompts import master_prompt
 from typing import Any
-
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -85,7 +85,7 @@ def speechVocabularyWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with speech analysis update
     """
-    system_message = SystemMessage(content=speechVocabularyWorker_prompt)
+    system_message = SystemMessage(content=getSpeechVocabularyWorker_prompt())
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -111,7 +111,7 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with speech analysis update
     """
-    system_message = SystemMessage(content=speechGrammarWorker_prompt)
+    system_message = SystemMessage(content=getSpeechGrammarWorker_prompt())
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -137,7 +137,7 @@ def speechInteractionWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with interaction analysis update
     """
-    system_message = SystemMessage(content=speechInteractionWorker_prompt)
+    system_message = SystemMessage(content=getSpeechInteractionWorker_prompt())
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -163,7 +163,7 @@ def speechComprehensionWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with comprehension analysis update
     """
-    system_message = SystemMessage(content=speechComprehensionWorker_prompt)
+    system_message = SystemMessage(content=getSpeechComprehensionWorker_prompt())
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -189,7 +189,7 @@ def boredomWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with border analysis update
     """
-    system_message = SystemMessage(content=boredomWorker_prompt)
+    system_message = SystemMessage(content=getBoredomWorker_prompt())
 
     # Analyze the conversation without participating in it
     conversation_summary = "\n".join([
@@ -232,7 +232,8 @@ def background_graph_needs_initial_state(state: State):
     """Check if background graph needs to load initial state."""
     if not (state.get("game_description") and state.get("child_profile")):
         return "initialStateLoader"
-    return ["speechVocabularyWorker", "speechGrammarWorker", "speechInteractionWorker", "speechComprehensionWorker", "boredomWorker"]
+    return ["speechVocabularyWorker", "speechGrammarWorker", "speechInteractionWorker", "speechComprehensionWorker",
+            "boredomWorker"]
 
 
 def load_analysis(state: State, config, background_graph_instance) -> dict:
