@@ -7,8 +7,7 @@ from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
 from prompts import getSpeechVocabularyWorker_prompt, \
     getSpeechGrammarWorker_prompt, getSpeechInteractionWorker_prompt, getSpeechComprehensionWorker_prompt, \
-    getBoredomWorker_prompt
-from master_prompts import master_prompt
+    getBoredomWorker_prompt, master_prompt
 from typing import Any
 
 # Global reference to background_graph (will be set after import)
