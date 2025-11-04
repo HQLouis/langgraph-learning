@@ -5,7 +5,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
-from worker_prompts import getSpeechVocabularyWorker_prompt, \
+from prompts import getSpeechVocabularyWorker_prompt, \
     getSpeechGrammarWorker_prompt, getSpeechInteractionWorker_prompt, getSpeechComprehensionWorker_prompt, \
     getBoredomWorker_prompt
 from master_prompts import master_prompt

@@ -3,6 +3,7 @@ Configuration settings for the Lingolino API.
 """
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -26,8 +27,17 @@ class Settings(BaseSettings):
     # LLM Settings
     llm_model: str = "google_genai:gemini-2.0-flash"
 
+    # AWS S3 Settings for Dynamic Prompts (Public Bucket)
+    aws_s3_bucket_name: str = "prompt-repository/"
+    aws_s3_prompts_prefix: str = "prompts/"
+    aws_region: str = "eu-central-1"
+
+    # Prompt Configuration
+    use_s3_prompts: bool = False  # Default to False for production safety
+    prompts_cache_ttl: int = 300  # Cache TTL in seconds (5 minutes for dev)
+
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(Path(__file__).parent.parent.parent / ".env"),
         env_file_encoding="utf-8",
         extra="ignore"  # Ignore extra fields from .env (like GOOGLE_API_KEY, LANGSMITH_*, etc.)
     )

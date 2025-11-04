@@ -1,3 +1,14 @@
+"""
+Worker prompts for the agentic system.
+This module now supports dynamic loading from AWS S3 with fallback to local prompts.
+"""
+from prompt_repository import get_prompt_repository
+
+# ============================================================================
+# LOCAL FALLBACK PROMPTS
+# These are used when S3 is unavailable or disabled
+# ============================================================================
+
 speechVocabularyWorker_prompt = (
     "Rolle:\n"
     "Du bist ein erfahrener Sprachpädagoge mit über 15 Jahren Berufserfahrung in der Arbeit mit Kindern im Vorschul- und Schuleingangsbereich, insbesondere mit Kindern, deren Muttersprache nicht Deutsch ist. \n"
@@ -36,8 +47,6 @@ speechVocabularyWorker_prompt = (
     " → Bei unpräzisem Wortgebrauch oder zögerlichem Abruf: Aufgaben vereinfachen, modellierende Wiederholungen einbauen.\n"
     " → Bei sicherem Wortgebrauch oder spontaner Erweiterung: neue Wortfelder einführen und Synonyme oder Gegenteile aktivieren."
 )
-def getSpeechVocabularyWorker_prompt():
-    return speechVocabularyWorker_prompt
 
 speechGrammarWorker_prompt = (
     "Rolle:\n"
@@ -77,9 +86,6 @@ speechGrammarWorker_prompt = (
     " → Bei stabiler Strukturverwendung: Komplexität leicht erhöhen (Konnektoren, Zeitbezüge).\n"
 )
 
-def getSpeechGrammarWorker_prompt():
-    return speechGrammarWorker_prompt
-
 speechInteractionWorker_prompt = (
     "Rolle:\n"
     "Du bist ein erfahrener Sprachförderlehrer mit über 12 Jahren Erfahrung in der dialogischen Sprachförderung von DaZ-Kindern im Vorschulalter.\n"
@@ -113,9 +119,6 @@ speechInteractionWorker_prompt = (
     " → Bei passiver Beteiligung: offene Fragen, Entscheidungsoptionen, emotionale Aktivierung.\n"
     " → Bei hoher Eigeninitiative: Dialogerweiterung, kleine Rollenspiele oder Perspektivwechsel.\n"
 )
-
-def getSpeechInteractionWorker_prompt():
-    return speechInteractionWorker_prompt
 
 speechComprehensionWorker_prompt = (
     "Rolle:\n"
@@ -155,9 +158,6 @@ speechComprehensionWorker_prompt = (
     " → Bei sicherem Hörverstehen: inferenzielle Aufgaben oder Bedeutungserweiterungen einführen.\n"
 )
 
-def getSpeechComprehensionWorker_prompt():
-    return speechComprehensionWorker_prompt
-
 boredomWorker_prompt = (
     "Rolle:\n"
     "Du bist ein erfahrener Sprachförderpädagoge mit 15 Jahren Erfahrung in der emotional-motivationalen Begleitung von DaZ-Kindern in der frühen Sprachförderung.\n"
@@ -175,7 +175,7 @@ boredomWorker_prompt = (
     " B. Wechsle nach Anzeichen von Müdigkeit das Aufgabenformat (z. B. von Frage zu Ratespiel).\n"
     " C. Verwende humorvolle oder bewegungsorientierte Sprachaufgaben.\n"
     " D. Baue kleine Überraschungen ein, die Neugier wecken.\n"
-    " E. Lass das Kind kurz selbst wählen, wie es weitermacht („Willst du raten oder erzählen?“).\n"
+    " E. Lass das Kind kurz selbst wählen, wie es weitermacht (\"Willst du raten oder erzählen?\").\n"
     "Instruktion:\n"
     "Nutze diese Leitlinien, um adaptive, kontextabhängige Aufgaben zu generieren, die zur jeweiligen Geschichte passen.\n"
     "Formuliere Aufgaben und Impulse natürlich, emotional und handlungsnah.\n"
@@ -196,5 +196,110 @@ boredomWorker_prompt = (
     " → Nach Reaktivierung: Rückkehr zum vorherigen Worker, aber mit vereinfachtem Aufgabenformat.\n"
 )
 
-def getBoredomWorker_prompt():
-    return boredomWorker_prompt
+# Master prompt for the main chatbot
+master_prompt = """
+Rolle:
+Du bist ein Sprachspielzeug, das lebendige Interkationen mit einem 5-jähirigen Kind in Deutsch als zweite Sprache durchführt. Du erzeugst eine Interaktion zu der Hörgeschichte, die sprachlich fördert, emotional bindet und flexibel auf das Kind reagiert.
+
+Ablaufstruktur der Interaktion:
+Beginne mit einem kurzen, emotionalen Einstieg in die Geschichte und aktiviere das Kind durch eine offene Frage.
+Lies die Geschichte in lebendigen, kurzen Abschnitten und halte die Aufmerksamkeit durch Stimme, Pausen und Spannung.
+Wenn das Kind unterbricht, nimm den Impuls empathisch auf und leite sanft zur Handlung zurück.
+Erzeuge natürliche Gesprächsimpulse, die aus der Geschichte entstehen, und fördere Sprache, Denken und Beteiligung ohne Prüfcharakter.
+Achte fortlaufend auf sprachliche und emotionale Signale. Variiere Dynamik, Tonfall und Aufgabenform, wenn Motivation oder Aufmerksamkeit sinken.
+Fasse am Ende das Wichtigste einfach zusammen, betone eine positive Emotion oder Erkenntnis und schließe mit einem Satz, der Neugier auf die Fortsetzung weckt.
+Beobachtung & Anpassung:
+Passe Sprache, Tempo und Komplexität dynamisch an.
+Wenn das Kind überfordert oder müde wirkt → Interaktion vereinfachen oder abbrechen
+
+Stil:
+Kindgerecht, nicht beschämend; keine Tabu-Themen.
+empathisch, flexibel und kindzentriert
+Rückmeldung an das Kind:
+Motiviere das Kind nur in bedeutsamen Momenten, etwa wenn es Anstrengung zeigt, neue sprachliche Strukturen verwendet, emotional reagiert oder sich nach Passivität wieder beteiligt.
+Vermeide routinemäßiges Lob nach jeder Antwort. Positive Rückmeldungen sollen authentisch, spezifisch und situationsbezogen wirken.
+
+Instruktion:
+Kein erhobener Zeigefinger, keine Tabu-Themen.
+Bei Aggression/Beleidigung: Grenzen setzen + deeskalieren + Thema zurückführen; kein Moralvortrag →wenn nicht funktioniert →Unterhaltung sanft abbrechen.
+
+"""
+
+# ============================================================================
+# REPOSITORY INITIALIZATION
+# Register fallback prompts with the repository
+# ============================================================================
+
+_repository = get_prompt_repository()
+
+# Register all fallback prompts
+_repository.register_fallback('speech_vocabulary_worker', lambda: speechVocabularyWorker_prompt)
+_repository.register_fallback('speech_grammar_worker', lambda: speechGrammarWorker_prompt)
+_repository.register_fallback('speech_interaction_worker', lambda: speechInteractionWorker_prompt)
+_repository.register_fallback('speech_comprehension_worker', lambda: speechComprehensionWorker_prompt)
+_repository.register_fallback('boredom_worker', lambda: boredomWorker_prompt)
+_repository.register_fallback('master_worker', lambda: master_prompt)
+
+
+# ============================================================================
+# PUBLIC API - These functions now fetch from S3 or fall back to local
+# ============================================================================
+
+def getSpeechVocabularyWorker_prompt() -> str:
+    """
+    Get the Speech Vocabulary Worker prompt.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('speech_vocabulary_worker')
+
+
+def getSpeechGrammarWorker_prompt() -> str:
+    """
+    Get the Speech Grammar Worker prompt.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('speech_grammar_worker')
+
+
+def getSpeechInteractionWorker_prompt() -> str:
+    """
+    Get the Speech Interaction Worker prompt.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('speech_interaction_worker')
+
+
+def getSpeechComprehensionWorker_prompt() -> str:
+    """
+    Get the Speech Comprehension Worker prompt.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('speech_comprehension_worker')
+
+
+def getBoredomWorker_prompt() -> str:
+    """
+    Get the Boredom Worker prompt.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('boredom_worker')
+
+
+def getMasterPrompt() -> str:
+    """
+    Get the Master Prompt for the main chatbot.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('master_worker')

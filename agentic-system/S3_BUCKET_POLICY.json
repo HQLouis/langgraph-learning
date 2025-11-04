@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::prompt-repository/prompts/*"
+    },
+    {
+      "Sid": "PublicWriteAccessToPrompts",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": "arn:aws:s3:::prompt-repository/prompts/*"
+    },
+    {
+      "Sid": "PublicListAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::prompt-repository",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": "prompts/*"
+        }
+      }
+    }
+  ]
+}
+
