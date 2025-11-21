@@ -1,0 +1,66 @@
+{
+  "family": "lingolino-api-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "lingolino-api",
+      "image": "AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/lingolino-api:IMAGE_TAG",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "AWS_S3_BUCKET_NAME",
+          "value": "prompt-repository"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "eu-central-1"
+        },
+        {
+          "name": "USE_S3_PROMPTS",
+          "value": "true"
+        },
+        {
+          "name": "DEBUG",
+          "value": "false"
+        },
+        {
+          "name": "CORS_ORIGINS",
+          "value": "https://text-chat-client.lingolino.io,https://prompt-admin.lingolino.io"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "GOOGLE_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:lingolino/google-api-key"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/lingolino-api",
+          "awslogs-region": "AWS_REGION",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}
+
