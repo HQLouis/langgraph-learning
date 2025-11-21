@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Testing
+functional-testing/
+tests/
+*.test.py
+test_*.py
+
+# Examples
+examples/
+langgraph_tutorial/
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Deployment
+docker-compose.yml
+start_api.sh
+
+# Logs
+*.log
+logs/
+

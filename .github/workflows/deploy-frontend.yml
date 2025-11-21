@@ -1,0 +1,146 @@
+name: Deploy Frontend to S3 & CloudFront
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'examples/web_client_example.html'
+      - 'agentic-system/prompt_admin_ui.html'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+env:
+  AWS_REGION: eu-central-1
+  WEB_CLIENT_BUCKET: text-chat-client.lingolino.io
+  PROMPT_ADMIN_BUCKET: prompt-admin.lingolino.io
+
+jobs:
+  deploy-web-client:
+    name: Deploy Web Client
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get ALB DNS name
+        id: alb-dns
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --query "LoadBalancers[?contains(LoadBalancerName, 'lingolino')].DNSName" \
+            --output text)
+          echo "alb_dns=$ALB_DNS" >> $GITHUB_OUTPUT
+          echo "🌐 ALB DNS: $ALB_DNS"
+
+      - name: Process web client HTML
+        run: |
+          # Replace localhost API URL with production ALB URL
+          sed "s|http://localhost:8000|http://${{ steps.alb-dns.outputs.alb_dns }}|g" \
+            examples/web_client_example.html > examples/index.html
+          
+          echo "✅ Updated API URL to: http://${{ steps.alb-dns.outputs.alb_dns }}"
+
+      - name: Upload to S3
+        run: |
+          aws s3 sync examples/ s3://${{ env.WEB_CLIENT_BUCKET }}/ \
+            --exclude "*" \
+            --include "index.html" \
+            --cache-control "public, max-age=300" \
+            --content-type "text/html"
+          
+          echo "✅ Uploaded web client to S3"
+
+      - name: Get CloudFront distribution ID
+        id: cf-dist
+        run: |
+          CF_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?contains(Aliases.Items, '${{ env.WEB_CLIENT_BUCKET }}')].Id" \
+            --output text)
+          echo "cf_id=$CF_ID" >> $GITHUB_OUTPUT
+          echo "☁️ CloudFront ID: $CF_ID"
+
+      - name: Invalidate CloudFront cache
+        if: steps.cf-dist.outputs.cf_id != ''
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.cf-dist.outputs.cf_id }} \
+            --paths "/*"
+          
+          echo "✅ CloudFront cache invalidated"
+
+      - name: Deployment summary
+        run: |
+          echo "## 🎨 Web Client Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 Bucket**: ${{ env.WEB_CLIENT_BUCKET }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **CloudFront ID**: ${{ steps.cf-dist.outputs.cf_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **API Backend**: http://${{ steps.alb-dns.outputs.alb_dns }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Web client deployed successfully!" >> $GITHUB_STEP_SUMMARY
+
+  deploy-prompt-admin:
+    name: Deploy Prompt Admin UI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Prepare prompt admin UI
+        run: |
+          # Copy and rename for S3
+          cp agentic-system/prompt_admin_ui.html index.html
+          echo "✅ Prepared prompt admin UI"
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp index.html s3://${{ env.PROMPT_ADMIN_BUCKET }}/ \
+            --cache-control "public, max-age=300" \
+            --content-type "text/html"
+          
+          echo "✅ Uploaded prompt admin UI to S3"
+
+      - name: Get CloudFront distribution ID
+        id: cf-dist
+        run: |
+          CF_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?contains(Aliases.Items, '${{ env.PROMPT_ADMIN_BUCKET }}')].Id" \
+            --output text)
+          echo "cf_id=$CF_ID" >> $GITHUB_OUTPUT
+          echo "☁️ CloudFront ID: $CF_ID"
+
+      - name: Invalidate CloudFront cache
+        if: steps.cf-dist.outputs.cf_id != ''
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.cf-dist.outputs.cf_id }} \
+            --paths "/*"
+          
+          echo "✅ CloudFront cache invalidated"
+
+      - name: Deployment summary
+        run: |
+          echo "## 🔧 Prompt Admin UI Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 Bucket**: ${{ env.PROMPT_ADMIN_BUCKET }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **CloudFront ID**: ${{ steps.cf-dist.outputs.cf_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Prompt admin UI deployed successfully!" >> $GITHUB_STEP_SUMMARY
+
