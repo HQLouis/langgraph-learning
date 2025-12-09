@@ -18,6 +18,7 @@
 # 10-cloudfront.tf       - CloudFront distributions
 # 11-route53-acm.tf      - Route53 records and ACM certificates
 # 12-cloudwatch.tf       - CloudWatch logs and monitoring
+# 13-s3-prompt-repository.tf - S3 bucket for AI worker prompts
 # ecs.tf                 - ECS service and task definitions
 # variables.tf           - Input variables
 # outputs.tf             - Output values

@@ -19,7 +19,7 @@ variable "project_name" {
 variable "s3_prompts_bucket" {
   type        = string
   description = "Name of the S3 bucket to store prompts"
-  default     = "conversational-ai-prompts-bucket"
+  default     = "prompt-repository"
 }
 
 variable "api_subdomain" {

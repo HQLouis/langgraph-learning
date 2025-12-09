@@ -48,6 +48,9 @@ The Terraform configuration has been organized into logical files for better mai
 ### Monitoring
 - `12-cloudwatch.tf` - CloudWatch log groups
 
+### Storage
+- `13-s3-prompt-repository.tf` - S3 bucket for AI worker prompts
+
 ## Why This Structure?
 
 The previous monolithic `main.tf` (700+ lines) has been split into logical files:

@@ -152,3 +152,22 @@ output "next_steps" {
   EOT
 }
 
+# ============================================================================
+# Prompt Repository Outputs
+# ============================================================================
+output "prompt_repository_bucket" {
+  description = "S3 bucket name for prompt repository"
+  value       = aws_s3_bucket.prompt_repository.id
+}
+output "prompt_repository_arn" {
+  description = "ARN of the prompt repository bucket"
+  value       = aws_s3_bucket.prompt_repository.arn
+}
+output "prompt_repository_url" {
+  description = "URL for accessing prompts in the repository"
+  value       = "https://${aws_s3_bucket.prompt_repository.bucket_regional_domain_name}"
+}
+output "prompt_repository_s3_url" {
+  description = "S3 URL for prompt repository (for ECS tasks)"
+  value       = "s3://${aws_s3_bucket.prompt_repository.id}"
+}
