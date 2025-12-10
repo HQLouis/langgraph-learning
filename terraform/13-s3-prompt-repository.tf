@@ -139,7 +139,7 @@ resource "aws_s3_object" "prompt_files" {
 
   bucket       = aws_s3_bucket.prompt_repository.id
   key          = "prompts/${each.value}.txt"
-  content      = ""  # Empty file
+  content      = "" # Empty file
   content_type = "text/plain"
 
   lifecycle {
@@ -150,6 +150,3 @@ resource "aws_s3_object" "prompt_files" {
     ]
   }
 }
-
-
-
