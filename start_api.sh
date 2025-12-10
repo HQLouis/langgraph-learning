@@ -20,5 +20,6 @@ echo "Press Ctrl+C to stop the server"
 echo ""
 
 cd "$(dirname "$0")"
+source .venv/bin/activate
 python -m backend.main
 

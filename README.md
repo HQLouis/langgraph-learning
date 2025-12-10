@@ -4,6 +4,49 @@
 
 This repository contains the Lingolino agentic learning system with a FastAPI backend for managing conversational interactions.
 
+---
+
+## ☁️ AWS Deployment - READY TO DEPLOY!
+
+**Deploy to AWS Fargate with S3 and CloudFront in 40 minutes!**
+
+### 🚀 Quick Start
+```bash
+# 1. Install tools
+brew install terraform awscli
+
+# 2. Configure AWS
+aws configure
+
+# 3. Deploy infrastructure
+./deploy.sh deploy
+
+# 4. Create secrets & configure GitHub
+# (Follow the outputs)
+
+# 5. Push to deploy
+git push origin main
+```
+
+### 📚 Documentation
+- **[QUICKSTART.md](QUICKSTART.md)** - 40-minute deployment guide
+- **[CHECKLIST.md](CHECKLIST.md)** - Step-by-step checklist
+- **[DOC_INDEX.md](DOC_INDEX.md)** - All documentation
+- **[AWS_CREDENTIALS.md](AWS_CREDENTIALS.md)** - AWS setup
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete guide
+
+### 💰 Cost
+~$56/month for dev environment (5 concurrent users)
+
+### ✨ Features
+✅ Infrastructure as Code (Terraform)  
+✅ Automated CI/CD (GitHub Actions)  
+✅ Auto-scaling ECS Fargate  
+✅ S3 + CloudFront for frontends  
+✅ Zero-downtime deployments  
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -189,6 +232,65 @@ Configure allowed origins for production in `.env`:
 ```env
 CORS_ORIGINS=["https://your-frontend.com"]
 ```
+
+## ☁️ AWS Deployment
+
+Deploy to AWS Fargate with S3 and CloudFront:
+
+### Quick Deploy
+
+```bash
+# 1. Deploy infrastructure
+cd terraform
+terraform init
+terraform apply
+
+# 2. Create secrets
+aws secretsmanager create-secret \
+  --name lingolino/google-api-key \
+  --secret-string "YOUR_KEY" \
+  --region eu-central-1
+
+# 3. Configure GitHub secrets and push
+git push origin main
+```
+
+**📖 Full Guides**:
+- **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Quick reference
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide
+- **[terraform/README.md](terraform/README.md)** - Infrastructure details
+
+### Test Docker Locally
+
+```bash
+# Build and run container
+./test_docker.sh start
+
+# View logs
+./test_docker.sh logs
+
+# Stop container
+./test_docker.sh stop
+```
+
+### Architecture
+
+- **Backend API**: AWS Fargate (ECS) with Auto-scaling
+- **Load Balancer**: Application Load Balancer
+- **Frontend**: S3 + CloudFront CDN
+- **Images**: Elastic Container Registry (ECR)
+- **Secrets**: AWS Secrets Manager
+- **CI/CD**: GitHub Actions
+
+### Environments
+
+- **Dev**: `terraform apply` (default)
+- **Custom Domain**: Configure in `terraform/variables.tf`
+- **Monitoring**: CloudWatch Logs & Metrics
+
+### Cost
+
+Estimated ~$56/month for dev environment (0.5 vCPU, 1GB RAM, suitable for 5 concurrent users)
 
 ## 📦 Dependencies
 

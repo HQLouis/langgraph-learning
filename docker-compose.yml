@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # Lingolino API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lingolino-api
+    ports:
+      - "8000:8000"
+    environment:
+      # These will be loaded from .env file
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY:-}
+      - LANGSMITH_TRACING=${LANGSMITH_TRACING:-false}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-prompt-repository}
+      - AWS_REGION=${AWS_REGION:-eu-central-1}
+      - USE_S3_PROMPTS=${USE_S3_PROMPTS:-false}
+      - DEBUG=${DEBUG:-false}
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - lingolino-network
+
+networks:
+  lingolino-network:
+    driver: bridge
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Testing
+functional-testing/
+tests/
+*.test.py
+test_*.py
+
+# Examples
+examples/
+langgraph_tutorial/
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# CI/CD
+.github/
+
+# Deployment
+docker-compose.yml
+start_api.sh
+
+# Logs
+*.log
+logs/
+
