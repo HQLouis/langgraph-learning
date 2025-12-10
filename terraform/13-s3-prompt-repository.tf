@@ -134,7 +134,8 @@ resource "aws_s3_object" "prompt_files" {
     "speech_grammar_worker",
     "speech_interaction_worker",
     "speech_comprehension_worker",
-    "boredom_worker"
+    "boredom_worker",
+    "master"
   ])
 
   bucket       = aws_s3_bucket.prompt_repository.id

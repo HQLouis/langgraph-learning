@@ -7,7 +7,7 @@ from states import State, BackgroundState
 from data_loaders import get_game_by_id, get_child_profile
 from prompts import getSpeechVocabularyWorker_prompt, \
     getSpeechGrammarWorker_prompt, getSpeechInteractionWorker_prompt, getSpeechComprehensionWorker_prompt, \
-    getBoredomWorker_prompt, master_prompt
+    getBoredomWorker_prompt, getMasterPrompt
 from typing import Any
 
 # Global reference to background_graph (will be set after import)
@@ -31,7 +31,7 @@ def masterChatbot(state: State, llm):
     """
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
-    {master_prompt}
+    {getMasterPrompt()}
     
     Book story: {state.get('game_description', '')}
     Vocabulary Analysis: {state.get('vocabulary_analysis', '')}

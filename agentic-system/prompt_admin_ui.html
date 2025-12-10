@@ -303,6 +303,9 @@
                     <li class="prompt-item" onclick="loadPrompt('boredom_worker')">
                         ⚡ Boredom Worker
                     </li>
+                    <li class="prompt-item" onclick="loadPrompt('master')">
+                        🤖 Master
+                    </li>
                 </ul>
             </div>
 
@@ -312,7 +315,6 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="loadFromS3()">🔄 Load from S3</button>
                         <button class="btn btn-primary" onclick="saveToS3()">☁️ Save to S3</button>
-                        <button class="btn btn-success" onclick="testPrompt()">🧪 Test</button>
                     </div>
                 </div>
 
@@ -346,7 +348,7 @@
             'speech_interaction_worker': 'Interaction Worker',
             'speech_comprehension_worker': 'Comprehension Worker',
             'boredom_worker': 'Boredom Worker',
-            'master_prompt': 'Master Prompt'
+            'master': 'Master'
         };
 
         // Load config on initialization
@@ -444,23 +446,6 @@
 
             // Load from S3
             loadFromS3();
-        }
-
-        // Test prompt
-        function testPrompt() {
-            const content = document.getElementById('promptEditor').value;
-
-            if (!content.trim()) {
-                showStatus('Prompt is empty!', 'error');
-                return;
-            }
-
-            // Basic validation
-            if (content.includes('Rolle:') && content.includes('Instruktion:')) {
-                showStatus('✅ Prompt structure looks good! Contains required sections.', 'success');
-            } else {
-                showStatus('⚠️ Warning: Prompt may be missing required sections (Rolle, Instruktion)', 'error');
-            }
         }
 
         // Show status message

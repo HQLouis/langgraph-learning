@@ -238,7 +238,7 @@ _repository.register_fallback('speech_grammar_worker', lambda: speechGrammarWork
 _repository.register_fallback('speech_interaction_worker', lambda: speechInteractionWorker_prompt)
 _repository.register_fallback('speech_comprehension_worker', lambda: speechComprehensionWorker_prompt)
 _repository.register_fallback('boredom_worker', lambda: boredomWorker_prompt)
-_repository.register_fallback('master_worker', lambda: master_prompt)
+_repository.register_fallback('master', lambda: master_prompt)
 
 
 # ============================================================================
@@ -302,4 +302,4 @@ def getMasterPrompt() -> str:
 
     :return: Prompt content
     """
-    return _repository.get_prompt('master_worker')
+    return _repository.get_prompt('master')
