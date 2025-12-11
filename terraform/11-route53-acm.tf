@@ -45,7 +45,7 @@ resource "aws_acm_certificate_validation" "lingolino" {
 
 resource "aws_route53_record" "web_client_alias" {
   zone_id = data.aws_route53_zone.lingolino.zone_id
-  name    = "text-chat-client.lingolino.io"
+  name    = "https://${var.web_client_subdomain}.${var.domain_name}"
   type    = "A"
 
   alias {
@@ -57,7 +57,7 @@ resource "aws_route53_record" "web_client_alias" {
 
 resource "aws_route53_record" "prompt_admin_alias" {
   zone_id = data.aws_route53_zone.lingolino.zone_id
-  name    = "prompt-admin.lingolino.io"
+  name    = "https://${var.prompt_admin_subdomain}.${var.domain_name}"
   type    = "A"
 
   alias {

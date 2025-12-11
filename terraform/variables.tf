@@ -31,13 +31,13 @@ variable "api_subdomain" {
 variable "prompt_admin_subdomain" {
   type        = string
   description = "Subdomain for the Prompt Admin UI"
-  default     = "admin"
+  default     = "prompt-admin"
 }
 
 variable "web_client_subdomain" {
   type        = string
   description = "Subdomain for the Web Client UI"
-  default     = "app"
+  default     = "text-chat-client"
 }
 
 variable "domain_name" {
