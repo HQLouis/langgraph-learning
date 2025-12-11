@@ -1,9 +1,12 @@
 """
 Configuration settings for the Lingolino API.
 """
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from pathlib import Path
+from typing import Union
+import json
 
 
 class Settings(BaseSettings):
@@ -15,10 +18,28 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # CORS Settings
-    cors_origins: list[str] = ["*"]  # Configure for production
+    cors_origins: list[str] = ["*"]
     cors_credentials: bool = True
     cors_methods: list[str] = ["*"]
     cors_headers: list[str] = ["*"]
+
+    @field_validator('cors_origins', mode='before')
+    @classmethod
+    def parse_cors_origins(cls, v: Union[str, list]) -> list[str]:
+        """Parse CORS origins from JSON string, comma-separated string, or list."""
+        if isinstance(v, str):
+            # Try parsing as JSON first
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return parsed
+            except (json.JSONDecodeError, ValueError):
+                pass
+
+            # Fallback to comma-separated
+            return [origin.strip() for origin in v.split(',') if origin.strip()]
+
+        return v if isinstance(v, list) else [v]
 
     # Rate Limiting
     rate_limit_per_minute: int = 60
@@ -33,13 +54,17 @@ class Settings(BaseSettings):
     aws_region: str = "eu-central-1"
 
     # Prompt Configuration
-    use_s3_prompts: bool = False  # Default to False for production safety
-    prompts_cache_ttl: int = 300  # Cache TTL in seconds (5 minutes for dev)
+    use_s3_prompts: bool = False
+    prompts_cache_ttl: int = 60
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).parent.parent.parent / ".env"),
         env_file_encoding="utf-8",
-        extra="ignore"  # Ignore extra fields from .env (like GOOGLE_API_KEY, LANGSMITH_*, etc.)
+        extra="ignore",
+        # Disable automatic JSON parsing for list/dict fields
+        json_schema_extra={
+            "env_parse_none_str": None
+        }
     )
 
 
