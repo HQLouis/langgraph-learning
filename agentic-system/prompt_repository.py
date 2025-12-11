@@ -86,7 +86,7 @@ class PromptRepository:
         'speech_interaction_worker': 'speech_interaction_worker.txt',
         'speech_comprehension_worker': 'speech_comprehension_worker.txt',
         'boredom_worker': 'boredom_worker.txt',
-        'master_prompt': 'master_prompt.txt',
+        'master': 'master.txt',
     }
 
     def __new__(cls):
