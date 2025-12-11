@@ -16,8 +16,8 @@ on:
 env:
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: conversational-ai-api
-  ECS_CLUSTER: conversation-ai-cluster-dev
-  ECS_SERVICE: conversation-ai-api-service
+  ECS_CLUSTER: conversational-ai-cluster-dev
+  ECS_SERVICE: conversational-ai-api-service
   CONTAINER_NAME: conversational-ai-api
 
 jobs:
