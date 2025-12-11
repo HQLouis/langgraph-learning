@@ -35,8 +35,8 @@ resource "aws_s3_bucket_policy" "web_client" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "CloudFrontAccess"
-        Effect    = "Allow"
+        Sid    = "CloudFrontAccess"
+        Effect = "Allow"
         Principal = {
           AWS = aws_cloudfront_origin_access_identity.web_client.iam_arn
         }
@@ -85,8 +85,8 @@ resource "aws_s3_bucket_policy" "prompt_admin" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "CloudFrontAccess"
-        Effect    = "Allow"
+        Sid    = "CloudFrontAccess"
+        Effect = "Allow"
         Principal = {
           AWS = aws_cloudfront_origin_access_identity.prompt_admin.iam_arn
         }
