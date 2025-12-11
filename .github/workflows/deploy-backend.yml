@@ -15,10 +15,10 @@ on:
 
 env:
   AWS_REGION: eu-central-1
-  ECR_REPOSITORY: lingolino-api
-  ECS_CLUSTER: lingolino-cluster-dev
-  ECS_SERVICE: lingolino-api-service
-  CONTAINER_NAME: lingolino-api
+  ECR_REPOSITORY: conversational-ai-api
+  ECS_CLUSTER: conversation-ai-cluster-dev
+  ECS_SERVICE: conversation-ai-api-service
+  CONTAINER_NAME: conversational-ai-api
 
 jobs:
   deploy:
