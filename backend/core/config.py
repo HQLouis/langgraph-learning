@@ -7,7 +7,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Union
 import json
-
+from typing import Annotated
+from pydantic import BeforeValidator
+import os
+print(f"DEBUG: CORS_ORIGINS raw value: {repr(os.environ.get('CORS_ORIGINS'))}")
 
 class Settings(BaseSettings):
     """Application settings."""
@@ -16,12 +19,6 @@ class Settings(BaseSettings):
     app_name: str = "Lingolino API"
     app_version: str = "0.1.0"
     debug: bool = False
-
-    # CORS Settings
-    cors_origins: list[str] = ["*"]
-    cors_credentials: bool = True
-    cors_methods: list[str] = ["*"]
-    cors_headers: list[str] = ["*"]
 
     @field_validator('cors_origins', mode='before')
     @classmethod
@@ -40,6 +37,13 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in v.split(',') if origin.strip()]
 
         return v if isinstance(v, list) else [v]
+
+    # CORS Settings
+    cors_origins: Annotated[list[str], BeforeValidator(parse_cors_origins)] = ["*"]
+    cors_credentials: bool = True
+    cors_methods: list[str] = ["*"]
+    cors_headers: list[str] = ["*"]
+
 
     # Rate Limiting
     rate_limit_per_minute: int = 60
