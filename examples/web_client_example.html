@@ -157,6 +157,9 @@
 
         async function startConversation() {
             try {
+                startBtn.disabled = true;
+                showStatus('⏳ Starting conversation...');
+
                 const response = await fetch(`${API_BASE}/conversations`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -171,19 +174,24 @@
                 const data = await response.json();
                 threadId = data.thread_id;
 
+                // Only enable UI after threadId is set
                 showStatus(`✅ Conversation started! ID: ${threadId.substring(0, 12)}...`);
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
-                startBtn.disabled = true;
                 messageInput.focus();
             } catch (error) {
                 showStatus(`❌ Error: ${error.message}`, true);
+                startBtn.disabled = false; // Re-enable start button on error
             }
         }
 
+
         async function sendMessage() {
             const message = messageInput.value.trim();
-            if (!message || !threadId) return;
+            if (!message || !threadId) {
+                if (!threadId) showStatus('❌ No active conversation', true);
+                return;
+            }
 
             // Disable input while sending
             messageInput.disabled = true;
