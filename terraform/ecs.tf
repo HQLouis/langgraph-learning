@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "api" {
         },
         {
           name  = "CORS_ORIGINS"
-          value = "https://${var.web_client_subdomain}.${var.domain_name},https://${var.prompt_admin_subdomain}.${var.domain_name}"
+          value = "http://localhost:63343, https://localhost:63343,https://${var.web_client_subdomain}.${var.domain_name},https://${var.prompt_admin_subdomain}.${var.domain_name}"
         }
       ]
 
@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "api" {
         interval    = 30
         timeout     = 5
         retries     = 3
-        startPeriod = 60
+        startPeriod = 120
       }
     }
   ])

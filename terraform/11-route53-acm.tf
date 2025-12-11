@@ -13,6 +13,23 @@ resource "aws_acm_certificate" "lingolino" {
 }
 
 # ============================================================================
+# ACM Certificate for ALB (in ALB region - eu-central-1)
+# ============================================================================
+
+resource "aws_acm_certificate" "api" {
+  domain_name       = "${var.api_subdomain}.${var.domain_name}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    Name = "API Certificate"
+  }
+}
+
+# ============================================================================
 # Route53 Records for Certificate Validation
 # ============================================================================
 
@@ -39,13 +56,35 @@ resource "aws_acm_certificate_validation" "lingolino" {
   validation_record_fqdns = [for record in aws_route53_record.lingolino_cert_validation : record.fqdn]
 }
 
+# Validation records for API certificate
+resource "aws_route53_record" "api_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.api.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
+
+  zone_id = data.aws_route53_zone.lingolino.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  ttl     = 60
+  records = [each.value.record]
+}
+
+resource "aws_acm_certificate_validation" "api" {
+  certificate_arn         = aws_acm_certificate.api.arn
+  validation_record_fqdns = [for record in aws_route53_record.api_cert_validation : record.fqdn]
+}
+
 # ============================================================================
 # Route53 A Records for CloudFront Distributions
 # ============================================================================
 
 resource "aws_route53_record" "web_client_alias" {
   zone_id = data.aws_route53_zone.lingolino.zone_id
-  name    = "text-chat-client.lingolino.io"
+  name    = "${var.web_client_subdomain}.${var.domain_name}"
   type    = "A"
 
   alias {
@@ -57,13 +96,29 @@ resource "aws_route53_record" "web_client_alias" {
 
 resource "aws_route53_record" "prompt_admin_alias" {
   zone_id = data.aws_route53_zone.lingolino.zone_id
-  name    = "prompt-admin.lingolino.io"
+  name    = "${var.prompt_admin_subdomain}.${var.domain_name}"
   type    = "A"
 
   alias {
     name                   = aws_cloudfront_distribution.prompt_admin.domain_name
     zone_id                = aws_cloudfront_distribution.prompt_admin.hosted_zone_id
     evaluate_target_health = false
+  }
+}
+
+# ============================================================================
+# Route53 A Record for API (ALB)
+# ============================================================================
+
+resource "aws_route53_record" "api_alias" {
+  zone_id = data.aws_route53_zone.lingolino.zone_id
+  name    = "${var.api_subdomain}.${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
   }
 }
 

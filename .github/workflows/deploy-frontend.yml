@@ -63,7 +63,7 @@ jobs:
         id: cf-dist
         run: |
           CF_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?contains(Aliases.Items, '${{ env.WEB_CLIENT_BUCKET }}')].Id" \
+            --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, '${{ env.WEB_CLIENT_BUCKET }}')].Id | [0]" \
             --output text)
           echo "cf_id=$CF_ID" >> $GITHUB_OUTPUT
           echo "☁️ CloudFront ID: $CF_ID"
@@ -121,7 +121,7 @@ jobs:
         id: cf-dist
         run: |
           CF_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?contains(Aliases.Items, '${{ env.PROMPT_ADMIN_BUCKET }}')].Id" \
+            --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, '${{ env.PROMPT_ADMIN_BUCKET }}')].Id | [0]" \
             --output text)
           echo "cf_id=$CF_ID" >> $GITHUB_OUTPUT
           echo "☁️ CloudFront ID: $CF_ID"

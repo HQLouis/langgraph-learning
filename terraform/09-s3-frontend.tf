@@ -35,11 +35,13 @@ resource "aws_s3_bucket_policy" "web_client" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.web_client.arn}/*"
+        Sid    = "CloudFrontAccess"
+        Effect = "Allow"
+        Principal = {
+          AWS = aws_cloudfront_origin_access_identity.web_client.iam_arn
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.web_client.arn}/*"
       }
     ]
   })
@@ -83,11 +85,13 @@ resource "aws_s3_bucket_policy" "prompt_admin" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.prompt_admin.arn}/*"
+        Sid    = "CloudFrontAccess"
+        Effect = "Allow"
+        Principal = {
+          AWS = aws_cloudfront_origin_access_identity.prompt_admin.iam_arn
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.prompt_admin.arn}/*"
       }
     ]
   })
