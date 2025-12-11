@@ -36,7 +36,7 @@
         },
         {
           "name": "CORS_ORIGINS",
-          "value": "[\"https://text-chat-client.lingolino.io\",\"https://prompt-admin.lingolino.io\"]"
+          "value": "https://text-chat-client.lingolino.io,https://prompt-admin.lingolino.io"
         }
       ],
       "secrets": [

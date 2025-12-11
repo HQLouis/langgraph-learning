@@ -5,12 +5,8 @@ from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from pathlib import Path
-from typing import Union
+from typing import Union, Any
 import json
-from typing import Annotated
-from pydantic import BeforeValidator
-import os
-print(f"DEBUG: CORS_ORIGINS raw value: {repr(os.environ.get('CORS_ORIGINS'))}")
 
 class Settings(BaseSettings):
     """Application settings."""
@@ -20,10 +16,16 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     debug: bool = False
 
-    @field_validator('cors_origins', mode='before')
+    # CORS Settings - using Any to prevent automatic JSON parsing
+    cors_origins: Any = ["*"]
+    cors_credentials: bool = True
+    cors_methods: Any = ["*"]
+    cors_headers: Any = ["*"]
+
+    @field_validator('cors_origins', 'cors_methods', 'cors_headers', mode='before')
     @classmethod
-    def parse_cors_origins(cls, v: Union[str, list]) -> list[str]:
-        """Parse CORS origins from JSON string, comma-separated string, or list."""
+    def parse_list_field(cls, v: Union[str, list]) -> list[str]:
+        """Parse list fields from JSON string, comma-separated string, or list."""
         if isinstance(v, str):
             # Try parsing as JSON first
             try:
@@ -38,11 +40,6 @@ class Settings(BaseSettings):
 
         return v if isinstance(v, list) else [v]
 
-    # CORS Settings
-    cors_origins: Annotated[list[str], BeforeValidator(parse_cors_origins)] = ["*"]
-    cors_credentials: bool = True
-    cors_methods: list[str] = ["*"]
-    cors_headers: list[str] = ["*"]
 
 
     # Rate Limiting

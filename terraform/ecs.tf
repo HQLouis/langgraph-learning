@@ -43,10 +43,7 @@ resource "aws_ecs_task_definition" "api" {
         },
         {
           name  = "CORS_ORIGINS"
-          value = jsonencode([
-            "https://${var.web_client_subdomain}.${var.domain_name}",
-            "https://${var.prompt_admin_subdomain}.${var.domain_name}"
-          ])
+          value = "https://${var.web_client_subdomain}.${var.domain_name},https://${var.prompt_admin_subdomain}.${var.domain_name}"
         }
       ]
 
