@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     llm_model: str = "google_genai:gemini-2.0-flash"
 
     # AWS S3 Settings for Dynamic Prompts (Public Bucket)
-    aws_s3_bucket_name: str = "prompt-repository/"
+    aws_s3_bucket_name: str = "conversational-ai-prompts-bucket/"
     aws_s3_prompts_prefix: str = "prompts/"
     aws_region: str = "eu-central-1"
 
