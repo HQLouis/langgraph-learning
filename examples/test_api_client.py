@@ -12,7 +12,7 @@ from typing import Optional
 class LingolinoClient:
     """Client for interacting with Lingolino API."""
 
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "conversational-ai-alb-dev-1521590126.eu-central-1.elb.amazonaws.com"):
         self.base_url = base_url
         self.session = requests.Session()
 

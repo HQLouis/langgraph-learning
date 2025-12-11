@@ -107,6 +107,16 @@ output "security_group_ecs_tasks" {
   value       = aws_security_group.ecs_tasks.id
 }
 
+output "api_url" {
+  description = "API URL with custom domain"
+  value       = "https://${var.api_subdomain}.${var.domain_name}"
+}
+
+output "api_certificate_arn" {
+  description = "ARN of the API ACM certificate"
+  value       = aws_acm_certificate.api.arn
+}
+
 # ============================================================================
 # Next Steps Output
 # ============================================================================
