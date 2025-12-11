@@ -73,5 +73,5 @@ variable "ecs_min_capacity" {
 variable "ecs_max_capacity" {
   type        = number
   description = "Maximum capacity for ECS service auto-scaling"
-  default     = 3
+  default     = 1
 }
