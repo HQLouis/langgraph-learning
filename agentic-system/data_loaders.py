@@ -6,14 +6,15 @@ from langgraph.prebuilt import InjectedState
 from states import State
 
 
-def get_game_by_id(state: Annotated[State, InjectedState]) -> str:
+def get_audio_book_by_id(state: Annotated[State, InjectedState]) -> str:
     """
-    Return the game description whose ID lives in state['game_id'].
+    Return the audio book whose ID lives in state['audio_book_id'].
 
-    :param state: state containing game_id
+    :param state: state containing audio_book_id
     :return: description of game
     """
-    game_id = state.get("game_id", "0")
+    # TODO LNG : Replace with real audio book content from s3 bucket instead.
+    audio_book_id = state.get("audio_book_id", "0")
     game = {
         "0": "Du bist Lino, ein Teddybär und Erklärbär. Ein Erklärbar ist ganz schlau und kann Kindern ganz viele Sachen erklären. Immer wenn ein Kind eine Frage hat, kann das Kind mit der Frage zu dir kommen. Dann schaut ihr gemeinsam, ob ihr die Frage beantworten könnt.",
         "game-abc": "Der keine Drache Kokosnuss und der große Zauberer\n“"
@@ -46,7 +47,7 @@ def get_game_by_id(state: Annotated[State, InjectedState]) -> str:
                     "Da deutet die Ziege auf die Flasche: »Wenn ihr ganz genau hineinschaut, dann könnt ihr das Flaschenland sehen.«\n"
                     "Kokosnuss und Matilda blicken durch das grüne Glas ins Innere der Flasche. Und tatsächlich, wenn sie ganz nah heranrücken, erkennen sie, was die Ziege meint: ein winziges Land in einer Flasche!\n"
                     "»Bitte«, sagt Kokosnuss, »erzähl uns dein Geheimnis!«"
-    }.get(game_id, "This is an open world game. You can do anything you want.")
+    }.get(audio_book_id, "This is an open world game. You can do anything you want.")
     return game
 
 
@@ -58,6 +59,7 @@ def get_child_profile(state: Annotated[State, InjectedState]) -> str:
     :return: profile of child
     """
     child_id = state.get("child_id", "1")
+    # TODO LNG : Replace with real child profile from s3 bucket instead.
     child_profile = {
         "1": "Das Kind ist 5 Jahre alt, mag Dinosaurier und Raketen. Es lernt gerade lesen und schreiben.",
         "2": "Das Kind ist 8 Jahre alt, mag Fussball und Videospiele. Es liest gerne Abenteuerbücher.",
