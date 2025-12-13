@@ -4,7 +4,7 @@ Node functions for the Lingolino graphs.
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
-from data_loaders import get_game_by_id, get_child_profile
+from data_loaders import get_audio_book_by_id, get_child_profile
 from prompts import (getSpeechGrammarWorker_prompt, \
     getSpeechComprehensionWorker_prompt, getSprachhandlungAnalyseWorker_prompt, getSpeechVocabularyWorker_prompt,
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
@@ -87,9 +87,8 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -112,9 +111,8 @@ def speechComprehensionWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -137,9 +135,8 @@ def sprachhandlungsAnalyseWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -163,9 +160,8 @@ def speechVocabularyWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -189,9 +185,8 @@ def boredomWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -215,9 +210,8 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -240,15 +234,13 @@ def aufgabenWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"aufgaben": response.content})
-# TODO update all the states in the command
 
 
 def satzbauAnalyseWorker(state: BackgroundState, config, llm):
@@ -267,9 +259,8 @@ def satzbauAnalyseWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -291,10 +282,9 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     conversation_summary = "\n".join([
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
-    child_profile = state.get('child_profile', '')
-    game_description = state.get('game_description', '')
+    satzbau_analyse = state.get('satzbau_analysis', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile} Game description: {game_description}"
+        content=f"Satzbau analyse: {satzbau_analyse}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -303,32 +293,32 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
 
 def initialStateLoader(state: State) -> dict:
     """
-    Load initial state values such as game description and child profile based on IDs in the state.
+    Load initial state values such as audio book and child profile based on IDs in the state.
 
     :param state: current state
-    :return: updated state with game_description and child_profile
+    :return: updated state with audio_book and child_profile
     """
-    game_description = get_game_by_id(state)
+    audio_book = get_audio_book_by_id(state)
     child_profile = get_child_profile(state)
     return Command(update={
-        "game_description": game_description,
+        "audio_book": audio_book,
         "child_profile": child_profile
     })
 
 
 def immediate_graph_needs_initial_state(state: State):
     """Check if immediate graph needs to load initial state."""
-    if not (state.get("game_description") and state.get("child_profile")):
+    if not (state.get("audio_book") and state.get("child_profile")):
         return "initialStateLoader"
     return "load_analysis"
 
 
 def background_graph_needs_initial_state(state: State):
     """Check if background graph needs to load initial state."""
-    if not (state.get("game_description") and state.get("child_profile")):
+    if not (state.get("audio_book") and state.get("child_profile")):
         return "initialStateLoader"
-    return ["speechVocabularyWorker", "speechGrammarWorker", "speechInteractionWorker", "speechComprehensionWorker",
-            "boredomWorker"]
+    return ["speechGrammarWorker", "speechComprehensionWorker", "sprachhandlungsAnalyseWorker", "speechVocabularyWorker",
+            "boredomWorker", "satzbauAnalyseWorker"]
 
 
 def load_analysis(state: State, config, background_graph_instance) -> dict:
