@@ -7,14 +7,14 @@ from local_fallback_prompts import (
     audio_book,
     child_profile,
     speechGrammarWorker_prompt,
-    speech_comprehension_worker,
-    sprachhandlung_analyse_worker,
+    speech_comprehension_worker_prompt,
+    sprachhandlung_analyse_worker_prompt,
     speechVocabularyWorker_prompt,
     boredomWorker_prompt,
-    foerderfokus_worker,
-    aufgaben_worker,
-    satzbau_analyse_worker,
-    satzbau_begrenzungs_worker,
+    foerderfokusWorker_prompt,
+    aufgabenWorker_prompt,
+    satzbau_analyse_worker_prompt,
+    satzbau_begrenzungs_worker_prompt,
     master_prompt
 )
 
@@ -31,14 +31,14 @@ _repository = get_prompt_repository()
 _repository.register_fallback('audio_book', lambda: audio_book)
 _repository.register_fallback('child_profile', lambda: child_profile)
 _repository.register_fallback('speech_grammar_worker', lambda: speechGrammarWorker_prompt)
-_repository.register_fallback('speech_comprehension_worker', lambda: speech_comprehension_worker)
-_repository.register_fallback('sprachhandlung_analyse_worker', lambda: sprachhandlung_analyse_worker)
+_repository.register_fallback('speech_comprehension_worker', lambda: speech_comprehension_worker_prompt)
+_repository.register_fallback('sprachhandlung_analyse_worker', lambda: sprachhandlung_analyse_worker_prompt)
 _repository.register_fallback('speech_vocabulary_worker', lambda: speechVocabularyWorker_prompt)
 _repository.register_fallback('boredom_worker', lambda: boredomWorker_prompt)
-_repository.register_fallback('foerderfokus_worker', lambda: foerderfokus_worker)
-_repository.register_fallback('aufgaben_worker', lambda: aufgaben_worker)
-_repository.register_fallback('satzbau_analyse_worker', lambda: satzbau_analyse_worker)
-_repository.register_fallback('satzbau_begrenzungs_worker', lambda: satzbau_begrenzungs_worker)
+_repository.register_fallback('foerderfokus_worker', lambda: foerderfokusWorker_prompt)
+_repository.register_fallback('aufgaben_worker', lambda: aufgabenWorker_prompt)
+_repository.register_fallback('satzbau_analyse_worker', lambda: satzbau_analyse_worker_prompt)
+_repository.register_fallback('satzbau_begrenzungs_worker', lambda: satzbau_begrenzungs_worker_prompt)
 _repository.register_fallback('master', lambda: master_prompt)
 
 
