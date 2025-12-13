@@ -81,11 +81,15 @@ class PromptRepository:
 
     # Prompt file names mapping
     PROMPT_FILES = {
-        'speech_vocabulary_worker': 'speech_vocabulary_worker.txt',
         'speech_grammar_worker': 'speech_grammar_worker.txt',
-        'speech_interaction_worker': 'speech_interaction_worker.txt',
         'speech_comprehension_worker': 'speech_comprehension_worker.txt',
+        'sprachhandlung_analyse_worker': 'sprachhandlung_analyse_worker.txt',
+        'speech_vocabulary_worker': 'speech_vocabulary_worker.txt',
         'boredom_worker': 'boredom_worker.txt',
+        'foerderfokus_worker': 'foerderfokus_worker.txt',
+        'aufgaben_worker': 'aufgaben_worker.txt',
+        'satzbau_analyse_worker': 'satzbau_analyse_worker.txt',
+        'satzbau_begrenzungs_worker': 'satzbau_begrenzungs_worker.txt',
         'master': 'master.txt',
     }
 

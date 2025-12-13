@@ -130,11 +130,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "prompt_repository" {
 
 resource "aws_s3_object" "prompt_files" {
   for_each = toset([
-    "speech_vocabulary_worker",
+    "audio_book",
+    "child_profile",
     "speech_grammar_worker",
-    "speech_interaction_worker",
     "speech_comprehension_worker",
+    "sprachhandlung_analyse_worker",
+    "speech_vocabulary_worker",
     "boredom_worker",
+    "foerderfokus_worker",
+    "aufgaben_worker",
+    "satzbau_analyse_worker",
+    "satzbau_begrenzungs_worker",
     "master"
   ])
 
