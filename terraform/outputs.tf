@@ -134,10 +134,16 @@ output "next_steps" {
        - Point ${var.prompt_admin_subdomain}.${var.domain_name} to ${aws_cloudfront_distribution.prompt_admin.domain_name}
        - Point ${var.api_subdomain}.${var.domain_name} to ${aws_lb.main.dns_name}
 
-    2. Create Secrets in AWS Secrets Manager:
+    2a. Create Secrets in AWS Secrets Manager:
        aws secretsmanager create-secret \
          --name lingolino/google-api-key \
          --secret-string "YOUR_GOOGLE_API_KEY" \
+         --region ${var.aws_region}
+
+    2b. Create Secrets in AWS Secrets Manager:
+       aws secretsmanager create-secret \
+         --name lingolino/langsmith-api-key \
+         --secret-string "YOUR_LANGSMITH_API_KEY" \
          --region ${var.aws_region}
 
     3. Update GitHub Secrets:

@@ -44,6 +44,18 @@ resource "aws_ecs_task_definition" "api" {
         {
           name  = "CORS_ORIGINS"
           value = "http://localhost:63343, https://localhost:63343,https://${var.web_client_subdomain}.${var.domain_name},https://${var.prompt_admin_subdomain}.${var.domain_name}"
+        },
+        {
+          name  = "LANGSMITH_TRACING"
+          value = "true"
+        },
+        {
+          name  = "LANGSMITH_ENDPOINT"
+          value = "https://api.smith.langchain.com"
+        },
+        {
+          name  = "LANGSMITH_PROJECT"
+          value = "web-hosted-conversational-ai"
         }
       ]
 
@@ -51,6 +63,10 @@ resource "aws_ecs_task_definition" "api" {
         {
           name      = "GOOGLE_API_KEY"
           valueFrom = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:lingolino/google-api-key"
+        },
+        {
+          name      = "LANGSMITH_API_KEY"
+          valueFrom = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:lingolino/langsmith-api-key"
         }
       ]
 

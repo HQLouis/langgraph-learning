@@ -56,7 +56,7 @@ class Settings(BaseSettings):
 
     # Prompt Configuration
     use_s3_prompts: bool = False
-    prompts_cache_ttl: int = 60
+    prompts_cache_ttl: int = 15
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).parent.parent.parent / ".env"),

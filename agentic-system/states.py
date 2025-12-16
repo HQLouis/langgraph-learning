@@ -12,28 +12,37 @@ class State(TypedDict):
     # in the annotation defines how this state key should be updated
     # (in this case, it appends messages to the list, rather than overwriting them)
     child_id: str
-    game_id: str
-    messages: Annotated[list, add_messages]
-    game_description: str
+    audio_book_id: str
     child_profile: str
-    vocabulary_analysis: str
+    audio_book: str
+
+    messages: Annotated[list, add_messages]
+
     grammar_analysis: str
-    interaction_analysis: str
-    comprehension_analysis: str
+    speech_comprehension_analysis: str
+    sprachhandlung_analysis: str
+    vocabulary_analysis: str
     boredom_analysis: str
+    foerderfokus: str
+    aufgaben: str
 
 
 class BackgroundState(TypedDict):
     """State for the background analysis graph."""
     child_id: str
-    game_id: str
+    audio_book_id: str
+    child_profile: str
+    audio_book: str
+
     # TODO LNG: for the inputs below we will test if keeping the list of inputs is useful later.
     # For now go with the simple and promising variant of only having the most recent input in the state.
-    game_description: str
-    child_profile: str
-    vocabulary_analysis: str
     grammar_analysis: str
-    interaction_analysis: str
-    comprehension_analysis: str
+    speech_comprehension_analysis: str
+    sprachhandlung_analysis: str
+    vocabulary_analysis: str
     boredom_analysis: str
+    foerderfokus: str
+    aufgaben: str
+    satzbau_analysis: str
+    satzbaubegrenzung: str
 
