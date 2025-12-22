@@ -1,0 +1,37 @@
+# E2E Testing Framework Requirements
+# For Lingolino Agentic System Testing
+
+# Core testing framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-html>=4.1.0
+pytest-xdist>=3.5.0  # For parallel test execution
+
+# LangChain and LLM dependencies (same as main project)
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-google-genai>=0.0.6
+google-generativeai>=0.3.0
+
+# Data handling
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# Logging and reporting
+loguru>=0.7.0
+rich>=13.7.0  # Beautiful console output
+
+# Utilities
+pyyaml>=6.0.0
+jinja2>=3.1.0  # For report templates
+
+# Cost tracking (optional)
+tiktoken>=0.5.0  # Token counting
+
+# Development
+black>=23.0.0
+ruff>=0.1.0
+mypy>=1.7.0
+
+
