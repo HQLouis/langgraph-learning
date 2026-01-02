@@ -12,6 +12,7 @@ from immediate_graph import create_immediate_response_graph
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph
 from immediate_graph import set_config
+from moderation_ai_graph import create_moderation_graph
 
 import threading
 
@@ -28,6 +29,7 @@ def start_chat():
 
     # Create the graphs
     background_graph = create_background_analysis_graph(llm, memory)
+    moderation_graph = create_moderation_graph(llm, memory)
     set_background_graph(background_graph)
     immediate_graph = create_immediate_response_graph(llm, memory, background_graph)
 
@@ -103,6 +105,30 @@ def start_chat():
                                 seen_message_ids.add(msg_id)
 
             print()  # New line after complete message
+
+            # Trigger moderation check asynchronously (non-blocking)
+            def run_moderation_check():
+                mod_thread_id = thread_id + "_moderation"
+                mod_config = {
+                    "configurable": {"thread_id": mod_thread_id}
+                }
+                try:
+                    # Invoke the moderation graph
+                    result = moderation_graph.invoke(
+                        {"child_id": child_id, "audio_book_id": game_id},
+                        mod_config
+                    )
+                    # Check if content is non-compliant
+                    if not result.get("is_compliant", True):
+                        violation = result.get("violation_type", "unknown")
+                        print(f"\n⚠️  [Moderation Alert: {violation} detected]", flush=True)
+                        #TODO LNG: Here we will also implement further actions, e.g., logging, notifying admin, etc.
+                except Exception:
+                    pass  # Suppress moderation errors for better UX
+
+            # Start moderation check in separate thread
+            moderation_thread = threading.Thread(target=run_moderation_check, daemon=True)
+            moderation_thread.start()
 
             # Trigger background analysis asynchronously (non-blocking)
             # Use threading to truly run in background without waiting

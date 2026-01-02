@@ -3,12 +3,12 @@ Node functions for the Lingolino graphs.
 """
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
-from states import State, BackgroundState
+from states import State, BackgroundState, ModerationState
 from data_loaders import get_audio_book_by_id, get_child_profile
 from prompts import (getSpeechGrammarWorker_prompt, \
     getSpeechComprehensionWorker_prompt, getSprachhandlungAnalyseWorker_prompt, getSpeechVocabularyWorker_prompt,
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
-                     getSatzbauBegrenzungsWorker_prompt, getMasterPrompt)
+                     getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getModerationWorker_prompt)
 from typing import Any
 
 # Global reference to background_graph (will be set after import)
@@ -341,3 +341,49 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
         "satzbaubegrenzung": snapshot.values.get("satzbaubegrenzung", ""),
     }
     return analyses
+
+
+def moderationWorker(state: ModerationState, config, llm):
+    """
+    Validates conversation content for compliance with system guidelines.
+    Detects inappropriate content such as violence, hate speech, etc.
+
+    :param state: Moderation state
+    :param config: Configuration with thread_id
+    :param llm: Language model instance
+    :return: Command with moderation results
+    """
+    system_message = SystemMessage(content=getModerationWorker_prompt())
+
+    # Get conversation history from the main graph
+    conversation_summary = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+    ])
+
+    moderation_message = HumanMessage(
+        content=f"Analyze this conversation for safety compliance:\n\n{conversation_summary}"
+    )
+
+    response = llm.invoke([system_message, moderation_message])
+
+    # Parse the response to extract compliance status and violation type
+    response_content = response.content.lower()
+    is_compliant = "yes" in response_content.split("\n")[0] if response_content else True
+
+    # Extract violation type from response
+    violation_type = "none"
+    if not is_compliant:
+        for vtype in ["violence", "inappropriate_content", "hate_speech", "self_harm",
+                      "bullying", "privacy_violation"]:
+            # TODO LNG: Make this an enum and also incorporate it into the local_fallback_prompts.py!
+            if vtype in response_content:
+                violation_type = vtype
+                break
+        if violation_type == "none":
+            violation_type = "other"
+
+    return Command(update={
+        "moderation_result": response.content,
+        "is_compliant": is_compliant,
+        "violation_type": violation_type
+    })

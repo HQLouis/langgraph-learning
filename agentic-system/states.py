@@ -46,3 +46,11 @@ class BackgroundState(TypedDict):
     satzbau_analysis: str
     satzbaubegrenzung: str
 
+
+class ModerationState(TypedDict):
+    """State for the moderation AI graph."""
+    child_id: str
+    audio_book_id: str
+    moderation_result: str
+    is_compliant: bool
+    violation_type: str
