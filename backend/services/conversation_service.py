@@ -19,6 +19,7 @@ sys.path.insert(0, str(agentic_path))
 
 from immediate_graph import create_immediate_response_graph, set_config
 from background_graph import create_background_analysis_graph
+from moderation_ai_graph import create_moderation_graph
 from nodes import set_background_graph
 
 
@@ -45,6 +46,7 @@ class ConversationService:
 
         # Create graphs
         self.background_graph = create_background_analysis_graph(self.llm, self.memory)
+        self.moderation_graph = create_moderation_graph(self.llm, self.memory)
         set_background_graph(self.background_graph)
         self.immediate_graph = create_immediate_response_graph(
             self.llm,
@@ -181,6 +183,9 @@ class ConversationService:
         # Trigger background analysis asynchronously
         self._run_background_analysis(thread_id, conversation.child_id, conversation.game_id)
 
+        # Trigger moderation check asynchronously
+        self._run_moderation_check(thread_id, conversation.child_id, conversation.game_id)
+
     @staticmethod
     def _format_chunk(chunk: str) -> str:
         """
@@ -262,6 +267,31 @@ class ConversationService:
         # Start background analysis in separate thread (fire-and-forget)
         analysis_thread = threading.Thread(target=run_analysis, daemon=True)
         analysis_thread.start()
+
+    def _run_moderation_check(self, thread_id: str, child_id: str, game_id: str):
+        """Run moderation check in a separate thread."""
+        def run_moderation():
+            mod_thread_id = thread_id + "_moderation"
+            print("running moderation check: ", mod_thread_id)
+            mod_config = {
+                "configurable": {"thread_id": mod_thread_id}
+            }
+            try:
+                result = self.moderation_graph.invoke(
+                    {"child_id": child_id, "game_id": game_id},
+                    mod_config
+                )
+                if not result.get("is_compliant", True):
+                    violation = result.get("violation_type", "unknown")
+                    print(f"\n⚠️  [Moderation Alert: {violation} detected]", flush=True)
+                    # TODO LNG: Here we will also implement further actions, e.g., logging, notifying admin, etc.
+            except Exception:
+                # Suppress moderation errors
+                pass
+
+        # Start moderation check in separate thread (fire-and-forget)
+        moderation_thread = threading.Thread(target=run_moderation, daemon=True)
+        moderation_thread.start()
 
     def get_conversation_history(self, thread_id: str) -> Optional[dict]:
         """
