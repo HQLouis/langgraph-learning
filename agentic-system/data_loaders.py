@@ -82,18 +82,21 @@ class DataRepository:
 
         try:
             import boto3
+            from botocore import UNSIGNED
+            from botocore.config import Config
 
             if not self._settings.aws_s3_bucket_name:
                 logger.warning("AWS_S3_BUCKET_NAME not configured, falling back to local data")
                 return None
 
-            # Use default credential chain (env vars, ~/.aws/credentials, IAM role)
+            # Create client with unsigned requests for public bucket access
             self._s3_client = boto3.client(
                 's3',
-                region_name=self._settings.aws_region
+                region_name=self._settings.aws_region,
+                config=Config(signature_version=UNSIGNED)
             )
 
-            logger.info(f"S3 client initialized for bucket: {self._settings.aws_s3_bucket_name}")
+            logger.info(f"S3 client initialized for public bucket: {self._settings.aws_s3_bucket_name}")
             return self._s3_client
 
         except Exception as e:
@@ -135,7 +138,7 @@ class DataRepository:
 
 
     def get_data(self, data_key: str, item_id: str, fallback: str) -> str:
-        cache_key = f"{data_key}_{item_id}"
+        cache_key = f"{data_key}"
 
         # Try cache first
         cached = self._cache.get(cache_key)
