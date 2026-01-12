@@ -47,7 +47,7 @@ def masterChatbot(state: State, llm):
 
     system_context += f"""
     
-    Book story: {state.get('audio_book', '')}
+    Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}
     Aufgaben für das Kind: {state.get('aufgaben', '')}
     Satzbaubegrenzungen: {state.get('satzbaubegrenzung', '')}
     """
