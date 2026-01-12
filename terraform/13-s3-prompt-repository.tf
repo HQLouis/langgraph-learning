@@ -141,7 +141,8 @@ resource "aws_s3_object" "prompt_files" {
     "aufgaben_worker",
     "satzbau_analyse_worker",
     "satzbau_begrenzungs_worker",
-    "master"
+    "master",
+    "master_first_message"
   ])
 
   bucket       = aws_s3_bucket.prompt_repository.id

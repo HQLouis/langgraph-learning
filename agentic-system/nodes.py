@@ -8,7 +8,7 @@ from data_loaders import get_audio_book_by_id, get_child_profile
 from prompts import (getSpeechGrammarWorker_prompt, \
     getSpeechComprehensionWorker_prompt, getSprachhandlungAnalyseWorker_prompt, getSpeechVocabularyWorker_prompt,
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
-                     getSatzbauBegrenzungsWorker_prompt, getMasterPrompt)
+                     getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
 
 # Global reference to background_graph (will be set after import)
@@ -30,9 +30,22 @@ def masterChatbot(state: State, llm):
     :param llm: Language model instance
     :return: Updated state with new message
     """
+    # Check if this is the first message (no AIMessage in state["messages"])
+    is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
+
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
     {getMasterPrompt()}
+    """
+
+    # Include the first message prompt only on the first interaction
+    if is_first_message:
+        system_context += f"""
+    
+    {getMasterFirstMessagePrompt()}
+    """
+
+    system_context += f"""
     
     Book story: {state.get('audio_book', '')}
     Aufgaben für das Kind: {state.get('aufgaben', '')}

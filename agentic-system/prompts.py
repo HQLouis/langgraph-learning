@@ -15,7 +15,8 @@ from local_fallback_prompts import (
     aufgabenWorker_prompt,
     satzbau_analyse_worker_prompt,
     satzbau_begrenzungs_worker_prompt,
-    master_prompt
+    master_prompt,
+    master_first_message_prompt
 )
 
 
@@ -40,6 +41,7 @@ _repository.register_fallback('aufgaben_worker', lambda: aufgabenWorker_prompt)
 _repository.register_fallback('satzbau_analyse_worker', lambda: satzbau_analyse_worker_prompt)
 _repository.register_fallback('satzbau_begrenzungs_worker', lambda: satzbau_begrenzungs_worker_prompt)
 _repository.register_fallback('master', lambda: master_prompt)
+_repository.register_fallback('master_first_message', lambda: master_first_message_prompt)
 
 
 # ============================================================================
@@ -154,3 +156,14 @@ def getMasterPrompt() -> str:
     :return: Prompt content
     """
     return _repository.get_prompt('master')
+
+
+def getMasterFirstMessagePrompt() -> str:
+    """
+    Get the Master First Message Prompt - used only on the first interaction.
+    Tries S3 first, falls back to local prompt if unavailable.
+
+    :return: Prompt content
+    """
+    return _repository.get_prompt('master_first_message')
+
