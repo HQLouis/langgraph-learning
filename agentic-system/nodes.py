@@ -10,6 +10,7 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
+from config.conversation_termination_policy import get_termination_prompt
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -33,9 +34,12 @@ def masterChatbot(state: State, llm):
     # Check if this is the first message (no AIMessage in state["messages"])
     is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
 
+    message_count = len(state["messages"]) // 2 # Assuming each interaction has a user and bot message
+
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
     {getMasterPrompt()}
+    {get_termination_prompt(message_count)}
     """
 
     # Include the first message prompt only on the first interaction
