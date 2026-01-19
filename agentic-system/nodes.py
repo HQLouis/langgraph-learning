@@ -10,7 +10,7 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
-from config.conversation_termination_policy import get_termination_prompt
+from config.conversation_termination_policy import get_termination_prompt, is_normal_phase
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -49,12 +49,13 @@ def masterChatbot(state: State, llm):
     {getMasterFirstMessagePrompt()}
     """
 
-    system_context += f"""
-    
-    Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}
-    Aufgaben für das Kind: {state.get('aufgaben', '')}
-    Satzbaubegrenzungen: {state.get('satzbaubegrenzung', '')}
-    """
+    if is_normal_phase(message_count):
+        system_context += f"""
+        
+        Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}
+        Aufgaben für das Kind: {state.get('aufgaben', '')}
+        Satzbaubegrenzungen: {state.get('satzbaubegrenzung', '')}
+        """
     system_message = SystemMessage(content=system_context)
     messages = [system_message] + state["messages"]
 

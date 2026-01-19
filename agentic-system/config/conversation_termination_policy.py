@@ -70,3 +70,29 @@ def get_termination_phase(message_count: int) -> str:
     else:
         return 'normal'
 
+def is_conversation_ended(message_count: int) -> bool:
+    """
+    Determine if the conversation should be ended based on message count.
+
+    :param message_count: Current number of messages in the conversation
+    :return: True if conversation should be ended, False otherwise
+    """
+    return message_count >= HARD_TERMINATION_THRESHOLD
+
+def is_soft_termination_phase(message_count: int) -> bool:
+    """
+    Determine if the conversation is in the soft termination phase.
+
+    :param message_count: Current number of messages in the conversation
+    :return: True if in soft termination phase, False otherwise
+    """
+    return SOFT_TERMINATION_THRESHOLD <= message_count < HARD_TERMINATION_THRESHOLD
+
+def is_normal_phase(message_count: int) -> bool:
+    """
+    Determine if the conversation is in the normal phase.
+
+    :param message_count: Current number of messages in the conversation
+    :return: True if in normal phase, False otherwise
+    """
+    return message_count < SOFT_TERMINATION_THRESHOLD
