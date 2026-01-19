@@ -6,8 +6,10 @@ from langgraph.types import Command
 from states import State, BackgroundState
 from data_loaders import get_audio_book_by_id, get_child_profile
 from prompts import (getSpeechGrammarWorker_prompt, \
-    getSpeechComprehensionWorker_prompt, getSprachhandlungAnalyseWorker_prompt, getSpeechVocabularyWorker_prompt,
-                     getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt, getSatzbauAnalyseWorker_prompt,
+                     getSpeechComprehensionWorker_prompt, getSprachhandlungAnalyseWorker_prompt,
+                     getSpeechVocabularyWorker_prompt,
+                     getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt,
+                     getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
 
@@ -84,6 +86,7 @@ def get_messages_history_from_immediate_graph_state(config) -> list:
     messages = snapshot.values.get("messages", [])
     return messages
 
+
 def speechGrammarWorker(state: BackgroundState, config, llm):
     """
     Analyzes the speech and grammar aspects of the conversation, based on that analysis creates possible task and interactions that teaches the child grammar playfully..
@@ -108,6 +111,7 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     # Store analysis separately from conversation
     return Command(update={"grammar_analysis": response.content})
 
+
 def speechComprehensionWorker(state: BackgroundState, config, llm):
     """
     Analyzes the comprehension aspects of the conversation and creates  impulses that support the child's understanding.
@@ -131,6 +135,7 @@ def speechComprehensionWorker(state: BackgroundState, config, llm):
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"speech_comprehension_analysis": response.content})
+
 
 def sprachhandlungsAnalyseWorker(state: BackgroundState, config, llm):
     """
@@ -206,6 +211,7 @@ def boredomWorker(state: BackgroundState, config, llm):
     # Store analysis separately from conversation
     return Command(update={"boredom_analysis": response.content})
 
+
 def foerderfokusWorker(state: BackgroundState, config, llm):
     """
     Analyzes the overall Förderfokus of the interaction to provide advice and suggestion for higher educational value of the total interaction.
@@ -223,13 +229,26 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
+    grammar_analysis = state.get('grammar_analysis', '')
+    speech_comprehension_analysis = state.get('speech_comprehension_analysis', '')
+    sprachhandlung_analysis = state.get('sprachhandlung_analysis', '')
+    vocabulary_analysis = state.get('vocabulary_analysis', '')
+    boredom_analysis = state.get('boredom_analysis', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+
+        content=f"Child profile:\n{child_profile}.\n\n"
+                f"Grammar analysis:\n{grammar_analysis}.\n\n"
+                f"Speech comprehension analysis:\n{speech_comprehension_analysis}.\n\n"
+                f"Sprachhandlung analysis:\n{sprachhandlung_analysis}.\n\n"
+                f"Vocabulary analysis:\n{vocabulary_analysis}.\n\n"
+                f"Boredom analysis:\n{boredom_analysis}.\n\n"
+                f"Conversation:\n{conversation_summary}."
     )
 
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"foerderfokus": response.content})
+
 
 def aufgabenWorker(state: BackgroundState, config, llm):
     """
@@ -247,8 +266,11 @@ def aufgabenWorker(state: BackgroundState, config, llm):
         f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
     ])
     child_profile = state.get('child_profile', '')
+    foerderfokus = state.get('foerderfokus', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Förderfokus analysis:\n{foerderfokus}\n\n"
+                f"Child profile:\n{child_profile}\n\n"
+                f" Conversation:\n{conversation_summary}. "
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -280,6 +302,7 @@ def satzbauAnalyseWorker(state: BackgroundState, config, llm):
     # Store analysis separately from conversation
     return Command(update={"satzbau_analysis": response.content})
 
+
 def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     """
     Uses the Satzbau-Analyse-Worker's results to create constraints for sentence structure in future interactions.
@@ -303,6 +326,7 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     response = llm.invoke([system_message, analysis_message])
     # Store analysis separately from conversation
     return Command(update={"satzbaubegrenzung": response.content})
+
 
 def initialStateLoader(state: State) -> dict:
     """
@@ -330,7 +354,8 @@ def background_graph_needs_initial_state(state: State):
     """Check if background graph needs to load initial state."""
     if not (state.get("audio_book") and state.get("child_profile")):
         return "initialStateLoader"
-    return ["speechGrammarWorker", "speechComprehensionWorker", "sprachhandlungsAnalyseWorker", "speechVocabularyWorker",
+    return ["speechGrammarWorker", "speechComprehensionWorker", "sprachhandlungsAnalyseWorker",
+            "speechVocabularyWorker",
             "boredomWorker", "satzbauAnalyseWorker"]
 
 
