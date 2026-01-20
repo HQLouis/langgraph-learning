@@ -12,7 +12,8 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
-from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase
+from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase, \
+    is_conversation_ended
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -40,7 +41,7 @@ def masterChatbot(state: State, llm):
 
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
-    {getMasterPrompt()}
+    {getMasterPrompt() if not is_conversation_ended(message_count) else ''}
     {get_termination_prompt(message_count)}
     """
 
@@ -50,10 +51,9 @@ def masterChatbot(state: State, llm):
     {getMasterFirstMessagePrompt()}
     """
 
-    if is_normal_phase(message_count) or is_soft_termination_phase(message_count):
-        system_context += f"""
-        Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}\n\n
-        """
+    system_context += f"""
+    Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}\n\n
+    """
     if is_normal_phase(message_count):
         system_context += f"""
         Aufgaben für das Kind: {state.get('aufgaben', '')}\n\n
