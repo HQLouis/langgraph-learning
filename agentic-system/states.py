@@ -25,6 +25,7 @@ class State(TypedDict):
     boredom_analysis: str
     foerderfokus: str
     aufgaben: str
+    satzbaubegrenzung: str
 
 
 class BackgroundState(TypedDict):

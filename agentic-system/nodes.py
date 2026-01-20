@@ -12,7 +12,7 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from typing import Any
-from config.conversation_termination_policy import get_termination_prompt, is_normal_phase
+from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -36,7 +36,7 @@ def masterChatbot(state: State, llm):
     # Check if this is the first message (no AIMessage in state["messages"])
     is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
 
-    message_count = len(state["messages"]) // 2 # Assuming each interaction has a user and bot message
+    message_count = len(state["messages"]) // 2  # Assuming each interaction has a user and bot message
 
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
@@ -47,15 +47,16 @@ def masterChatbot(state: State, llm):
     # Include the first message prompt only on the first interaction
     if is_first_message:
         system_context += f"""
-    
     {getMasterFirstMessagePrompt()}
     """
 
+    if is_normal_phase(message_count) or is_soft_termination_phase(message_count):
+        system_context += f"""
+        Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}\n\n
+        """
     if is_normal_phase(message_count):
         system_context += f"""
-        
-        Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}
-        Aufgaben für das Kind: {state.get('aufgaben', '')}
+        Aufgaben für das Kind: {state.get('aufgaben', '')}\n\n
         Satzbaubegrenzungen: {state.get('satzbaubegrenzung', '')}
         """
     system_message = SystemMessage(content=system_context)
@@ -325,10 +326,6 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     """
     system_message = SystemMessage(content=getSatzbauBegrenzungsWorker_prompt())
 
-    # Analyze the conversation without participating in it
-    conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
-    ])
     satzbau_analyse = state.get('satzbau_analysis', '')
     analysis_message = HumanMessage(
         content=f"Satzbauanalyse: {satzbau_analyse}"
