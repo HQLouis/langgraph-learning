@@ -104,7 +104,8 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}. "
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -129,7 +130,8 @@ def speechComprehensionWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}. "
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -154,7 +156,8 @@ def sprachhandlungsAnalyseWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -179,7 +182,8 @@ def speechVocabularyWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}."
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -204,7 +208,8 @@ def boredomWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -295,7 +300,8 @@ def satzbauAnalyseWorker(state: BackgroundState, config, llm):
     ])
     child_profile = state.get('child_profile', '')
     analysis_message = HumanMessage(
-        content=f"Analyze this conversation: {conversation_summary}. Child profile: {child_profile}"
+        content=f"Child profile: {child_profile}\n\n"
+                f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
@@ -320,7 +326,7 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     ])
     satzbau_analyse = state.get('satzbau_analysis', '')
     analysis_message = HumanMessage(
-        content=f"Satzbau analyse: {satzbau_analyse}"
+        content=f"Satzbauanalyse: {satzbau_analyse}"
     )
 
     response = llm.invoke([system_message, analysis_message])
