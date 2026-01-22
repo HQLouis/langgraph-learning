@@ -34,7 +34,6 @@ def masterChatbot(state: State, llm):
     :param llm: Language model instance
     :return: Updated state with new message
     """
-    # Check if this is the first message (no AIMessage in state["messages"])
     is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
 
     message_count = len(state["messages"]) // 2  # Assuming each interaction has a user and bot message
@@ -45,22 +44,34 @@ def masterChatbot(state: State, llm):
     {get_termination_prompt(message_count)}
     """
 
-    # Include the first message prompt only on the first interaction
     if is_first_message:
-        system_context += f"""
-    {getMasterFirstMessagePrompt()}
-    """
+        system_context += f"\n{getMasterFirstMessagePrompt()}"
 
     system_context += f"""
     Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}\n\n
     """
-    if is_normal_phase(message_count):
-        system_context += f"""
-        Aufgaben für das Kind: {state.get('aufgaben', '')}\n\n
-        Satzbaubegrenzungen: {state.get('satzbaubegrenzung', '')}
-        """
+
     system_message = SystemMessage(content=system_context)
-    messages = [system_message] + state["messages"]
+
+    # Build message list with meta-instruction injection
+    if is_normal_phase(message_count) and (state.get('aufgaben') or state.get('satzbaubegrenzung')):
+        # Create meta-instruction message
+        meta_instruction = HumanMessage(content=f"""
+[WICHTIGE ANWEISUNGEN FÜR DEINE NÄCHSTE ANTWORT]
+
+🎯 Aufgaben für das Kind:
+{state.get('aufgaben', 'Keine spezifischen Aufgaben.')}
+
+📏 Satzbaubegrenzungen (STRIKT EINHALTEN):
+{state.get('satzbaubegrenzung', 'Keine Begrenzungen.')}
+
+⚠️ Berücksichtige diese Vorgaben UNBEDINGT in deiner unmittelbaren Antwort!
+""")
+
+        # Insert meta-instruction right before the last user message
+        messages = [system_message] + state["messages"][:-1] + [meta_instruction, state["messages"][-1]]
+    else:
+        messages = [system_message] + state["messages"]
 
     # Stream the response chunk-by-chunk (no accumulation)
     # This allows format_response to process chunks incrementally
