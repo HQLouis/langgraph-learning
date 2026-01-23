@@ -41,7 +41,6 @@ def masterChatbot(state: State, llm):
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
     {getMasterPrompt() if not is_conversation_ended(message_count) else ''}
-    {get_termination_prompt(message_count)}
     """
 
     if is_first_message:
@@ -70,6 +69,14 @@ def masterChatbot(state: State, llm):
     messages = [system_message]
     if is_normal_phase(message_count) and (state.get('aufgaben') or state.get('satzbaubegrenzung')):
         messages.append(meta_system)
+    if not is_normal_phase(message_count):
+        termination_prompt = get_termination_prompt(message_count)
+        termination_system = SystemMessage(content=f"""
+        [GESPRÄCHSBEENDIGUNGSRICHTLINIEN — NICHT AN DAS KIND ADRESSIEREN]
+        
+        {termination_prompt}
+        """)
+        messages.append(termination_system)
 
     messages += state["messages"]
 
