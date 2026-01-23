@@ -53,25 +53,25 @@ def masterChatbot(state: State, llm):
 
     system_message = SystemMessage(content=system_context)
 
-    # Build message list with meta-instruction injection
+    meta_system = SystemMessage(content=f"""
+    [METAREGELN FÜR DIE NÄCHSTE ASSISTANT-ANTWORT — NICHT AN DAS KIND ADRESSIEREN]
+    
+    🎯 Aufgaben für das Kind:
+    {state.get('aufgaben', 'Keine spezifischen Aufgaben.')}
+    
+    📏 Satzbaubegrenzungen (STRIKT EINHALTEN):
+    {state.get('satzbaubegrenzung', 'Keine Begrenzungen.')}
+    
+    WICHTIG:
+    - Antworte auf die LETZTE KIND-NACHRICHT im Verlauf.
+    - Nutze die Regeln nur, um die Form deiner Antwort zu steuern.
+    """)
+
+    messages = [system_message]
     if is_normal_phase(message_count) and (state.get('aufgaben') or state.get('satzbaubegrenzung')):
-        # Create meta-instruction message
-        meta_instruction = HumanMessage(content=f"""
-[WICHTIGE ANWEISUNGEN FÜR DEINE NÄCHSTE ANTWORT]
+        messages.append(meta_system)
 
-🎯 Aufgaben für das Kind:
-{state.get('aufgaben', 'Keine spezifischen Aufgaben.')}
-
-📏 Satzbaubegrenzungen (STRIKT EINHALTEN):
-{state.get('satzbaubegrenzung', 'Keine Begrenzungen.')}
-
-⚠️ Berücksichtige diese Vorgaben UNBEDINGT in deiner unmittelbaren Antwort!
-""")
-
-        # Insert meta-instruction right before the last user message
-        messages = [system_message] + state["messages"][:-1] + [meta_instruction, state["messages"][-1]]
-    else:
-        messages = [system_message] + state["messages"]
+    messages += state["messages"]
 
     # Stream the response chunk-by-chunk (no accumulation)
     # This allows format_response to process chunks incrementally
