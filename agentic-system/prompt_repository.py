@@ -90,6 +90,7 @@ class PromptRepository:
         'aufgaben_worker': 'aufgaben_worker.txt',
         'satzbau_analyse_worker': 'satzbau_analyse_worker.txt',
         'satzbau_begrenzungs_worker': 'satzbau_begrenzungs_worker.txt',
+        'master_first_message': 'master_first_message.txt',
         'master': 'master.txt',
     }
 
