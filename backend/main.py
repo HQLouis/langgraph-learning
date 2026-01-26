@@ -9,9 +9,18 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 import time
+import logging
 
 from backend.core.config import get_settings
+from backend.core.logging_config import setup_logging
 from backend.api.routes import conversations, health
+
+# Setup logging before creating the app
+setup_logging()
+
+# Get logger for this module
+logger = logging.getLogger(__name__)
+logger.info("Starting Lingolino API application")
 
 # Get settings
 settings = get_settings()
@@ -42,15 +51,16 @@ app.add_middleware(
     allow_headers=settings.cors_headers,
 )
 
-
 # Request timing middleware
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     """Add X-Process-Time header to all responses."""
     start_time = time.time()
+    logger.info(f"Incoming request: {request.method} {request.url.path}")
     response = await call_next(request)
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = str(process_time)
+    logger.info(f"Request completed: {request.method} {request.url.path} - Status: {response.status_code} - Time: {process_time:.4f}s")
     return response
 
 
@@ -74,6 +84,8 @@ async def root():
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Handle unexpected exceptions globally."""
+    logger.error(f"Unhandled exception for {request.method} {request.url.path}: {str(exc)}", exc_info=True)
+
     if settings.debug:
         raise exc
 

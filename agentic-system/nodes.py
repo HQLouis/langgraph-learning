@@ -1,6 +1,7 @@
 """
 Node functions for the Lingolino graphs.
 """
+import logging
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
@@ -14,6 +15,9 @@ from prompts import (getSpeechGrammarWorker_prompt, \
 from typing import Any
 from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase, \
     is_conversation_ended
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
@@ -34,9 +38,11 @@ def masterChatbot(state: State, llm):
     :param llm: Language model instance
     :return: Updated state with new message
     """
+    logger.info("masterChatbot: Starting to generate response")
     is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
 
     message_count = len(state["messages"]) // 2  # Assuming each interaction has a user and bot message
+    logger.info(f"masterChatbot: Processing message count: {message_count}, is_first_message: {is_first_message}")
 
     # TODO LNG: This will be flexibly set via the game config in the future.
     system_context = f"""
@@ -69,6 +75,7 @@ def masterChatbot(state: State, llm):
     messages = [system_message]
     if is_normal_phase(message_count) and (state.get('aufgaben') or state.get('satzbaubegrenzung')):
         messages.append(meta_system)
+        logger.info(f"masterChatbot: Added meta_system with aufgaben and satzbaubegrenzung")
     if not is_normal_phase(message_count):
         termination_prompt = get_termination_prompt(message_count)
         termination_system = SystemMessage(content=f"""
@@ -77,16 +84,19 @@ def masterChatbot(state: State, llm):
         {termination_prompt}
         """)
         messages.append(termination_system)
+        logger.info(f"masterChatbot: Added termination prompt for message count: {message_count}")
 
     messages += state["messages"]
 
     # Stream the response chunk-by-chunk (no accumulation)
     # This allows format_response to process chunks incrementally
+    logger.info("masterChatbot: Starting LLM stream")
     response_content = ""
     for chunk in llm.stream(messages):
         if hasattr(chunk, 'content'):
             response_content += chunk.content
 
+    logger.info(f"masterChatbot: Generated response with length: {len(response_content)}")
     return {"messages": [AIMessage(content=response_content)]}
 
 
@@ -120,6 +130,7 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with grammar analysis update
     """
+    logger.info("speechGrammarWorker: Starting grammar analysis")
     system_message = SystemMessage(content=getSpeechGrammarWorker_prompt())
 
     # Analyze the conversation without participating in it
@@ -133,6 +144,7 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"speechGrammarWorker: Analysis completed with length: {len(response.content)}")
     # Store analysis separately from conversation
     return Command(update={"grammar_analysis": response.content})
 
@@ -251,6 +263,7 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with förderfokus analysis update
     """
+    logger.info("foerderfokusWorker: Starting overall educational value analysis")
     system_message = SystemMessage(content=getFoerderfokusWorker_prompt())
 
     # Analyze the conversation without participating in it
@@ -275,6 +288,7 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"foerderfokusWorker: Analysis completed - {response.content[:100]}...")
     # Store analysis separately from conversation
     return Command(update={"foerderfokus": response.content})
 
@@ -288,6 +302,7 @@ def aufgabenWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with task suggestions update
     """
+    logger.info("aufgabenWorker: Starting task suggestions generation")
     system_message = SystemMessage(content=getAufgabenWorker_prompt())
 
     # Analyze the conversation without participating in it
@@ -303,6 +318,7 @@ def aufgabenWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"aufgabenWorker: Task suggestions generated - {response.content[:100]}...")
     # Store analysis separately from conversation
     return Command(update={"aufgaben": response.content})
 
@@ -342,6 +358,7 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with satzbaubegrenzung update
     """
+    logger.info("satzbauBegrenzungsWorker: Starting sentence structure constraints generation")
     system_message = SystemMessage(content=getSatzbauBegrenzungsWorker_prompt())
 
     satzbau_analyse = state.get('satzbau_analysis', '')
@@ -350,6 +367,7 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"satzbauBegrenzungsWorker: Constraints generated - {response.content[:100]}...")
     # Store analysis separately from conversation
     return Command(update={"satzbaubegrenzung": response.content})
 

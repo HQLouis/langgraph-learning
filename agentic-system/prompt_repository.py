@@ -16,8 +16,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from backend.core.config import get_settings
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Use centralized logging configuration (will be setup by main.py)
+# This ensures logs go to CloudWatch when running in ECS
 logger = logging.getLogger(__name__)
 
 
