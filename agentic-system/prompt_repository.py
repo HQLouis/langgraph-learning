@@ -16,8 +16,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from backend.core.config import get_settings
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Use centralized logging configuration (will be setup by main.py)
+# This ensures logs go to CloudWatch when running in ECS
 logger = logging.getLogger(__name__)
 
 
@@ -90,6 +90,7 @@ class PromptRepository:
         'aufgaben_worker': 'aufgaben_worker.txt',
         'satzbau_analyse_worker': 'satzbau_analyse_worker.txt',
         'satzbau_begrenzungs_worker': 'satzbau_begrenzungs_worker.txt',
+        'master_first_message': 'master_first_message.txt',
         'master': 'master.txt',
     }
 

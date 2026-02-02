@@ -8,7 +8,8 @@ from typing import Annotated, Optional, Dict
 from pathlib import Path
 import sys
 
-logging.basicConfig(level=logging.INFO)
+# Use centralized logging configuration (will be setup by main.py)
+# This ensures logs go to CloudWatch when running in ECS
 logger = logging.getLogger(__name__)
 
 # Add parent directory to path
