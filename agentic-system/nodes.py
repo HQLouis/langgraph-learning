@@ -61,9 +61,6 @@ def masterChatbot(state: State, llm):
     meta_system = SystemMessage(content=f"""
     [METAREGELN FÜR DIE NÄCHSTE ASSISTANT-ANTWORT — NICHT AN DAS KIND ADRESSIEREN]
     
-    🎯 Aufgaben für das Kind:
-    {state.get('aufgaben', 'Keine spezifischen Aufgaben.')}
-    
     📏 Satzbaubegrenzungen (STRIKT EINHALTEN):
     {state.get('satzbaubegrenzung', 'Keine Begrenzungen.')}
     
@@ -419,7 +416,6 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
         "configurable": {"thread_id": bg_thread_id}
     })
     analyses = {
-        "aufgaben": snapshot.values.get("aufgaben", ""),
         "satzbaubegrenzung": snapshot.values.get("satzbaubegrenzung", ""),
     }
     return analyses
