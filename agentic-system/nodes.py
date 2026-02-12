@@ -2,6 +2,7 @@
 Node functions for the Lingolino graphs.
 """
 import logging
+from pathlib import Path
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.types import Command
 from states import State, BackgroundState
@@ -12,9 +13,10 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt,
                      getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
-from typing import Any
+from typing import Any, Optional
 from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase, \
     is_conversation_ended
+from beats import BeatPackManager, BeatRetriever
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -22,12 +24,21 @@ logger = logging.getLogger(__name__)
 # Global reference to background_graph (will be set after import)
 background_graph: Any = None
 
+# Global beat pack manager (will be initialized with content directory)
+beat_manager: Optional[BeatPackManager] = None
+
 
 def set_background_graph(graph):
     """Set the background graph reference for cross-graph communication."""
     global background_graph
     background_graph = graph
 
+
+def initialize_beat_manager(content_dir: Path):
+    """Initialize the global beat pack manager."""
+    global beat_manager
+    beat_manager = BeatPackManager(content_dir)
+    logger.info(f"Initialized beat manager with content_dir: {content_dir}")
 
 def masterChatbot(state: State, llm):
     """
@@ -52,7 +63,24 @@ def masterChatbot(state: State, llm):
     if is_first_message:
         system_context += f"\n{getMasterFirstMessagePrompt()}"
 
-    system_context += f"""
+    # Use beat context if available, otherwise fall back to full audio_book
+    content_context = state.get('beat_context')
+    if content_context:
+        logger.info("masterChatbot: Using beat-based context (closed-world)")
+        system_context += f"""
+    
+    [GESCHLOSSENES WELTWISSEN - STRIKTE EINHALTUNG]
+    Verwende AUSSCHLIESSLICH die folgenden Beat-Inhalte als einzige inhaltliche Quelle.
+    Erfinde KEINE neuen Fakten, Figuren, Orte oder Ereignisse außerhalb dieser Beats.
+    
+    {content_context}
+    
+    WICHTIG: Antworte NUR basierend auf den oben genannten Beats. Wenn das Kind nach etwas fragt, 
+    das nicht in diesen Beats vorkommt, sage ehrlich: "Das weiß ich nicht genau aus der Geschichte."
+    """
+    else:
+        logger.info("masterChatbot: Using full audio_book context (fallback)")
+        system_context += f"""
     Verwende ausschließlich den expliziten Buchkontext sowie Inhalte, die sich eindeutig daraus ableiten lassen, als einzige inhaltliche Quelle für Figuren, Orte, Gegenstände und Ereignisse : {state.get('audio_book', '')}\n\n
     """
 
@@ -423,3 +451,75 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
         "satzbaubegrenzung": snapshot.values.get("satzbaubegrenzung", ""),
     }
     return analyses
+
+
+def load_beat_context(state: State) -> dict:
+    """
+    Load relevant beats from the beatpack based on conversation status.
+
+    Strategy:
+    - If tasks are planned (num_planned_tasks), distribute beats chronologically
+    - Otherwise, use retrieval based on the last user message
+    - For first interaction, use first few beats
+
+    :param state: Current state
+    :return: Updated state with beat_context and active_beat_ids
+    """
+    global beat_manager
+
+    # Check if beat system is configured
+    story_id = state.get("story_id")
+    chapter_id = state.get("chapter_id")
+
+    if not story_id or not chapter_id:
+        logger.info("load_beat_context: No story_id/chapter_id configured, skipping beat loading")
+        return {}
+
+    if beat_manager is None:
+        logger.warning("load_beat_context: Beat manager not initialized")
+        return {}
+
+    # Get beatpack retriever
+    retriever = beat_manager.get_retriever(story_id, chapter_id)
+    if retriever is None:
+        logger.warning(f"load_beat_context: No beatpack found for {story_id}/{chapter_id}")
+        return {}
+
+    # Determine which beats to load
+    num_planned_tasks = state.get("num_planned_tasks", 5)
+    messages = state.get("messages", [])
+
+    # Count user messages to determine interaction position
+    user_message_count = sum(1 for msg in messages if isinstance(msg, HumanMessage))
+
+    if user_message_count == 0:
+        # First interaction - use chronologically distributed beats for tasks
+        logger.info(f"load_beat_context: First interaction, loading {num_planned_tasks} distributed beats")
+        beats = retriever.get_beats_for_tasks(num_planned_tasks)
+    else:
+        # Subsequent interactions - retrieve relevant beats based on last message
+        last_user_message = None
+        for msg in reversed(messages):
+            if isinstance(msg, HumanMessage):
+                last_user_message = msg.content
+                break
+
+        query = last_user_message if last_user_message else ""
+        logger.info(f"load_beat_context: Retrieving beats for query: {query[:50]}...")
+
+        # Retrieve top-k relevant beats
+        top_k = min(num_planned_tasks, 6)  # Limit context size
+        beats = retriever.retrieve_beats(query, top_k=top_k)
+
+    # Format beats as context
+    beat_context = retriever.format_beats_for_context(beats, include_entities=True)
+    active_beat_ids = [beat.beat_id for beat in beats]
+
+    logger.info(f"load_beat_context: Loaded {len(beats)} beats: {active_beat_ids}")
+
+    return {
+        "beat_context": beat_context,
+        "active_beat_ids": active_beat_ids
+    }
+
+

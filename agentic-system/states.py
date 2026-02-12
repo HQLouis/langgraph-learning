@@ -1,7 +1,7 @@
 """
 State definitions for the Lingolino application.
 """
-from typing import Annotated
+from typing import Annotated, Optional
 from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
 
@@ -27,6 +27,13 @@ class State(TypedDict):
     aufgaben: str
     satzbaubegrenzung: str
 
+    # Beat system fields
+    story_id: Optional[str]  # Story identifier for beatpack
+    chapter_id: Optional[str]  # Chapter identifier for beatpack
+    beat_context: Optional[str]  # Formatted beat context for current interaction
+    active_beat_ids: Optional[list]  # List of beat IDs currently in use
+    num_planned_tasks: Optional[int]  # Number of tasks planned for this chapter (default: 5)
+
 
 class BackgroundState(TypedDict):
     """State for the background analysis graph."""
@@ -46,4 +53,11 @@ class BackgroundState(TypedDict):
     aufgaben: str
     satzbau_analysis: str
     satzbaubegrenzung: str
+
+    # Beat system fields
+    story_id: Optional[str]
+    chapter_id: Optional[str]
+    beat_context: Optional[str]
+    active_beat_ids: Optional[list]
+    num_planned_tasks: Optional[int]
 
