@@ -19,16 +19,27 @@ sys.path.insert(0, str(agentic_path))
 
 from immediate_graph import create_immediate_response_graph, set_config
 from background_graph import create_background_analysis_graph
-from nodes import set_background_graph
+from nodes import set_background_graph, initialize_beat_manager
 
 
 class ConversationMetadata:
     """Metadata for a conversation."""
 
-    def __init__(self, thread_id: str, child_id: str, game_id: str):
+    def __init__(
+        self,
+        thread_id: str,
+        child_id: str,
+        game_id: str,
+        story_id: Optional[str] = None,
+        chapter_id: Optional[str] = None,
+        num_planned_tasks: Optional[int] = 5
+    ):
         self.thread_id = thread_id
         self.child_id = child_id
         self.game_id = game_id
+        self.story_id = story_id
+        self.chapter_id = chapter_id
+        self.num_planned_tasks = num_planned_tasks
         self.created_at = datetime.utcnow()
 
 
@@ -43,6 +54,11 @@ class ConversationService:
         self.llm = init_chat_model(llm_model)
         self.memory = MemorySaver()
 
+        # Initialize beat manager for closed-world content management
+        content_dir = Path(__file__).parent.parent.parent / "agentic-system" / "content"
+        initialize_beat_manager(content_dir)
+        print(f"✓ Beat Manager initialized with content_dir: {content_dir}")
+
         # Create graphs
         self.background_graph = create_background_analysis_graph(self.llm, self.memory)
         set_background_graph(self.background_graph)
@@ -56,13 +72,23 @@ class ConversationService:
         # Key: thread_id, Value: ConversationMetadata
         self._conversations: dict[str, ConversationMetadata] = {}
 
-    def create_conversation(self, child_id: str, game_id: str) -> ConversationMetadata:
+    def create_conversation(
+        self,
+        child_id: str,
+        game_id: str,
+        story_id: Optional[str] = None,
+        chapter_id: Optional[str] = None,
+        num_planned_tasks: Optional[int] = 5
+    ) -> ConversationMetadata:
         """
         Create a new conversation.
 
         Args:
             child_id: ID of the child
             game_id: ID of the game
+            story_id: Optional story ID for beat-based content
+            chapter_id: Optional chapter ID for beat-based content
+            num_planned_tasks: Number of planned tasks for beat distribution (default: 5)
 
         Returns:
             ConversationMetadata with unique thread_id
@@ -72,8 +98,21 @@ class ConversationService:
         thread_id = f"conv_{session_id}"
 
         # Store metadata
-        metadata = ConversationMetadata(thread_id, child_id, game_id)
+        metadata = ConversationMetadata(
+            thread_id,
+            child_id,
+            game_id,
+            story_id,
+            chapter_id,
+            num_planned_tasks
+        )
         self._conversations[thread_id] = metadata
+
+        # Log beat system activation
+        if story_id and chapter_id:
+            print(f"✓ Beat system activated for {story_id}/{chapter_id} with {num_planned_tasks} tasks")
+        else:
+            print(f"⚠ Beat system not activated (no story_id/chapter_id), using fallback audio_book context")
 
         return metadata
 
@@ -139,13 +178,23 @@ class ConversationService:
         # Create user message
         user_message = HumanMessage(content=message)
 
+        # Build initial state with beat system fields
+        initial_state = {"messages": [user_message]}
+
+        # Add beat system parameters if available
+        if conversation.story_id and conversation.chapter_id:
+            initial_state["story_id"] = conversation.story_id
+            initial_state["chapter_id"] = conversation.chapter_id
+            initial_state["num_planned_tasks"] = conversation.num_planned_tasks
+            print(f"✓ Using beat system: {conversation.story_id}/{conversation.chapter_id}")
+
         # Track streaming state
         seen_message_ids = set()
         last_chunk_content = ""
 
         # Stream response from immediate graph
         for event in self.immediate_graph.stream(
-            {"messages": [user_message]},
+            initial_state,
             config,
             stream_mode="messages"
         ):
@@ -250,11 +299,19 @@ class ConversationService:
             bg_config = {
                 "configurable": {"thread_id": bg_thread_id}
             }
+
+            # Get conversation metadata for beat system fields
+            conversation = self.get_conversation(thread_id)
+            bg_state = {"child_id": child_id, "game_id": game_id}
+
+            # Include beat system fields if available
+            if conversation and conversation.story_id and conversation.chapter_id:
+                bg_state["story_id"] = conversation.story_id
+                bg_state["chapter_id"] = conversation.chapter_id
+                bg_state["num_planned_tasks"] = conversation.num_planned_tasks
+
             try:
-                self.background_graph.invoke(
-                    {"child_id": child_id, "game_id": game_id},
-                    bg_config
-                )
+                self.background_graph.invoke(bg_state, bg_config)
             except Exception:
                 # Suppress background errors
                 pass

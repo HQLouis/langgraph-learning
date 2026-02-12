@@ -11,11 +11,19 @@ class ConversationCreate(BaseModel):
     child_id: str = Field(..., description="ID of the child (1-3)")
     game_id: str = Field(..., description="ID of the game (e.g., 0)")
 
+    # Beat system fields (optional - enables closed-world content management)
+    story_id: Optional[str] = Field(None, description="Story ID for beat-based content (optional)")
+    chapter_id: Optional[str] = Field(None, description="Chapter ID for beat-based content (optional)")
+    num_planned_tasks: Optional[int] = Field(5, description="Number of planned tasks for beat distribution (default: 5)")
+
     class Config:
         json_schema_extra = {
             "example": {
                 "child_id": "1",
-                "game_id": "0"
+                "game_id": "0",
+                "story_id": "mia_und_leo",
+                "chapter_id": "chapter_01",
+                "num_planned_tasks": 5
             }
         }
 
