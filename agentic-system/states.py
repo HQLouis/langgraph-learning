@@ -34,6 +34,9 @@ class State(TypedDict):
     active_beat_ids: Optional[list]  # List of beat IDs currently in use
     num_planned_tasks: Optional[int]  # Number of tasks planned for this chapter (default: 5)
 
+    # Output Contract fields
+    response_contract: Optional[dict]  # Structured output contract for validation
+
 
 class BackgroundState(TypedDict):
     """State for the background analysis graph."""

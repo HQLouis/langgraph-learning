@@ -231,6 +231,10 @@ class BeatRetriever:
         tokens = re.findall(r'[a-zäöüß0-9]+', text.lower())
         return tokens
 
+    def get_all_beats(self) -> List[Beat]:
+        """Get all beats in order."""
+        return sorted(self.beatpack.beats, key=lambda b: b.order)
+
     def retrieve_beats(self, query: str, top_k: int = 5) -> List[Beat]:
         """
         Retrieve top-k most relevant beats for a query using BM25-style scoring.

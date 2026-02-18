@@ -13,6 +13,7 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getBoredomWorker_prompt, getFoerderfokusWorker_prompt, getAufgabenWorker_prompt,
                      getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
+from output_contract_builder import build_output_contract
 from typing import Any, Optional
 from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase, \
     is_conversation_ended
@@ -43,11 +44,11 @@ def initialize_beat_manager(content_dir: Path):
 def masterChatbot(state: State, llm):
     """
     Main chatbot node that generates responses to the child.
-    Streams responses chunk-by-chunk for low latency.
+    Now automatically constructs output contract from the response and context.
 
     :param state: Current state with messages and analysis
     :param llm: Language model instance
-    :return: Updated state with new message
+    :return: Updated state with new message and response_contract
     """
     logger.info("masterChatbot: Starting to generate response")
     is_first_message = not any(isinstance(msg, AIMessage) for msg in state["messages"])
@@ -55,7 +56,7 @@ def masterChatbot(state: State, llm):
     message_count = len(state["messages"]) // 2  # Assuming each interaction has a user and bot message
     logger.info(f"masterChatbot: Processing message count: {message_count}, is_first_message: {is_first_message}")
 
-    # TODO LNG: This will be flexibly set via the game config in the future.
+    # Build system context (WITHOUT output contract JSON instructions)
     system_context = f"""
     {getMasterPrompt() if not is_conversation_ended(message_count) else ''}
     """
@@ -116,16 +117,51 @@ def masterChatbot(state: State, llm):
 
     messages += state["messages"]
 
-    # Stream the response chunk-by-chunk (no accumulation)
-    # This allows format_response to process chunks incrementally
-    logger.info("masterChatbot: Starting LLM stream")
-    response_content = ""
-    for chunk in llm.stream(messages):
-        if hasattr(chunk, 'content'):
-            response_content += chunk.content
+    # Get natural language response (no JSON formatting)
+    logger.info("masterChatbot: Starting LLM invocation for natural response")
+    response = llm.invoke(messages)
+    spoken_text = response.content.strip()
 
-    logger.info(f"masterChatbot: Generated response with length: {len(response_content)}")
-    return {"messages": [AIMessage(content=response_content)]}
+    logger.info(f"masterChatbot: Generated response with length: {len(spoken_text)}")
+
+    # Get last user message for context
+    last_user_message = None
+    for msg in reversed(state["messages"]):
+        if isinstance(msg, HumanMessage):
+            last_user_message = msg.content
+            break
+
+    # Build output contract programmatically from the response and context
+    logger.info("masterChatbot: Building output contract from context")
+
+    # Get active beats if available
+    active_beats = None
+    if beat_manager and state.get('story_id') and state.get('chapter_id'):
+        retriever = beat_manager.get_retriever(state['story_id'], state['chapter_id'])
+        if retriever and state.get('active_beat_ids'):
+            active_beats = [
+                beat for beat in retriever.get_all_beats()
+                if beat.beat_id in state['active_beat_ids']
+            ]
+            logger.info(f"masterChatbot: Using {len(active_beats)} active beats for contract building")
+
+    logger.info(f"masterChatbot: Detected active beats: {[beat.beat_id for beat in active_beats]}") if active_beats else logger.info("masterChatbot: No active beats detected")
+    response_contract = build_output_contract(
+        response=spoken_text,
+        active_beats=active_beats,
+        story_id=state.get('story_id'),
+        chapter_id=state.get('chapter_id'),
+        aufgaben=state.get('aufgaben'),
+        last_user_message=last_user_message
+    )
+
+    logger.info(f"masterChatbot: Built contract with {len(response_contract.get('grounding', {}).get('evidence', []))} evidence items")
+
+    # Return both the spoken text as message and the full contract in state
+    return {
+        "messages": [AIMessage(content=spoken_text)],
+        "response_contract": response_contract
+    }
 
 
 def get_messages_history_from_immediate_graph_state(config) -> list:

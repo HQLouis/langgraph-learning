@@ -167,3 +167,4 @@ def getMasterFirstMessagePrompt() -> str:
     """
     return _repository.get_prompt('master_first_message')
 
+

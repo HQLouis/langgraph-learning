@@ -20,6 +20,7 @@ sys.path.insert(0, str(agentic_path))
 from immediate_graph import create_immediate_response_graph, set_config
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph, initialize_beat_manager
+from ..services.output_contract_validator import validate_response_contract
 
 
 class ConversationMetadata:
@@ -359,5 +360,65 @@ class ConversationService:
                 "created_at": conversation.created_at
             }
         except Exception:
+            return None
+    def get_last_response_contract(self, thread_id: str, validate: bool = False) -> Optional[dict]:
+        """
+        Get the last response contract from the conversation state.
+
+        Args:
+            thread_id: Thread ID of the conversation
+            validate: Whether to validate the contract against source content
+
+        Returns:
+            Dictionary with contract and optional validation results, or None if not found
+        """
+        conversation = self.get_conversation(thread_id)
+        if not conversation:
+            return None
+
+        # Get state from memory
+        config = {"configurable": {"thread_id": thread_id}}
+
+        try:
+            # Get the current state
+            state = self.immediate_graph.get_state(config)
+
+            if not state or not state.values:
+                return None
+
+            response_contract = state.values.get("response_contract")
+            if not response_contract:
+                return {
+                    "thread_id": thread_id,
+                    "contract": None,
+                    "message": "No response contract found (may be using legacy response format)"
+                }
+
+            result = {
+                "thread_id": thread_id,
+                "contract": response_contract
+            }
+
+            # Validate if requested
+            if validate:
+                # Get beat manager for validation (if using beat system)
+                from nodes import beat_manager
+
+                # Get story content for validation
+                full_content = state.values.get("audio_book")
+
+                validation_result = validate_response_contract(
+                    response_contract,
+                    beat_manager=beat_manager,
+                    story_id=conversation.story_id,
+                    chapter_id=conversation.chapter_id,
+                    full_content=full_content
+                )
+
+                result["validation"] = validation_result.to_dict()
+
+            return result
+        except Exception as e:
+            print(f"Error getting response contract: {e}")
             return None
 
