@@ -116,6 +116,9 @@
             <div>
                 <label>Child ID: <input type="text" id="childId" value="1"></label>
                 <label>Game ID: <input type="text" id="gameId" value="0"></label>
+                <label>Story ID: <input type="text" id="storyId" value=""></label>
+                <label>Chapter ID: <input type="text" id="chapterId" value=""></label>
+                <label>Num Planned Tasks: <input type="text" id="numPlannedTasks" value=""></label>
                 <button id="startBtn">Start Conversation</button>
             </div>
             <div id="status"></div>
@@ -130,17 +133,44 @@
     </div>
 
     <script>
-        const API_BASE = 'https://conversational-api.lingolino.io';
+        const API_BASE = 'http://localhost:8000'; // 'https://conversational-api.lingolino.io'
         let threadId = null;
         let currentEventSource = null;
 
         const childIdInput = document.getElementById('childId');
         const gameIdInput = document.getElementById('gameId');
+        const storyIdInput = document.getElementById('storyId');
+        const chapterIdInput = document.getElementById('chapterId');
+        const numPlannedTasksInput = document.getElementById('numPlannedTasks');
         const startBtn = document.getElementById('startBtn');
         const chatDiv = document.getElementById('chat');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         const statusDiv = document.getElementById('status');
+
+        // Parse URL parameters and populate inputs
+        function loadUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('child_id')) {
+                childIdInput.value = urlParams.get('child_id');
+            }
+            if (urlParams.has('game_id')) {
+                gameIdInput.value = urlParams.get('game_id');
+            }
+            if (urlParams.has('story_id')) {
+                storyIdInput.value = urlParams.get('story_id');
+            }
+            if (urlParams.has('chapter_id')) {
+                chapterIdInput.value = urlParams.get('chapter_id');
+            }
+            if (urlParams.has('num_planned_tasks')) {
+                numPlannedTasksInput.value = urlParams.get('num_planned_tasks');
+            }
+        }
+
+        // Load URL params on page load
+        loadUrlParams();
 
         function showStatus(message, isError = false) {
             statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
@@ -160,13 +190,27 @@
                 startBtn.disabled = true;
                 showStatus('⏳ Starting conversation...');
 
+                // Build request body with all parameters
+                const requestBody = {
+                    child_id: childIdInput.value,
+                    game_id: gameIdInput.value
+                };
+
+                // Add optional parameters if they have values
+                if (storyIdInput.value) {
+                    requestBody.story_id = storyIdInput.value;
+                }
+                if (chapterIdInput.value) {
+                    requestBody.chapter_id = chapterIdInput.value;
+                }
+                if (numPlannedTasksInput.value) {
+                    requestBody.num_planned_tasks = parseInt(numPlannedTasksInput.value, 10);
+                }
+
                 const response = await fetch(`${API_BASE}/conversations`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        child_id: childIdInput.value,
-                        game_id: gameIdInput.value
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) throw new Error('Failed to create conversation');
