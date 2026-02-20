@@ -219,7 +219,7 @@
                 threadId = data.thread_id;
 
                 // Only enable UI after threadId is set
-                showStatus(`✅ Conversation started! ID: ${threadId.substring(0, 12)}...`);
+                showStatus(`✅ Conversation started! ID: ${threadId}`);
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
                 messageInput.focus();
