@@ -13,10 +13,61 @@ from beats import Beat
 
 logger = logging.getLogger(__name__)
 
+def _sliding_window_score(quote_words: List[str], beat_words: List[str]) -> Tuple[float, int]:
+    """
+    Slide windows of varying sizes across beat_words and return the best
+    SequenceMatcher ratio and the index of the best-matching window start.
+
+    Windows tried (in order of preference):
+      - exact size (n words)  – highest signal for paraphrases
+      - n+1, n+2  words       – catches paraphrases with extra filler words
+      - n-1 words             – catches paraphrases that drop a word
+
+    Args:
+        quote_words: Tokenised (lowercased) quote
+        beat_words:  Tokenised (lowercased) beat text
+
+    Returns:
+        (best_score, best_start_index)
+    """
+    n = len(quote_words)
+    m = len(beat_words)
+    if n == 0 or m == 0:
+        return 0.0, 0
+
+    quote_str = " ".join(quote_words)
+    best_score = 0.0
+    best_start = 0
+
+    # Try window sizes: exact n, then n±1, n+2
+    for window_size in [n, n + 1, n + 2, max(1, n - 1)]:
+        if window_size > m:
+            window_size = m
+        for i in range(m - window_size + 1):
+            window = " ".join(beat_words[i:i + window_size])
+            score = SequenceMatcher(None, quote_str, window).ratio()
+            if score > best_score:
+                best_score = score
+                best_start = i
+            if best_score >= 1.0:
+                return best_score, best_start
+
+    return best_score, best_start
+
 
 def fuzzy_match_quote_to_beat(quote: str, beats: List[Beat], threshold: float = 0.6) -> Optional[Tuple[Beat, str]]:
     """
     Find which beat contains a quote using fuzzy matching.
+
+    Strategy
+    --------
+    1. Exact substring match (case-insensitive) – fastest path.
+    2. Word-level sliding window comparison – scores a window of the same
+       length as the quote against a sliding segment of the beat.  This
+       prevents the ratio from being diluted by the rest of the beat text and
+       correctly handles paraphrases / tense changes.
+    3. Whole-text ratio fallback – kept for very short beats where the window
+       and the full text are essentially the same.
 
     Args:
         quote: The quote to search for
@@ -27,39 +78,94 @@ def fuzzy_match_quote_to_beat(quote: str, beats: List[Beat], threshold: float = 
         Tuple of (matching_beat, exact_quote_found) or None if no match
     """
     quote_normalized = " ".join(quote.lower().split())
+    quote_words = quote_normalized.split()
+
+    # Guard: reject queries shorter than 2 words – single words (e.g. "Mia")
+    # are verbatim substrings of almost every beat and would bypass the
+    # threshold via the exact-match fast path without meaningful signal.
+    if len(quote_words) < 2:
+        return None
+
     best_match = None
     best_score = 0.0
     best_quote = None
 
     for beat in beats:
         content_normalized = " ".join(beat.text.lower().split())
+        beat_words = content_normalized.split()
 
-        # Try exact match first
+        # ── 1. Exact substring match ──────────────────────────────────────
         if quote_normalized in content_normalized:
-            # Find the exact quote in the original text
             pattern = re.compile(re.escape(quote), re.IGNORECASE)
             match = pattern.search(beat.text)
             if match:
                 return beat, match.group(0)
 
-        # Try fuzzy matching
-        matcher = SequenceMatcher(None, quote_normalized, content_normalized)
-        score = matcher.ratio()
+        # ── 2. Sliding-window score ───────────────────────────────────────
+        # Compares the quote against consecutive same-length windows of the
+        # beat, avoiding score dilution from the rest of the beat text.
+        window_score, window_start = _sliding_window_score(quote_words, beat_words)
+
+        # ── 3. Token-set score ────────────────────────────────────────────
+        # Sort both token lists and compare – captures vocabulary overlap
+        # even when the LLM reorders or rephrases words (e.g. paraphrases
+        # where key nouns appear far apart in the beat text).
+        sorted_quote = " ".join(sorted(quote_words))
+        sorted_beat = " ".join(sorted(beat_words))
+        token_set_score = SequenceMatcher(None, sorted_quote, sorted_beat).ratio()
+
+        # ── 4. Token coverage score ───────────────────────────────────────
+        # Recall-oriented: what fraction of the quote's content words (≥4
+        # chars) appear anywhere in the beat?  Punctuation is stripped from
+        # both sides so "davon," → "davon" and "sammeln." → "sammeln" match
+        # correctly.  The length filter is applied after stripping.
+        quote_content = [re.sub(r"[^\w]", "", w) for w in quote_words]
+        quote_content = [w for w in quote_content if len(w) >= 4]
+        if quote_content:
+            beat_word_set = {re.sub(r"[^\w]", "", w) for w in beat_words}
+            beat_word_set = {w for w in beat_word_set if w}  # remove empty strings
+            matched_content = sum(1 for w in quote_content if w in beat_word_set)
+            token_coverage_score = matched_content / len(quote_content)
+        else:
+            token_coverage_score = 0.0
+
+        # ── 5. Whole-text ratio (fallback for short beats) ────────────────
+        full_score = SequenceMatcher(None, quote_normalized, content_normalized).ratio()
+
+        score = max(window_score, token_set_score, token_coverage_score, full_score)
 
         if score > best_score:
             best_score = score
             best_match = beat
-            # Find the best matching substring
-            matching_blocks = matcher.get_matching_blocks()
-            if matching_blocks:
-                # Get the longest matching block
-                longest_block = max(matching_blocks, key=lambda b: b.size)
-                if longest_block.size > 0:
-                    start = longest_block.b
-                    end = start + longest_block.size
-                    best_quote = beat.text[start:end]
+
+            # Build the matched-quote snippet from the best window position
+            n = len(quote_words)
+            end = min(window_start + n, len(beat_words))
+            window_text = " ".join(beat_words[window_start:end])
+
+            # Map back to original (non-lowercased) beat text via char offset
+            char_start = len(" ".join(beat_words[:window_start]))
+            if window_start > 0:
+                char_start += 1  # account for the space before the window
+            char_end = char_start + len(window_text)
+            best_quote = beat.text[char_start:char_end] or beat.text[:100]
 
     if best_score >= threshold and best_match:
+        # Secondary guard: require a minimum token overlap so that coincidental
+        # short-word matches (e.g. "Wald", "einen") don't produce false positives.
+        # Punctuation is stripped from both sides before comparing.
+        quote_content_words = {re.sub(r"[^\w]", "", w) for w in quote_words if len(w) >= 4}
+        quote_content_words = {w for w in quote_content_words if len(w) >= 4}
+        beat_content_normalized = " ".join(best_match.text.lower().split())
+        beat_content_words = {re.sub(r"[^\w]", "", w)
+                              for w in beat_content_normalized.split()
+                              if len(w) >= 4}
+        beat_content_words = {w for w in beat_content_words if w}
+        if quote_content_words and beat_content_words:
+            overlap = len(quote_content_words & beat_content_words) / len(quote_content_words)
+            if overlap < 0.50:
+                return None
+
         return best_match, best_quote or best_match.text[:100]
 
     return None
@@ -180,7 +286,7 @@ def build_output_contract(
             "task_type": task_type if task_type != "NONE" else "COMPREHENSION_QUESTION",
             "prompt_spoken": response if answer_type == "QUESTION" else None,
             "expected_child_response_type": "FREE_TEXT",
-            "learning_goal": learning_goal
+            "learning_goal": learning_goal # TODO learning goal is a description and is not really needed, because the task_type is representing it already. Since we are using this contract only to verify the response it is obsolete
         }
 
     # Build grounding with evidence

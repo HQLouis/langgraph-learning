@@ -153,10 +153,6 @@ class TestExactMatches:
 class TestNearExactMatches:
     """Slightly rephrased quotes that still clearly originate from a beat."""
 
-    @pytest.mark.xfail(
-        reason="SequenceMatcher.ratio() penalises short query vs long beat text; "
-               "scorer needs to be changed to longest-common-substring / query-coverage"
-    )
     def test_beat1_paraphrase_window(self, beat_1):
         """
         The spoken response says 'Mia hat jeden Tag aus ihrem Fenster geschaut'
@@ -379,10 +375,6 @@ class TestEdgeCases:
         result = fuzzy_match_quote_to_beat("Mia", all_beats, threshold=0.6)
         assert result is None
 
-    @pytest.mark.xfail(
-        reason="A cross-beat quote scores below 0.6 with ratio() because neither beat "
-               "covers the full length of the combined quote.  Needs query-coverage scoring."
-    )
     def test_very_long_quote_spanning_two_beats(self, all_beats):
         """
         A quote that spans the boundary of beat 1 and beat 2 should still
