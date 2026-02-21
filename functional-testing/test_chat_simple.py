@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Simple test to verify chat works end-to-end"""
 import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agentic-system'))
+
 from immediate_graph import create_immediate_response_graph
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph
@@ -29,7 +32,7 @@ print('🤖 Lino: ', end='', flush=True)
 response_found = False
 for event in im_graph.stream({'messages': [msg]}, config, stream_mode='updates'):
     for node_name, node_output in event.items():
-        if node_name == 'format_response' and 'messages' in node_output:
+        if node_name == 'masterChatbot' and 'messages' in node_output:
             for m in node_output['messages']:
                 if hasattr(m, 'content') and m.content and hasattr(m, 'type') and m.type == 'ai':
                     print(m.content, flush=True)

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """Test if the streaming deduplication fixes garbled output"""
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agentic-system'))
+
 from immediate_graph import create_immediate_response_graph
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph
@@ -32,7 +36,7 @@ for event in im_graph.stream({'messages': [msg]}, config, stream_mode='messages'
         message, metadata = event
         node = metadata.get('langgraph_node', '')
 
-        if node == 'format_response':
+        if node == 'masterChatbot':
             msg_id = getattr(message, 'id', None)
             if msg_id and msg_id in seen_message_ids:
                 continue

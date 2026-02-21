@@ -4,6 +4,10 @@ Tests for the real-time streaming chunk formatter in ConversationService.
 This tests the _format_chunk method that processes LLM output chunks
 incrementally to minimize latency for TTS.
 """
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 from backend.services.conversation_service import ConversationService
 
 
