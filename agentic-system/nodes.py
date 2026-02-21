@@ -155,7 +155,7 @@ def masterChatbot(state: State, llm):
         last_user_message=last_user_message
     )
 
-    logger.info(f"masterChatbot: Built contract with {len(response_contract.get('grounding', {}).get('evidence', []))} evidence items")
+    logger.info(f"masterChatbot: Built contract with {len(response_contract.grounding.evidence)} evidence items")
 
     # Return both the spoken text as message and the full contract in state
     return {

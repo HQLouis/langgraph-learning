@@ -1,9 +1,18 @@
 """
 State definitions for the Lingolino application.
 """
+import sys
+import os
 from typing import Annotated, Optional
 from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
+
+# Import ResponseContract from backend models (project root may not be in sys.path)
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
+from backend.models.output_contract import ResponseContract
 
 
 class State(TypedDict):
@@ -35,7 +44,7 @@ class State(TypedDict):
     num_planned_tasks: Optional[int]  # Number of tasks planned for this chapter (default: 5)
 
     # Output Contract fields
-    response_contract: Optional[dict]  # Structured output contract for validation
+    response_contract: Optional[ResponseContract]  # Structured output contract for validation
 
 
 class BackgroundState(TypedDict):
