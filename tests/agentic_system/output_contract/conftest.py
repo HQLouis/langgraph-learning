@@ -89,6 +89,12 @@ def beat_5(all_beats) -> Beat:
 
 
 @pytest.fixture(scope="session")
+def beat_7(all_beats) -> Beat:
+    """Beat 7 – Leo shows Mia a hidden spot full of raspberries."""
+    return next(b for b in all_beats if b.beat_id == 7)
+
+
+@pytest.fixture(scope="session")
 def beat_9(all_beats) -> Beat:
     """Beat 9 – The sun sets; Leo asks if they'll meet again tomorrow."""
     return next(b for b in all_beats if b.beat_id == 9)

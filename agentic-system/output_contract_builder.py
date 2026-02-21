@@ -72,7 +72,12 @@ def _sliding_window_score(quote_words: List[str], beat_words: List[str]) -> Tupl
     return best_score, best_start
 
 
-def fuzzy_match_quote_to_beat(quote: str, beats: List[Beat], threshold: float = 0.6) -> Optional[Tuple[Beat, str]]:
+def fuzzy_match_quote_to_beat(
+    quote: str,
+    beats: List[Beat],
+    threshold: float = 0.6,
+    min_overlap: float = 0.50,
+) -> Optional[Tuple[Beat, str]]:
     """
     Find which beat contains a quote using fuzzy matching.
 
@@ -83,13 +88,24 @@ def fuzzy_match_quote_to_beat(quote: str, beats: List[Beat], threshold: float = 
        length as the quote against a sliding segment of the beat.  This
        prevents the ratio from being diluted by the rest of the beat text and
        correctly handles paraphrases / tense changes.
-    3. Whole-text ratio fallback – kept for very short beats where the window
-       and the full text are essentially the same.
+    3. Token-set score – sorted-token comparison for word-order independence.
+    4. Token coverage score – fraction of quote content words found in beat
+       (recall-oriented; robust to paraphrases with inserted/dropped words).
+    5. Whole-text ratio fallback – kept for short beats.
+
+    The overlap guard (min_overlap) is a secondary precision check: after a
+    candidate beat passes the similarity threshold, at least min_overlap
+    fraction of the quote's content words (≥4 chars, punctuation stripped)
+    must appear in the beat.  Lower it (e.g. 0.20) for referential sentences
+    like "Mia, die am Waldrand wohnt" that mention story entities without
+    quoting the beat verbatim.
 
     Args:
         quote: The quote to search for
         beats: List of beats to search in
         threshold: Similarity threshold (0.0 to 1.0)
+        min_overlap: Minimum fraction of quote content words that must appear
+                     in the winning beat (secondary precision guard).
 
     Returns:
         Tuple of (matching_beat, exact_quote_found) or None if no match
@@ -167,21 +183,33 @@ def fuzzy_match_quote_to_beat(quote: str, beats: List[Beat], threshold: float = 
             char_end = char_start + len(window_text)
             best_quote = beat.text[char_start:char_end] or beat.text[:100]
 
+    # Pre-compute cross-beat entity frequency: entities that appear in more
+    # than one beat are too generic to anchor grounding (e.g. 'Himmel',
+    # 'Beeren', 'Morgens' appear in multiple beats).
+    from collections import Counter as _Counter
+    entity_frequency: _Counter = _Counter(
+        e.lower()
+        for b in beats
+        for e in (b.entities or [])
+        if len(e) >= 5
+    )
+
     if best_score >= threshold and best_match:
-        # Secondary guard: require a minimum token overlap so that coincidental
-        # short-word matches (e.g. "Wald", "einen") don't produce false positives.
-        # Punctuation is stripped from both sides before comparing.
-        quote_content_words = {re.sub(r"[^\w]", "", w) for w in quote_words if len(w) >= 4}
-        quote_content_words = {w for w in quote_content_words if len(w) >= 4}
-        beat_content_normalized = " ".join(best_match.text.lower().split())
-        beat_content_words = {re.sub(r"[^\w]", "", w)
-                              for w in beat_content_normalized.split()
-                              if len(w) >= 4}
-        beat_content_words = {w for w in beat_content_words if w}
-        if quote_content_words and beat_content_words:
-            overlap = len(quote_content_words & beat_content_words) / len(quote_content_words)
-            if overlap < 0.50:
-                return None
+        # Entity-anchor guard: the winning beat must contain at least one
+        # entity (≥5 chars) that (a) is UNIQUE to that beat (appears in
+        # exactly 1 beat) and (b) appears in the quote text.
+        # Cross-beat entities like 'Himmel', 'Beeren', 'Morgens' are excluded
+        # because they are too generic to prove the response originated from
+        # this particular beat.
+        unique_beat_entities = {
+            e.lower()
+            for e in (best_match.entities or [])
+            if len(e) >= 5 and entity_frequency[e.lower()] == 1
+        }
+        quote_word_set = set(re.sub(r"[^\w]", " ", quote_normalized).split())
+        entity_hit = any(entity in quote_word_set for entity in unique_beat_entities)
+        if not entity_hit:
+            return None
 
         return best_match, best_quote or best_match.text[:100]
 
@@ -309,7 +337,7 @@ def build_output_contract(
             if len(sentence.split()) < 3:
                 continue
 
-            match_result = fuzzy_match_quote_to_beat(sentence, active_beats, threshold=0.5)
+            match_result = fuzzy_match_quote_to_beat(sentence, active_beats, threshold=0.5, min_overlap=0.20)
 
             if match_result:
                 beat, quote = match_result
@@ -335,9 +363,11 @@ def build_output_contract(
                 ))
                 logger.info(f"Added claim: '{sentence[:50]}...' supported by evidence {evidence_idx}")
 
-        # Fallback: match the whole response if no sentence-level claims were found
+        # Fallback: match the whole response if no sentence-level claims were found.
+        # Use a stricter min_overlap than sentence-level (0.35 vs 0.20) to prevent
+        # single common words like 'Wald' or 'einen' from grounding off-topic responses.
         if not claims_list:
-            match_result = fuzzy_match_quote_to_beat(response, active_beats, threshold=0.4)
+            match_result = fuzzy_match_quote_to_beat(response, active_beats, threshold=0.4, min_overlap=0.20)
             if match_result:
                 beat, quote = match_result
                 evidence_list.append(Evidence(
