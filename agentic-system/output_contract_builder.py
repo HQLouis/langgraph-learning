@@ -26,6 +26,8 @@ from backend.models.output_contract import (
     Evidence,
     Claim,
     AnswerType,
+    Task,
+    TaskType,
 )
 
 logger = logging.getLogger(__name__)
@@ -323,6 +325,16 @@ def build_output_contract(
     answer_type = AnswerType(answer_type_str)
     logger.info(f"Detected answer_type: {answer_type}")
 
+    # Detect task type
+    task_type_str, learning_goal = detect_task_type(aufgaben, response)
+    task: Optional[Task] = None
+    if task_type_str != "NONE":
+        task = Task(
+            task_type=TaskType(task_type_str),
+            learning_goal=learning_goal,
+        )
+    logger.info(f"Detected task_type: {task_type_str}")
+
     # Build grounding with typed Evidence / Claim objects
     evidence_list: List[Evidence] = []
     claims_list: List[Claim] = []
@@ -398,7 +410,7 @@ def build_output_contract(
     contract = ResponseContract(
         answer_type=answer_type,
         spoken_text=response,
-        task=None,  # TODO LNG: wire in Task model once aufgaben detection is reliable
+        task=task,
         grounding=grounding,
         confidence=round(confidence, 2),
     )

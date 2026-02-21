@@ -36,7 +36,6 @@ class ExpectedChildResponseType(str, Enum):
     NONE = "NONE"
 
 
-# TODO LNG: Entfernen!
 class Task(BaseModel):
     """Educational task embedded in the response."""
     task_type: TaskType = Field(
