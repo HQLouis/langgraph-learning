@@ -18,7 +18,14 @@ dependencies = [
     "slowapi>=0.1.9",
     "emoji>=2.14.0",
     "boto3>=1.35.0",
+    "pytest-json-report>=1.5.0",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["agentic-system"]
+markers = [
+    "contract: output contract / structural field-presence tests (fast, deterministic)",
+    "llm_feature: tests that invoke the real dialog system LLM (slow, costs API credits)",
+    "llm_judge: tests that use an LLM judge to evaluate response quality",
+    "simulated: Strategy B tests — full conversation simulation from scratch (slowest)",
+]

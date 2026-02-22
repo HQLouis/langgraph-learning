@@ -61,6 +61,16 @@ def masterChatbot(state: State, llm):
     {getMasterPrompt() if not is_conversation_ended(message_count) else ''}
     """
 
+    # Inject child profile so the LLM knows the child's name, age, and gender
+    child_profile = state.get('child_profile', '')
+    if child_profile:
+        system_context += f"""
+
+    [KIND-PROFIL — IMMER BEACHTEN]
+    {child_profile}
+    Sprich das Kind immer mit seinem Namen an und verwende eine dem Geschlecht entsprechende Sprache.
+    """
+
     if is_first_message:
         system_context += f"\n{getMasterFirstMessagePrompt()}"
 

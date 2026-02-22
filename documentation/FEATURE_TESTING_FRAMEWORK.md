@@ -19,33 +19,41 @@ This framework provides:
 ## 2. Directory Structure
 
 ```
-agentic-system/
+tests/
   feature-testing/
-    conftest.py                        # Shared fixtures: state builder, conversation simulator, LLM judge helper, CLI hooks
-    config.py                          # N_RUNS, PASS_THRESHOLD, judge model config
+    conftest.py                        # Pytest fixtures: LLM instances, CLI options, auto HTML report hook
+    ft_config.py                       # N_RUNS, PASS_THRESHOLD, judge model config
+    feature_testing_utils.py           # Pure helpers: build_state, run_n_times, llm_judge, simulate_conversation
     reporting/
       generate_report.py               # Generates HTML report from pytest JSON results
-      report_template.html             # HTML template for the report
+      output/                          # Reports written here (auto-created on each run)
     child-name-and-gender/             # Feature: system considers child's name & gender
+      __init__.py
       test_output_contract.py          # Structural field-presence assertions (fixture-based)
       test_name_usage.py               # LLM judge: is the child's name used? (fixture-based + fully-simulated)
       test_gender_usage.py             # LLM judge: is language gender-appropriate? (fixture-based + fully-simulated)
     <next-feature>/
+      __init__.py
       test_output_contract.py
       test_<aspect>.py
       ...
 ```
 
-**Boundary with `tests/`**: The existing `tests/` directory contains regression and unit tests for
-individual modules. `feature-testing/` tests user-facing behavioral features end-to-end, from state
-input to dialog output. The two directories are complementary and independent.
+**Boundary with the rest of `tests/`**: The existing `tests/agentic_system/` directory contains
+regression and unit tests for individual modules. `tests/feature-testing/` tests user-facing
+behavioral features end-to-end, from state input to dialog output. The two directories are
+complementary and independent.
+
+> **Note on `ft_config.py`**: The config file is named `ft_config` (not `config`) to avoid
+> shadowing the `agentic-system/config/` package that `nodes.py` imports from when pytest adds
+> `agentic-system/` to `sys.path`.
 
 ---
 
-## 3. Configuration (`config.py`)
+## 3. Configuration (`ft_config.py`)
 
 ```python
-# agentic-system/feature-testing/config.py
+# tests/feature-testing/ft_config.py
 
 N_RUNS: int = 5
 # How many times each probabilistic (LLM-based) test is executed per test run.
@@ -55,7 +63,7 @@ PASS_THRESHOLD: float = 0.80
 # Fraction of N_RUNS that must pass for the test to be considered passing.
 # Example: N_RUNS=5, PASS_THRESHOLD=0.80 → at least 4/5 runs must pass.
 
-JUDGE_MODEL: str = "gemini-2.0-flash"
+JUDGE_MODEL: str = "google_genai:gemini-2.0-flash"
 # The LLM used as a judge for content-based assertions.
 # Should be a capable but cost-efficient model.
 
@@ -63,15 +71,19 @@ JUDGE_TEMPERATURE: float = 0.0
 # Keep as low as possible for consistent judging.
 # 0.0 = deterministic sampling (if supported by the provider).
 
-SYSTEM_MODEL: str = "gemini-2.0-flash"
+SYSTEM_MODEL: str = "google_genai:gemini-2.0-flash"
 # The LLM used to run the dialog system under test.
 # All feature tests always use the real LLM — no mocking.
+
+SIMULATED_N_RUNS: int = 3
+# Default N_RUNS for fully-simulated (Strategy B) tests.
+# Lower than fixture-based tests because each run involves multiple LLM calls.
 ```
 
 These values can be overridden via pytest CLI options (registered in `conftest.py`):
 
 ```bash
-pytest agentic-system/feature-testing/ --n-runs=10 --pass-threshold=0.9
+pytest tests/feature-testing/ --n-runs=10 --pass-threshold=0.9
 ```
 
 ---
@@ -279,7 +291,7 @@ Pattern:
 
 ## 6. Example Feature: "Child Name & Gender Consideration"
 
-### Feature directory: `agentic-system/feature-testing/child-name-and-gender/`
+### Feature directory: `tests/feature-testing/child-name-and-gender/`
 
 This feature verifies that the dialog system personalizes its responses using the child's name
 and uses gender-appropriate language.
@@ -399,22 +411,22 @@ Pytest markers used for CI configuration:
 
 ```bash
 # Run all feature tests (real LLM, generates HTML report)
-pytest agentic-system/feature-testing/ -v --html-report
+pytest tests/feature-testing/ -v --html-report
 
 # Run a single feature
-pytest agentic-system/feature-testing/child-name-and-gender/ -v
+pytest tests/feature-testing/child-name-and-gender/ -v
 
 # Run only output contract tests across all features (fast)
-pytest agentic-system/feature-testing/ -m contract -v
+pytest tests/feature-testing/ -m contract -v
 
 # Run only fixture-based LLM tests (no full simulations)
-pytest agentic-system/feature-testing/ -m "llm_feature and not simulated" -v
+pytest tests/feature-testing/ -m "llm_feature and not simulated" -v
 
 # Run only fully-simulated tests
-pytest agentic-system/feature-testing/ -m simulated -v
+pytest tests/feature-testing/ -m simulated -v
 
 # Override N_RUNS and PASS_THRESHOLD for a stricter run
-pytest agentic-system/feature-testing/ --n-runs=10 --pass-threshold=0.9
+pytest tests/feature-testing/ --n-runs=10 --pass-threshold=0.9
 ```
 
 **Terminal failure output example**:
@@ -431,7 +443,7 @@ FAILED test_name_used_female_child — Only 2/5 runs passed (required: 80%)
 
 ## 9. HTML Report
 
-After each test run, an HTML report is generated in `agentic-system/feature-testing/reporting/`.
+After each test run, an HTML report is generated in `tests/feature-testing/reporting/output/`.
 The report is designed to be readable by non-technical stakeholders.
 
 ### Report structure
