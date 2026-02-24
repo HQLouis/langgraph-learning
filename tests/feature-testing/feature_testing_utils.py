@@ -162,7 +162,7 @@ def build_state(
 
 
 def run_n_times(
-    test_fn: Callable[[], tuple[bool, str]],
+    test_fn: Callable[[], tuple[bool, str, str]],
     n: int,
     threshold: float,
 ) -> None:
@@ -181,13 +181,13 @@ def run_n_times(
         AssertionError: When fewer than (threshold * n) runs pass, including
                         per-run PASS/FAIL verdicts and reasons.
     """
-    results: list[tuple[bool, str]] = [test_fn() for _ in range(n)]
-    passes = sum(1 for passed, _ in results if passed)
+    results: list[tuple[bool, str, str]] = [test_fn() for _ in range(n)]
+    passes = sum(1 for passed, _, _ in results if passed)
 
     if passes / n < threshold:
         details = "\n".join(
-            f"  Run {i + 1}: {'PASS' if passed else 'FAIL'} — {reason}"
-            for i, (passed, reason) in enumerate(results)
+            f"  Run {i + 1}: {'PASS' if passed else 'FAIL'} — {response_text} — {reason}"
+            for i, (passed, response_text, reason) in enumerate(results)
         )
         raise AssertionError(
             f"Only {passes}/{n} runs passed "
@@ -215,7 +215,7 @@ Do not add any other text.
 --- Your Verdict (PASS or FAIL + reason) ---"""
 
 
-def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[bool, str]:
+def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[bool, str, str]:
     """
     Evaluate response_text against a natural-language criterion using the judge LLM.
 
@@ -227,7 +227,7 @@ def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[b
         criterion: English-language criterion the response must satisfy.
 
     Returns:
-        (passed, reason) where passed is True iff the first line is "PASS".
+        (passed, response_text, reason) where passed is True iff the first line is "PASS".
     """
     prompt = _JUDGE_PROMPT_TEMPLATE.format(
         response_text=response_text,
@@ -240,7 +240,7 @@ def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[b
     reason = lines[1].strip() if len(lines) > 1 else verdict_raw
 
     passed = verdict_line.startswith("PASS")
-    return passed, reason
+    return passed, response_text, reason
 
 
 # ---------------------------------------------------------------------------
