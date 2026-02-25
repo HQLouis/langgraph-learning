@@ -27,9 +27,6 @@ from feature_testing_utils import (
     simulate_conversation,
     MESSAGES_TURN_3_MID_STORY,
 )
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import ft_config as _cfg
 

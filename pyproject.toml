@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["agentic-system"]
+pythonpath = ["agentic-system", "tests/feature-testing"]
 markers = [
     "contract: output contract / structural field-presence tests (fast, deterministic)",
     "llm_feature: tests that invoke the real dialog system LLM (slow, costs API credits)",
