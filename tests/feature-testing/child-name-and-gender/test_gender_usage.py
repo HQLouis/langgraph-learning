@@ -91,7 +91,7 @@ class TestGenderUsageFixtureBased:
             messages=[HumanMessage(content="Hallo!")],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
@@ -111,7 +111,7 @@ class TestGenderUsageFixtureBased:
             messages=[HumanMessage(content="Hallo!")],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
@@ -133,7 +133,7 @@ class TestGenderUsageFixtureBased:
             ],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
@@ -166,7 +166,7 @@ class TestGenderUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             _, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Emma",
@@ -185,7 +185,7 @@ class TestGenderUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             _, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Jonas",
