@@ -24,6 +24,8 @@ from feature_testing_utils import (
     build_state,
     llm_judge,
     simulate_conversation,
+    state_to_setting,
+    simulation_to_setting,
     MESSAGES_TURN_3_MID_STORY,
 )
 
@@ -97,7 +99,8 @@ class TestNameUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
 
-        run_details_recorder(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_NAME_USED_EMMA))
 
     def test_name_used_male_child(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
@@ -117,7 +120,8 @@ class TestNameUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_LUCA)
 
-        run_details_recorder(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_NAME_USED_LUCA))
 
     def test_name_used_mid_conversation(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
@@ -144,7 +148,8 @@ class TestNameUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA_MID_CONVERSATION)
 
-        run_details_recorder(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_NAME_USED_EMMA_MID_CONVERSATION))
 
 
 # ---------------------------------------------------------------------------
@@ -174,17 +179,26 @@ class TestNameUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str, str]:
-            _, spoken_text = simulate_conversation(
+        def _run() -> tuple:
+            final_state, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Emma",
                 child_age=6,
                 child_gender="weiblich",
                 child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
             )
-            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
+            from langchain_core.messages import HumanMessage as _HM
+            conversation = [
+                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+                for m in final_state.get("messages", [])
+            ]
+            return passed, resp, reason, conversation
 
-        run_details_recorder(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold,
+                             setting=simulation_to_setting("Emma", 6, "weiblich",
+                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
+                                                           CRITERION_NAME_USED_EMMA))
 
     def test_name_used_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
@@ -193,15 +207,23 @@ class TestNameUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str, str]:
-            _, spoken_text = simulate_conversation(
+        def _run() -> tuple:
+            final_state, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Jonas",
                 child_age=8,
                 child_gender="männlich",
                 child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
             )
-            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_JONAS)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_JONAS)
+            from langchain_core.messages import HumanMessage as _HM
+            conversation = [
+                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+                for m in final_state.get("messages", [])
+            ]
+            return passed, resp, reason, conversation
 
-        run_details_recorder(_run, n, pass_threshold)
-
+        run_details_recorder(_run, n, pass_threshold,
+                             setting=simulation_to_setting("Jonas", 8, "männlich",
+                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
+                                                           CRITERION_NAME_USED_JONAS))

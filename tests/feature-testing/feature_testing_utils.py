@@ -197,6 +197,89 @@ def build_state(
 
 
 # ---------------------------------------------------------------------------
+# Setting extractors — derive report metadata from test inputs, not strings
+# ---------------------------------------------------------------------------
+
+
+def state_to_setting(state: State, criterion: str, strategy: str = "Fixture-based (Strategy A)") -> dict:
+    """
+    Derive a human-readable test-setting dict from a State object.
+
+    Reads child_profile, messages, story_id and chapter_id directly from the
+    state so there is no manual string duplication in the test file.
+
+    Args:
+        state:     The State produced by build_state().
+        criterion: The judge criterion string used in this test.
+        strategy:  Short label for the test strategy (default: Strategy A).
+
+    Returns:
+        A dict ready to be passed as ``setting=`` to run_details_recorder.
+    """
+    import re as _re
+    from langchain_core.messages import HumanMessage as _HM
+
+    # ── Parse child_profile free-form string ────────────────────────────────
+    # Format: "Das Kind heißt {name}, ist {age} Jahre alt und ist {gender_word}."
+    profile = state.get("child_profile", "")
+    name_match = _re.search(r"heißt\s+(\S+),", profile)
+    age_match  = _re.search(r"ist\s+(\d+)\s+Jahre", profile)
+    gender_match = _re.search(r"und ist\s+(.+?)\.", profile)
+    child_name   = name_match.group(1)  if name_match   else "?"
+    child_age    = age_match.group(1)   if age_match    else "?"
+    gender_word  = gender_match.group(1) if gender_match else "?"
+
+    # ── Structured conversation history ─────────────────────────────────────
+    # Store as a list of {role, content} dicts so the report renderer can
+    # display each turn as its own labelled bubble rather than a flat string.
+    messages = state.get("messages", [])
+    conversation: list[dict] = [
+        {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+        for m in messages
+    ]
+
+    return {
+        "Child":        f"{child_name}, {child_age} years old, {gender_word}",
+        "Strategy":     strategy,
+        "Story":        f"{state.get('story_id', '?')} / {state.get('chapter_id', '?')}",
+        "Criterion":    criterion,
+        # Special key — rendered as a chat transcript by _build_setting_dropdown
+        "__messages__": conversation,
+    }
+
+
+def simulation_to_setting(
+        child_name: str,
+        child_age: int,
+        child_gender: str,
+        child_inputs: list[str],
+        criterion: str,
+) -> dict:
+    """
+    Derive a human-readable test-setting dict for Strategy B (simulated) tests.
+
+    Args:
+        child_name:   Child's first name.
+        child_age:    Child's age in years.
+        child_gender: "weiblich" or "männlich".
+        child_inputs: Ordered list of hardcoded child utterances used in the simulation.
+        criterion:    The judge criterion string used in this test.
+
+    Returns:
+        A dict ready to be passed as ``setting=`` to run_details_recorder.
+    """
+    gender_label = "female" if child_gender == "weiblich" else "male"
+    return {
+        "Child":        f"{child_name}, {child_age} years old, {gender_label}",
+        "Strategy":     f"Fully simulated (Strategy B) — {len(child_inputs)} turns from scratch",
+        "Criterion":    criterion,
+        # Child inputs as planned conversation turns — system responses are
+        # captured per-run from the actual simulation and stored in the sidecar.
+        "__messages__": [{"role": "Child", "content": s} for s in child_inputs],
+    }
+
+
+# ---------------------------------------------------------------------------
 # N-run helper
 # ---------------------------------------------------------------------------
 
@@ -207,23 +290,32 @@ def run_n_times(
         threshold: float,
         _node_id: str | None = None,
         _sidecar_path: "Path | None" = None,
+        _setting: dict | None = None,
 ) -> None:
     """
     Execute test_fn n times and assert that at least (threshold * n) runs pass.
 
-    test_fn must return a (passed: bool, response_text: str, reason: str) tuple
-    so that failure details can be included in the assertion message.
+    test_fn must return either:
+      (passed: bool, response_text: str, reason: str)          — Strategy A
+      (passed: bool, response_text: str, reason: str,
+       conversation: list[dict])                               — Strategy B
+
+    The optional 4th element is a list of ``{role, content}`` dicts
+    representing the full conversation that occurred during that run.  When
+    present it is stored in the sidecar so the HTML report can show the actual
+    turn-by-turn exchange inside each run card.
 
     When _node_id and _sidecar_path are provided the per-run results are also
     written to a sidecar JSON file so that the HTML report generator can show
     run details for *passing* tests (where pytest stores no longrepr).
 
     Args:
-        test_fn:        Zero-argument callable returning (passed, response_text, reason).
+        test_fn:        Zero-argument callable returning a 3- or 4-tuple.
         n:              Total number of executions.
         threshold:      Required pass rate as a fraction (e.g. 0.80 for 80 %).
         _node_id:       pytest node ID — used as key in the sidecar file.
         _sidecar_path:  Path to the sidecar JSON file that accumulates run details.
+        _setting:       Optional dict describing the test setup shown in the HTML report.
 
     Raises:
         AssertionError: When fewer than (threshold * n) runs pass, including
@@ -231,19 +323,31 @@ def run_n_times(
     """
     import json as _json
 
-    results: list[tuple[bool, str, str]] = [test_fn() for _ in range(n)]
-    passes = sum(1 for passed, _, _ in results if passed)
+    raw_results: list[tuple] = [test_fn() for _ in range(n)]
+    passes = sum(1 for r in raw_results if r[0])
 
-    # ── Persist run details to sidecar so the report can show them ──────────
+    # ── Persist run details to sidecar ───────────────────────────────────────
     if _node_id and _sidecar_path:
         try:
             sidecar: dict = {}
             if _sidecar_path.exists():
                 sidecar = _json.loads(_sidecar_path.read_text(encoding="utf-8"))
-            sidecar[_node_id] = [
-                {"passed": passed, "response_text": response_text, "reason": reason}
-                for passed, response_text, reason in results
-            ]
+
+            runs_out = []
+            for r in raw_results:
+                passed, response_text, reason = r[0], r[1], r[2]
+                conversation = list(r[3]) if len(r) >= 4 else []
+                runs_out.append({
+                    "passed": passed,
+                    "response_text": response_text,
+                    "reason": reason,
+                    "conversation": conversation,
+                })
+
+            sidecar[_node_id] = {
+                "setting": _setting or {},
+                "runs": runs_out,
+            }
             _sidecar_path.write_text(
                 _json.dumps(sidecar, ensure_ascii=False, indent=2), encoding="utf-8"
             )
@@ -252,8 +356,8 @@ def run_n_times(
 
     if passes / n < threshold:
         details = "\n".join(
-            f"  Run {i + 1}: {'PASS' if passed else 'FAIL'} — {response_text} — {reason}"
-            for i, (passed, response_text, reason) in enumerate(results)
+            f"  Run {i + 1}: {'PASS' if r[0] else 'FAIL'} — {r[1]} — {r[2]}"
+            for i, r in enumerate(raw_results)
         )
         raise AssertionError(
             f"Only {passes}/{n} runs passed "

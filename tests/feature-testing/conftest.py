@@ -103,7 +103,17 @@ def run_details_recorder(request: pytest.FixtureRequest):
     Usage in a test:
         def test_something(self, system_llm, judge_llm, n_runs, pass_threshold,
                            run_details_recorder):
-            run_details_recorder(lambda: ..., n_runs, pass_threshold)
+            run_details_recorder(
+                lambda: ...,
+                n_runs,
+                pass_threshold,
+                setting={
+                    "Child": "Emma, 6y, female",
+                    "Strategy": "Fixture-based (Strategy A)",
+                    "Criterion": "Name 'Emma' must appear in response",
+                    "Conversation context": "First turn",
+                },
+            )
     """
     import functools
     from feature_testing_utils import run_n_times as _run_n_times
@@ -119,8 +129,13 @@ def run_details_recorder(request: pytest.FixtureRequest):
     node_id: str = request.node.nodeid
 
     @functools.wraps(_run_n_times)
-    def _recorder(test_fn, n, threshold):
-        _run_n_times(test_fn, n, threshold, _node_id=node_id, _sidecar_path=sidecar_path)
+    def _recorder(test_fn, n, threshold, setting: dict | None = None):
+        _run_n_times(
+            test_fn, n, threshold,
+            _node_id=node_id,
+            _sidecar_path=sidecar_path,
+            _setting=setting,
+        )
 
     return _recorder
 

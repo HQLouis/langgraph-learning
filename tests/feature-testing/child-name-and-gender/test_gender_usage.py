@@ -19,6 +19,8 @@ from feature_testing_utils import (
     build_state,
     llm_judge,
     simulate_conversation,
+    state_to_setting,
+    simulation_to_setting,
     MESSAGES_TURN_3_MID_STORY,
 )
 import sys
@@ -96,7 +98,8 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_FEMALE)
 
-        run_details_recorder(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_GENDER_APPROPRIATE_FEMALE))
 
     def test_gender_appropriate_male(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
@@ -116,7 +119,8 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_MALE)
 
-        run_details_recorder(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_GENDER_APPROPRIATE_MALE))
 
     def test_gender_consistent_mid_story(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
@@ -138,7 +142,8 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_CONSISTENT_FEMALE)
 
-        run_details_recorder(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold,
+                             setting=state_to_setting(state, CRITERION_GENDER_CONSISTENT_FEMALE))
 
 
 # ---------------------------------------------------------------------------
@@ -165,17 +170,26 @@ class TestGenderUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str, str]:
-            _, spoken_text = simulate_conversation(
+        def _run() -> tuple:
+            final_state, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Emma",
                 child_age=6,
                 child_gender="weiblich",
                 child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
             )
-            return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_FEMALE)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_FEMALE)
+            from langchain_core.messages import HumanMessage as _HM
+            conversation = [
+                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+                for m in final_state.get("messages", [])
+            ]
+            return passed, resp, reason, conversation
 
-        run_details_recorder(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold,
+                             setting=simulation_to_setting("Emma", 6, "weiblich",
+                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
+                                                           CRITERION_GENDER_APPROPRIATE_FEMALE))
 
     def test_gender_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
@@ -184,15 +198,23 @@ class TestGenderUsageSimulated:
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str, str]:
-            _, spoken_text = simulate_conversation(
+        def _run() -> tuple:
+            final_state, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Jonas",
                 child_age=7,
                 child_gender="männlich",
                 child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
             )
-            return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_MALE)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_MALE)
+            from langchain_core.messages import HumanMessage as _HM
+            conversation = [
+                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+                for m in final_state.get("messages", [])
+            ]
+            return passed, resp, reason, conversation
 
-        run_details_recorder(_run, n, pass_threshold)
-
+        run_details_recorder(_run, n, pass_threshold,
+                             setting=simulation_to_setting("Jonas", 7, "männlich",
+                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
+                                                           CRITERION_GENDER_APPROPRIATE_MALE))
