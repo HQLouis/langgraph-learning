@@ -34,9 +34,25 @@ for _p in [str(_AGENTIC_SYSTEM), str(_PROJECT_ROOT), str(_FEATURE_TESTING_DIR)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from states import State
+from states import State, BackgroundState
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Background analysis field list — derived from BackgroundState so it stays
+# in sync with states.py without any duplication here.
+# Only fields that also exist on State (i.e. the analysis outputs) are relevant;
+# infrastructure fields like child_id, audio_book, story_id, … are excluded.
+# ---------------------------------------------------------------------------
+_STATE_FIELDS: frozenset[str] = frozenset(State.__annotations__)
+_BG_ANALYSIS_FIELDS: tuple[str, ...] = tuple(
+    field for field in BackgroundState.__annotations__
+    if field in _STATE_FIELDS
+    and field not in {
+        "child_id", "audio_book_id", "child_profile", "audio_book",
+        "story_id", "chapter_id", "beat_context", "active_beat_ids", "num_planned_tasks",
+    }
+)
 
 # ---------------------------------------------------------------------------
 # Story fixture constants
@@ -89,22 +105,25 @@ MESSAGES_TURN_3_MID_STORY: list = [
 ]
 """Three complete exchanges — child is mid-story."""
 
+
 # ---------------------------------------------------------------------------
 # State builder
 # ---------------------------------------------------------------------------
 
 
 def build_state(
-    child_name: str,
-    child_age: int,
-    child_gender: str,
-    messages: list,
-    audio_book: str = FIXTURE_AUDIO_BOOK,
-    aufgaben: str = "",
-    satzbaubegrenzung: str = "",
-    story_id: str = FIXTURE_STORY_ID,
-    chapter_id: str = FIXTURE_CHAPTER_ID,
-    active_beat_ids: list | None = None,
+        child_name: str,
+        child_age: int,
+        child_gender: str,
+        messages: list,
+        audio_book: str = FIXTURE_AUDIO_BOOK,
+        aufgaben: str = "",
+        satzbaubegrenzung: str = "",
+        story_id: str = FIXTURE_STORY_ID,
+        chapter_id: str = FIXTURE_CHAPTER_ID,
+        active_beat_ids: list | None = None,
+        background_state: dict | None = None,
+        num_planned_tasks: int = 5,
 ) -> State:
     """
     Build a fully-populated State for Strategy A (fixture-based) tests.
@@ -120,10 +139,21 @@ def build_state(
         messages: Pre-built conversation history (use MESSAGES_TURN_* constants).
         audio_book: Story content (defaults to the Mia und Leo fixture).
         aufgaben: Analysis result from the aufgaben worker (empty = not yet analysed).
+                  Ignored when background_state is provided.
         satzbaubegrenzung: Sentence structure constraints (empty = none active).
+                           Ignored when background_state is provided.
         story_id: Story identifier for the beat system.
         chapter_id: Chapter identifier for the beat system.
         active_beat_ids: Beat IDs currently in scope (None = empty list).
+        background_state: Optional dict (BackgroundState-shaped) produced by
+                          :func:`run_background_analysis`.  When provided, ALL
+                          analysis fields are copied from it so that the
+                          immediate graph sees the full background output — not
+                          only ``aufgaben`` and ``satzbaubegrenzung``.  The
+                          individual keyword arguments above act as fallbacks
+                          when this is None.
+        num_planned_tasks: Number of story tasks planned for this chapter.
+                           Passed through to the beat system (default: 5).
 
     Returns:
         A fully-populated State TypedDict ready for use with masterChatbot().
@@ -133,25 +163,35 @@ def build_state(
         f"Das Kind heißt {child_name}, ist {child_age} Jahre alt und ist {gender_word}."
     )
 
+    # Resolve analysis values: background_state wins over individual kwargs.
+    # _BG_ANALYSIS_FIELDS is derived from BackgroundState.__annotations__ at
+    # module level — no duplication needed here.
+    if background_state is not None:
+        analysis = {field: background_state.get(field, "") for field in _BG_ANALYSIS_FIELDS}
+    else:
+        analysis = {field: "" for field in _BG_ANALYSIS_FIELDS}
+        analysis["aufgaben"] = aufgaben
+        analysis["satzbaubegrenzung"] = satzbaubegrenzung
+
     return State(
         child_id="fixture_child",
         audio_book_id="fixture_audio_book",
         child_profile=child_profile,
         audio_book=audio_book,
         messages=messages,
-        grammar_analysis="",
-        speech_comprehension_analysis="",
-        sprachhandlung_analysis="",
-        vocabulary_analysis="",
-        boredom_analysis="",
-        foerderfokus="",
-        aufgaben=aufgaben,
-        satzbaubegrenzung=satzbaubegrenzung,
+        grammar_analysis=analysis["grammar_analysis"],
+        speech_comprehension_analysis=analysis["speech_comprehension_analysis"],
+        sprachhandlung_analysis=analysis["sprachhandlung_analysis"],
+        vocabulary_analysis=analysis["vocabulary_analysis"],
+        boredom_analysis=analysis["boredom_analysis"],
+        foerderfokus=analysis["foerderfokus"],
+        aufgaben=analysis["aufgaben"],
+        satzbaubegrenzung=analysis["satzbaubegrenzung"],
         story_id=story_id,
         chapter_id=chapter_id,
         beat_context=None,
         active_beat_ids=active_beat_ids or [],
-        num_planned_tasks=5,
+        num_planned_tasks=num_planned_tasks,
         response_contract=None,
     )
 
@@ -162,9 +202,9 @@ def build_state(
 
 
 def run_n_times(
-    test_fn: Callable[[], tuple[bool, str, str]],
-    n: int,
-    threshold: float,
+        test_fn: Callable[[], tuple[bool, str, str]],
+        n: int,
+        threshold: float,
 ) -> None:
     """
     Execute test_fn n times and assert that at least (threshold * n) runs pass.
@@ -244,22 +284,156 @@ def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[b
 
 
 # ---------------------------------------------------------------------------
+# Strategy B — background graph runner
+# ---------------------------------------------------------------------------
+
+
+def run_background_analysis(
+        background_llm_instance,
+        child_name: str,
+        child_age: int,
+        child_gender: str,
+        messages: list,
+        audio_book: str = FIXTURE_AUDIO_BOOK,
+        story_id: str = FIXTURE_STORY_ID,
+        chapter_id: str = FIXTURE_CHAPTER_ID,
+        num_planned_tasks: int = 5,
+) -> dict:
+    """
+    Run the real ``background_graph`` against a completed conversation turn.
+
+    This mirrors the production flow where the background_graph is triggered
+    asynchronously after each immediate_graph turn.  The workers analyse the
+    conversation and produce analysis fields (``aufgaben``, ``satzbaubegrenzung``,
+    and all intermediate analyses) that are consumed by the *next*
+    immediate_graph turn via ``load_analysis``.
+
+    Uses ``create_background_analysis_graph`` directly so the graph topology,
+    node order, and LLM bindings are always in sync with the real implementation
+    — no manual duplication of the DAG here.
+
+    The background workers call ``get_messages_history_from_immediate_graph_state``
+    to fetch the conversation from the immediate graph's LangGraph checkpoint.
+    In the test context there is no LangGraph runtime, so we monkey-patch that
+    helper to return our in-memory message list instead.
+
+    The ``initialStateLoader`` node would normally load ``audio_book`` and
+    ``child_profile`` from DynamoDB/S3.  We bypass it by pre-seeding those
+    values directly into the input state, relying on the
+    ``background_graph_needs_initial_state`` conditional edge that skips
+    ``initialStateLoader`` when both fields are already present.
+
+    Args:
+        background_llm_instance: LLM used by the background analysis workers.
+        child_name: The child's first name.
+        child_age: The child's age in years.
+        child_gender: "weiblich" or "männlich".
+        messages: Full conversation history *after* the most recent turn
+                  (i.e. including the AI reply for that turn).
+        audio_book: Story content.
+        story_id: Story identifier.
+        chapter_id: Chapter identifier.
+        num_planned_tasks: Number of story tasks planned for this chapter,
+                           forwarded to the beat system (default: 5).
+
+    Returns:
+        A dict (BackgroundState-shaped) containing all analysis fields produced
+        by the background graph, including ``aufgaben`` and ``satzbaubegrenzung``.
+        Pass it directly to :func:`build_state` via the ``background_state``
+        parameter.
+    """
+    from langgraph.checkpoint.memory import MemorySaver
+    from background_graph import create_background_analysis_graph
+    import nodes as _nodes_module
+
+    # Build child_profile in the same format used by data_loaders.py.
+    gender_word = "ein Mädchen" if child_gender == "weiblich" else "ein Junge"
+    child_profile = (
+        f"Das Kind heißt {child_name}, ist {child_age} Jahre alt und ist {gender_word}."
+    )
+
+    # Pre-seed the state so background_graph_needs_initial_state skips
+    # initialStateLoader (which would try to hit DynamoDB/S3).
+    initial_input = {
+        "child_id": "fixture_child",
+        "audio_book_id": "fixture_audio_book",
+        "child_profile": child_profile,
+        "audio_book": audio_book,
+        "story_id": story_id,
+        "chapter_id": chapter_id,
+        "num_planned_tasks": num_planned_tasks,
+        # None of the background graph workers read beat_context or active_beat_ids from the state.
+        # So seeding them as None / [] is not just acceptable — it 's semantically correct: the background graph genuinely has no use for beat context, and pre-seeding them simply satisfies the TypedDict without influencing any behaviour.
+        "beat_context": None,
+        "active_beat_ids": [],
+    }
+
+    # Patch the helper that workers use to read the conversation history so it
+    # returns our in-memory message list rather than a LangGraph checkpoint.
+    _original_get_messages = _nodes_module.get_messages_history_from_immediate_graph_state
+
+    def _patched_get_messages(_config):  # noqa: ANN001
+        return messages
+
+    _nodes_module.get_messages_history_from_immediate_graph_state = _patched_get_messages
+
+    # Each test run gets its own in-memory checkpointer so state never leaks
+    # between invocations.
+    _memory = MemorySaver()
+    _graph = create_background_analysis_graph(background_llm_instance, _memory)
+    _config = {"configurable": {"thread_id": "fixture_bg_thread"}}
+
+    try:
+        _graph.invoke(initial_input, _config)
+        snapshot = _graph.get_state(_config)
+        bg_state: dict = dict(snapshot.values)
+    finally:
+        # Always restore the original helper to avoid side-effects on other tests.
+        _nodes_module.get_messages_history_from_immediate_graph_state = _original_get_messages
+
+    logger.info(
+        "run_background_analysis: completed — aufgaben length=%d, satzbaubegrenzung length=%d",
+        len(bg_state.get("aufgaben", "")),
+        len(bg_state.get("satzbaubegrenzung", "")),
+    )
+
+    return bg_state
+
+
+# ---------------------------------------------------------------------------
 # Strategy B — full conversation simulator
 # ---------------------------------------------------------------------------
 
 
 def simulate_conversation(
-    system_llm_instance,
-    child_name: str,
-    child_age: int,
-    child_gender: str,
-    child_inputs: list[str],
-    audio_book: str = FIXTURE_AUDIO_BOOK,
-    story_id: str = FIXTURE_STORY_ID,
-    chapter_id: str = FIXTURE_CHAPTER_ID,
+        system_llm_instance,
+        child_name: str,
+        child_age: int,
+        child_gender: str,
+        child_inputs: list[str],
+        audio_book: str = FIXTURE_AUDIO_BOOK,
+        story_id: str = FIXTURE_STORY_ID,
+        chapter_id: str = FIXTURE_CHAPTER_ID,
+        run_background: bool = True,
+        background_llm_instance=None,
+        num_planned_tasks: int = 5,
 ) -> tuple[State, str]:
     """
     Run a full conversation from scratch using real LLMs (Strategy B).
+
+    Mirrors the real production pipeline:
+
+    1. **Turn N (immediate_graph):** ``masterChatbot`` generates a response
+       using the full ``BackgroundState`` analysis from the *previous*
+       background run (all fields empty on turn 0).
+    2. **After Turn N (background_graph):** The real background graph is invoked
+       via :func:`run_background_analysis`.  Its full ``BackgroundState``
+       snapshot — including ``aufgaben``, ``satzbaubegrenzung``, and all
+       intermediate analyses — is stored.
+    3. **Turn N+1:** The complete background snapshot is passed to
+       :func:`build_state` via ``background_state=`` so all analysis fields
+       are available to ``masterChatbot``, not only the two that are currently
+       consumed.
 
     The human side of the conversation is driven by the hardcoded child_inputs
     list to keep simulations as reproducible as possible despite the LLM's
@@ -275,6 +449,15 @@ def simulate_conversation(
         audio_book: Story content (defaults to the Mia und Leo fixture).
         story_id: Story identifier.
         chapter_id: Chapter identifier.
+        run_background: When True (default) the real background graph is run
+                        after every turn so that all analysis fields reflect
+                        the real pipeline.  Set to False to skip background
+                        analysis (faster but less realistic).
+        background_llm_instance: LLM used for the background workers.  Falls
+                                  back to ``system_llm_instance`` when None.
+        num_planned_tasks: Number of story tasks planned for this chapter,
+                           forwarded to the beat system in both the immediate
+                           and background graphs (default: 5).
 
     Returns:
         (final_state, spoken_text) where final_state is the State after the
@@ -282,9 +465,15 @@ def simulate_conversation(
     """
     from nodes import masterChatbot
 
+    _bg_llm = background_llm_instance if background_llm_instance is not None else system_llm_instance
+
     accumulated_messages: list = []
     result: dict = {}
     spoken_text: str = ""
+
+    # Full BackgroundState snapshot from the previous background run.
+    # None on the first turn — build_state will default all analysis fields to "".
+    current_background_state: dict | None = None
 
     for turn_index, child_input in enumerate(child_inputs):
         accumulated_messages = list(accumulated_messages) + [HumanMessage(content=child_input)]
@@ -297,6 +486,10 @@ def simulate_conversation(
             audio_book=audio_book,
             story_id=story_id,
             chapter_id=chapter_id,
+            # Pass the full BackgroundState from the previous run so ALL
+            # analysis fields are available — not only aufgaben/satzbaubegrenzung.
+            background_state=current_background_state,
+            num_planned_tasks=num_planned_tasks,
         )
 
         result = masterChatbot(turn_state, system_llm_instance)
@@ -313,6 +506,26 @@ def simulate_conversation(
             len(child_inputs),
         )
 
+        # Run the real background graph to produce the full analysis snapshot
+        # for the *next* turn, mirroring the async background_graph invocation
+        # in production.
+        if run_background:
+            logger.info(
+                "simulate_conversation: running background analysis after turn %d",
+                turn_index + 1,
+            )
+            current_background_state = run_background_analysis(
+                background_llm_instance=_bg_llm,
+                child_name=child_name,
+                child_age=child_age,
+                child_gender=child_gender,
+                messages=accumulated_messages,
+                audio_book=audio_book,
+                story_id=story_id,
+                chapter_id=chapter_id,
+                num_planned_tasks=num_planned_tasks,
+            )
+
     final_state = build_state(
         child_name=child_name,
         child_age=child_age,
@@ -321,9 +534,10 @@ def simulate_conversation(
         audio_book=audio_book,
         story_id=story_id,
         chapter_id=chapter_id,
+        background_state=current_background_state,
+        num_planned_tasks=num_planned_tasks,
     )
     if result.get("response_contract"):
         final_state["response_contract"] = result["response_contract"]  # type: ignore[index]
 
     return final_state, spoken_text
-
