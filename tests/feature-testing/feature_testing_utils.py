@@ -205,24 +205,50 @@ def run_n_times(
         test_fn: Callable[[], tuple[bool, str, str]],
         n: int,
         threshold: float,
+        _node_id: str | None = None,
+        _sidecar_path: "Path | None" = None,
 ) -> None:
     """
     Execute test_fn n times and assert that at least (threshold * n) runs pass.
 
-    test_fn must return a (passed: bool, reason: str) tuple so that failure
-    details can be included in the assertion message.
+    test_fn must return a (passed: bool, response_text: str, reason: str) tuple
+    so that failure details can be included in the assertion message.
+
+    When _node_id and _sidecar_path are provided the per-run results are also
+    written to a sidecar JSON file so that the HTML report generator can show
+    run details for *passing* tests (where pytest stores no longrepr).
 
     Args:
-        test_fn: Zero-argument callable returning (passed, reason).
-        n: Total number of executions.
-        threshold: Required pass rate as a fraction (e.g. 0.80 for 80 %).
+        test_fn:        Zero-argument callable returning (passed, response_text, reason).
+        n:              Total number of executions.
+        threshold:      Required pass rate as a fraction (e.g. 0.80 for 80 %).
+        _node_id:       pytest node ID — used as key in the sidecar file.
+        _sidecar_path:  Path to the sidecar JSON file that accumulates run details.
 
     Raises:
         AssertionError: When fewer than (threshold * n) runs pass, including
                         per-run PASS/FAIL verdicts and reasons.
     """
+    import json as _json
+
     results: list[tuple[bool, str, str]] = [test_fn() for _ in range(n)]
     passes = sum(1 for passed, _, _ in results if passed)
+
+    # ── Persist run details to sidecar so the report can show them ──────────
+    if _node_id and _sidecar_path:
+        try:
+            sidecar: dict = {}
+            if _sidecar_path.exists():
+                sidecar = _json.loads(_sidecar_path.read_text(encoding="utf-8"))
+            sidecar[_node_id] = [
+                {"passed": passed, "response_text": response_text, "reason": reason}
+                for passed, response_text, reason in results
+            ]
+            _sidecar_path.write_text(
+                _json.dumps(sidecar, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:  # noqa: BLE001 — never let sidecar I/O break the test
+            pass
 
     if passes / n < threshold:
         details = "\n".join(

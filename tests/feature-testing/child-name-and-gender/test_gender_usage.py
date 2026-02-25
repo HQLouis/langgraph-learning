@@ -17,7 +17,6 @@ from langchain_core.messages import HumanMessage
 
 from feature_testing_utils import (
     build_state,
-    run_n_times,
     llm_judge,
     simulate_conversation,
     MESSAGES_TURN_3_MID_STORY,
@@ -79,7 +78,7 @@ SIMULATED_CHILD_INPUTS_3_TURNS = [
 class TestGenderUsageFixtureBased:
     """Strategy A: Verify gender-appropriate language against hardcoded state fixtures."""
 
-    def test_gender_appropriate_female(self, system_llm, judge_llm, n_runs, pass_threshold):
+    def test_gender_appropriate_female(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
         Response for 'Emma' (female, 6y) at first turn should use
         gender-appropriate language for a girl.
@@ -97,9 +96,9 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_FEMALE)
 
-        run_n_times(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold)
 
-    def test_gender_appropriate_male(self, system_llm, judge_llm, n_runs, pass_threshold):
+    def test_gender_appropriate_male(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
         Response for 'Jonas' (male, 7y) at first turn should use
         gender-appropriate language for a boy.
@@ -117,9 +116,9 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_MALE)
 
-        run_n_times(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold)
 
-    def test_gender_consistent_mid_story(self, system_llm, judge_llm, n_runs, pass_threshold):
+    def test_gender_consistent_mid_story(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
         Response for 'Emma' (female, 6y) mid-story (after 3 prior exchanges)
         should maintain consistent gender-appropriate language.
@@ -139,7 +138,7 @@ class TestGenderUsageFixtureBased:
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_CONSISTENT_FEMALE)
 
-        run_n_times(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold)
 
 
 # ---------------------------------------------------------------------------
@@ -159,7 +158,7 @@ class TestGenderUsageSimulated:
     real LLM calls.
     """
 
-    def test_gender_simulated_female(self, system_llm, judge_llm, pass_threshold):
+    def test_gender_simulated_female(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
         Full simulation for 'Emma' (female, 6y) over 3 turns.
         The final response should use language appropriate for a girl.
@@ -176,9 +175,9 @@ class TestGenderUsageSimulated:
             )
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_FEMALE)
 
-        run_n_times(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold)
 
-    def test_gender_simulated_male(self, system_llm, judge_llm, pass_threshold):
+    def test_gender_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
         Full simulation for 'Jonas' (male, 7y) over 3 turns.
         The final response should use language appropriate for a boy.
@@ -195,5 +194,5 @@ class TestGenderUsageSimulated:
             )
             return llm_judge(judge_llm, spoken_text, CRITERION_GENDER_APPROPRIATE_MALE)
 
-        run_n_times(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold)
 

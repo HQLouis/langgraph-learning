@@ -22,7 +22,6 @@ from langchain_core.messages import HumanMessage
 
 from feature_testing_utils import (
     build_state,
-    run_n_times,
     llm_judge,
     simulate_conversation,
     MESSAGES_TURN_3_MID_STORY,
@@ -80,7 +79,7 @@ SIMULATED_CHILD_INPUTS_3_TURNS = [
 class TestNameUsageFixtureBased:
     """Strategy A: Verify name usage against hardcoded state fixtures."""
 
-    def test_name_used_female_child(self, system_llm, judge_llm, n_runs, pass_threshold):
+    def test_name_used_female_child(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
         The system should address or mention the child 'Emma' (female, 6y)
         in a first-turn response.
@@ -92,15 +91,15 @@ class TestNameUsageFixtureBased:
             messages=[HumanMessage(content="Hallo!")],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
 
-        run_n_times(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold)
 
-    def test_name_used_male_child(self, system_llm, judge_llm, n_runs, pass_threshold):
+    def test_name_used_male_child(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
         The system should address or mention the child 'Luca' (male, 7y)
         in a first-turn response.
@@ -112,15 +111,15 @@ class TestNameUsageFixtureBased:
             messages=[HumanMessage(content="Hallo!")],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_LUCA)
 
-        run_n_times(_run, n_runs, pass_threshold)
+        run_details_recorder(_run, n_runs, pass_threshold)
 
-    def test_name_used_mid_conversation(self, system_llm, judge_llm, pass_threshold):
+    def test_name_used_mid_conversation(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
         The system should produce a personally-directed response mid-story
         (after 3 prior exchanges).
@@ -139,13 +138,13 @@ class TestNameUsageFixtureBased:
             ],
         )
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA_MID_CONVERSATION)
 
-        run_n_times(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold)
 
 
 # ---------------------------------------------------------------------------
@@ -168,14 +167,14 @@ class TestNameUsageSimulated:
     real LLM calls.
     """
 
-    def test_name_used_simulated_female(self, system_llm, judge_llm, pass_threshold):
+    def test_name_used_simulated_female(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
         Full simulation for 'Emma' (female, 6y) over 3 turns.
         The final response should address or mention 'Emma'.
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             _, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Emma",
@@ -185,16 +184,16 @@ class TestNameUsageSimulated:
             )
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
 
-        run_n_times(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold)
 
-    def test_name_used_simulated_male(self, system_llm, judge_llm, pass_threshold):
+    def test_name_used_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
         Full simulation for 'Jonas' (male, 8y) over 3 turns.
         The final response should address or mention 'Jonas'.
         """
         n = _cfg.SIMULATED_N_RUNS
 
-        def _run() -> tuple[bool, str]:
+        def _run() -> tuple[bool, str, str]:
             _, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
                 child_name="Jonas",
@@ -204,5 +203,5 @@ class TestNameUsageSimulated:
             )
             return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_JONAS)
 
-        run_n_times(_run, n, pass_threshold)
+        run_details_recorder(_run, n, pass_threshold)
 

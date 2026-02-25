@@ -93,6 +93,38 @@ def judge_llm():
     return init_chat_model(_cfg.JUDGE_MODEL, temperature=_cfg.JUDGE_TEMPERATURE)
 
 
+@pytest.fixture(scope="function")
+def run_details_recorder(request: pytest.FixtureRequest):
+    """
+    Returns a thin wrapper around run_n_times that automatically injects the
+    current test's node ID and the sidecar file path so per-run details are
+    persisted for *every* test — including passing ones.
+
+    Usage in a test:
+        def test_something(self, system_llm, judge_llm, n_runs, pass_threshold,
+                           run_details_recorder):
+            run_details_recorder(lambda: ..., n_runs, pass_threshold)
+    """
+    import functools
+    from feature_testing_utils import run_n_times as _run_n_times
+
+    json_report_path_str: str | None = request.config.getoption(
+        "--json-report-file", default=None
+    )
+    sidecar_path = (
+        Path(json_report_path_str).with_suffix(".run_details.json")
+        if json_report_path_str
+        else None
+    )
+    node_id: str = request.node.nodeid
+
+    @functools.wraps(_run_n_times)
+    def _recorder(test_fn, n, threshold):
+        _run_n_times(test_fn, n, threshold, _node_id=node_id, _sidecar_path=sidecar_path)
+
+    return _recorder
+
+
 # ---------------------------------------------------------------------------
 # Auto HTML report generation after every test session
 # ---------------------------------------------------------------------------
@@ -144,6 +176,7 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
             n_runs=n_runs,
             threshold=threshold,
             model=_cfg.SYSTEM_MODEL,
+            sidecar_path=json_path.with_suffix(".run_details.json"),
         )
         # Symlink latest → stamped for easy access
         if latest_path.exists() or latest_path.is_symlink():
