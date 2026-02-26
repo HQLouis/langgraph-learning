@@ -67,7 +67,9 @@ CRITERION_NAME_USED_JONAS = (
 
 SIMULATED_CHILD_INPUTS_3_TURNS = [
     "Hallo!",
+    "Hallo Emma! Ich freue mich, dass du heute mit mir lernst. Heute lesen wir eine Geschichte über ein Mädchen namens Mia.",
     "Cool, ich mag Geschichten!",
+    "Das ist toll! Mia lebt in einem kleinen Dorf am Waldrand. Eines Tages geht sie in den Wald, um Beeren zu sammeln.",
     "Wer ist Mia?",
 ]
 

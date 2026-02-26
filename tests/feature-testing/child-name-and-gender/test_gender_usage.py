@@ -66,7 +66,9 @@ CRITERION_GENDER_CONSISTENT_FEMALE = (
 
 SIMULATED_CHILD_INPUTS_3_TURNS = [
     "Hallo!",
+    "Hallo Emma! Schön, dass du heute dabei bist. Heute lesen wir eine Geschichte über ein Mädchen namens Mia und einen Fuchs namens Leo.",
     "Ich höre gerne Geschichten.",
+    "Das freut mich, Emma! Mia geht in den Wald, um Beeren zu sammeln. Was denkst du, was sie dort finden könnte?",
     "Was macht Mia im Wald?",
 ]
 

@@ -258,24 +258,41 @@ def simulation_to_setting(
     """
     Derive a human-readable test-setting dict for Strategy B (simulated) tests.
 
+    ``child_inputs`` uses the interleaved format expected by
+    :func:`simulate_conversation`: alternating child and pre-defined system
+    utterances, ending with a child utterance (odd length).  All but the last
+    system response are pre-defined in the list; the last system response is
+    generated live by the dialog system and captured in the sidecar.
+
     Args:
         child_name:   Child's first name.
         child_age:    Child's age in years.
         child_gender: "weiblich" or "männlich".
-        child_inputs: Ordered list of hardcoded child utterances used in the simulation.
+        child_inputs: Conversation script in interleaved format:
+                      ``[child_1, system_1, child_2, system_2, …, child_N]``.
         criterion:    The judge criterion string used in this test.
 
     Returns:
         A dict ready to be passed as ``setting=`` to run_details_recorder.
     """
     gender_label = "female" if child_gender == "weiblich" else "male"
+    num_child_turns = (len(child_inputs) + 1) // 2
+
+    # Reconstruct the scripted conversation for display.
+    # Elements at even indices are child turns; odd indices are pre-defined
+    # system responses.  The final system response is generated live.
+    messages: list[dict] = []
+    for i, text in enumerate(child_inputs):
+        role = "Child" if i % 2 == 0 else "System"
+        messages.append({"role": role, "content": text})
+    # Indicate that the last system response is generated live.
+    messages.append({"role": "System", "content": "(generated live — evaluated by judge)"})
+
     return {
         "Child":        f"{child_name}, {child_age} years old, {gender_label}",
-        "Strategy":     f"Fully simulated (Strategy B) — {len(child_inputs)} turns from scratch",
+        "Strategy":     f"Fully simulated (Strategy B) — {num_child_turns} child turns from scratch",
         "Criterion":    criterion,
-        # Child inputs as planned conversation turns — system responses are
-        # captured per-run from the actual simulation and stored in the sidecar.
-        "__messages__": [{"role": "Child", "content": s} for s in child_inputs],
+        "__messages__": messages,
     }
 
 
@@ -545,44 +562,71 @@ def simulate_conversation(
         story_id: str = FIXTURE_STORY_ID,
         chapter_id: str = FIXTURE_CHAPTER_ID,
         run_background: bool = True,
+        run_background_only_before_last: bool = True,
         background_llm_instance=None,
         num_planned_tasks: int = 5,
 ) -> tuple[State, str]:
     """
     Run a full conversation from scratch using real LLMs (Strategy B).
 
-    Mirrors the real production pipeline:
+    **Conversation format (``child_inputs``):**
 
-    1. **Turn N (immediate_graph):** ``masterChatbot`` generates a response
-       using the full ``BackgroundState`` analysis from the *previous*
-       background run (all fields empty on turn 0).
-    2. **After Turn N (background_graph):** The real background graph is invoked
-       via :func:`run_background_analysis`.  Its full ``BackgroundState``
-       snapshot — including ``aufgaben``, ``satzbaubegrenzung``, and all
-       intermediate analyses — is stored.
-    3. **Turn N+1:** The complete background snapshot is passed to
-       :func:`build_state` via ``background_state=`` so all analysis fields
-       are available to ``masterChatbot``, not only the two that are currently
-       consumed.
+    The list defines the *full* conversation script — alternating child and
+    system turns — with the system responses pre-fixed for every turn except
+    the last.  The last element is **always a child utterance**; the system's
+    response to it is what gets produced live and evaluated by the judge.
 
-    The human side of the conversation is driven by the hardcoded child_inputs
-    list to keep simulations as reproducible as possible despite the LLM's
-    non-determinism on the system side.
+    Expected structure::
+
+        [
+            child_turn_1,   # str  — child utterance
+            system_turn_1,  # str  — pre-defined system response
+            child_turn_2,   # str  — child utterance
+            system_turn_2,  # str  — pre-defined system response
+            ...
+            child_turn_N,   # str  — last child utterance  ← tested turn
+        ]
+
+    So an odd-length list means N child turns and N-1 pre-defined system
+    turns.  The list must have an odd length (at least 1).
+
+    This guarantees:
+
+    * The conversation history fed into the final turn is fully deterministic
+      and always makes sense — earlier system responses are authored, not
+      randomly generated.
+    * Only ``masterChatbot`` (immediate_graph) is called on the **last** child
+      turn, making evaluation stable.
+
+    **Background analysis (``run_background`` / ``run_background_only_before_last``):**
+
+    * ``run_background=False`` — background analysis is never run (fast, less realistic).
+    * ``run_background=True, run_background_only_before_last=True`` (default) —
+      background analysis is run **only after the second-to-last child turn**
+      (i.e. once, to populate the analysis fields used by the final turn).
+    * ``run_background=True, run_background_only_before_last=False`` —
+      background analysis is run after **every** child turn, mirroring full
+      production behaviour.
 
     Args:
         system_llm_instance: Real LLM for the dialog system under test.
         child_name: The child's first name.
         child_age: The child's age in years.
         child_gender: "weiblich" or "männlich".
-        child_inputs: Hardcoded child utterances, one per turn.
-                      The last entry is the input for the turn being tested.
+        child_inputs: Conversation script as described above.  Odd-length list
+                      of alternating child and system utterances, ending with a
+                      child utterance.  Minimum length: 1.
         audio_book: Story content (defaults to the Mia und Leo fixture).
         story_id: Story identifier.
         chapter_id: Chapter identifier.
         run_background: When True (default) the real background graph is run
-                        after every turn so that all analysis fields reflect
-                        the real pipeline.  Set to False to skip background
-                        analysis (faster but less realistic).
+                        to produce analysis fields.  Controlled further by
+                        ``run_background_only_before_last``.
+        run_background_only_before_last: When True (default) background analysis
+                        is run only after the second-to-last child turn — the
+                        one whose analysis actually influences the final system
+                        response.  Set to False together with ``run_background``
+                        to run background analysis after *every* turn.
         background_llm_instance: LLM used for the background workers.  Falls
                                   back to ``system_llm_instance`` when None.
         num_planned_tasks: Number of story tasks planned for this chapter,
@@ -591,11 +635,47 @@ def simulate_conversation(
 
     Returns:
         (final_state, spoken_text) where final_state is the State after the
-        last turn and spoken_text is the system's response to the last input.
+        last turn and spoken_text is the system's response to the last child
+        input.
+
+    Raises:
+        ValueError: If ``child_inputs`` has an even length (meaning it would
+                    end on a system turn rather than a child turn).
     """
     from nodes import masterChatbot
 
+    if len(child_inputs) % 2 == 0:
+        raise ValueError(
+            "child_inputs must have an odd length: alternating child/system utterances "
+            "ending with a child utterance.  "
+            f"Got {len(child_inputs)} elements (even)."
+        )
+
     _bg_llm = background_llm_instance if background_llm_instance is not None else system_llm_instance
+
+    # ---------------------------------------------------------------------------
+    # Parse child_inputs into structured turns.
+    #
+    # child_inputs layout (0-based indices):
+    #   0        → child turn 1
+    #   1        → system turn 1  (pre-defined)
+    #   2        → child turn 2
+    #   3        → system turn 2  (pre-defined)
+    #   ...
+    #   N-1      → last child turn  (tested — system response generated live)
+    #
+    # child_turns  = elements at even indices: child_inputs[0], [2], [4], …
+    # system_turns = elements at odd  indices: child_inputs[1], [3], [5], …
+    #                (one fewer than child_turns)
+    # ---------------------------------------------------------------------------
+    child_turns: list[str] = child_inputs[0::2]
+    system_turns: list[str] = child_inputs[1::2]  # pre-defined system responses
+
+    total_child_turns = len(child_turns)
+    # Index (0-based) of the second-to-last child turn, i.e. the last turn
+    # after which background analysis is relevant.  -1 means there is only one
+    # child turn and no background is needed.
+    before_last_child_index = total_child_turns - 2
 
     accumulated_messages: list = []
     result: dict = {}
@@ -605,47 +685,15 @@ def simulate_conversation(
     # None on the first turn — build_state will default all analysis fields to "".
     current_background_state: dict | None = None
 
-    for turn_index, child_input in enumerate(child_inputs):
+    for turn_index, child_input in enumerate(child_turns):
+        is_last_turn = turn_index == total_child_turns - 1
+
+        # Append the child's utterance.
         accumulated_messages = list(accumulated_messages) + [HumanMessage(content=child_input)]
 
-        turn_state = build_state(
-            child_name=child_name,
-            child_age=child_age,
-            child_gender=child_gender,
-            messages=accumulated_messages,
-            audio_book=audio_book,
-            story_id=story_id,
-            chapter_id=chapter_id,
-            # Pass the full BackgroundState from the previous run so ALL
-            # analysis fields are available — not only aufgaben/satzbaubegrenzung.
-            background_state=current_background_state,
-            num_planned_tasks=num_planned_tasks,
-        )
-
-        result = masterChatbot(turn_state, system_llm_instance)
-        ai_messages = result.get("messages", [])
-
-        if ai_messages:
-            ai_message = ai_messages[-1]
-            spoken_text = ai_message.content
-            accumulated_messages = accumulated_messages + [ai_message]
-
-        logger.info(
-            "simulate_conversation: turn %d/%d completed",
-            turn_index + 1,
-            len(child_inputs),
-        )
-
-        # Run the real background graph to produce the full analysis snapshot
-        # for the *next* turn, mirroring the async background_graph invocation
-        # in production.
-        if run_background:
-            logger.info(
-                "simulate_conversation: running background analysis after turn %d",
-                turn_index + 1,
-            )
-            current_background_state = run_background_analysis(
-                background_llm_instance=_bg_llm,
+        if is_last_turn:
+            # ── Final turn: run the immediate_graph (masterChatbot) live ────
+            turn_state = build_state(
                 child_name=child_name,
                 child_age=child_age,
                 child_gender=child_gender,
@@ -653,8 +701,63 @@ def simulate_conversation(
                 audio_book=audio_book,
                 story_id=story_id,
                 chapter_id=chapter_id,
+                background_state=current_background_state,
                 num_planned_tasks=num_planned_tasks,
             )
+
+            result = masterChatbot(turn_state, system_llm_instance)
+            ai_messages = result.get("messages", [])
+
+            if ai_messages:
+                ai_message = ai_messages[-1]
+                spoken_text = ai_message.content
+                accumulated_messages = accumulated_messages + [ai_message]
+
+            logger.info(
+                "simulate_conversation: final turn %d/%d completed (immediate_graph)",
+                turn_index + 1,
+                total_child_turns,
+            )
+        else:
+            # ── Intermediate turn: use the pre-defined system response ───────
+            system_response = system_turns[turn_index]
+            ai_message = AIMessage(content=system_response)
+            accumulated_messages = accumulated_messages + [ai_message]
+            spoken_text = system_response
+
+            logger.info(
+                "simulate_conversation: turn %d/%d — using pre-defined system response",
+                turn_index + 1,
+                total_child_turns,
+            )
+
+            # ── Background analysis after this intermediate turn ─────────────
+            # Determine whether to run background for this turn:
+            #   • run_background must be True
+            #   • Either run_background_only_before_last is False (run every turn),
+            #     or this is the second-to-last child turn (before_last_child_index).
+            should_run_bg = run_background and (
+                not run_background_only_before_last
+                or turn_index == before_last_child_index
+            )
+
+            if should_run_bg:
+                logger.info(
+                    "simulate_conversation: running background analysis after turn %d/%d",
+                    turn_index + 1,
+                    total_child_turns,
+                )
+                current_background_state = run_background_analysis(
+                    background_llm_instance=_bg_llm,
+                    child_name=child_name,
+                    child_age=child_age,
+                    child_gender=child_gender,
+                    messages=accumulated_messages,
+                    audio_book=audio_book,
+                    story_id=story_id,
+                    chapter_id=chapter_id,
+                    num_planned_tasks=num_planned_tasks,
+                )
 
     final_state = build_state(
         child_name=child_name,
