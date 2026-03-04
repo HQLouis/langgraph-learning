@@ -407,6 +407,8 @@ def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[b
     Evaluate response_text against a natural-language criterion using the judge LLM.
 
     The judge prompt is always in English for maximum model consistency.
+    LangSmith tracing is disabled by default for judge calls to avoid polluting
+    traces. Set JUDGE_LANGSMITH_TRACING=true to enable.
 
     Args:
         judge_llm_instance: Initialised judge LLM (from the judge_llm fixture).
@@ -416,11 +418,19 @@ def llm_judge(judge_llm_instance, response_text: str, criterion: str) -> tuple[b
     Returns:
         (passed, response_text, reason) where passed is True iff the first line is "PASS".
     """
+    from ft_config import JUDGE_LANGSMITH_TRACING
+
     prompt = _JUDGE_PROMPT_TEMPLATE.format(
         response_text=response_text,
         criterion=criterion,
     )
-    verdict_raw = judge_llm_instance.invoke([HumanMessage(content=prompt)]).content.strip()
+
+    if JUDGE_LANGSMITH_TRACING:
+        verdict_raw = judge_llm_instance.invoke([HumanMessage(content=prompt)]).content.strip()
+    else:
+        from langsmith import tracing_context
+        with tracing_context(enabled=False):
+            verdict_raw = judge_llm_instance.invoke([HumanMessage(content=prompt)]).content.strip()
 
     lines = verdict_raw.splitlines()
     verdict_line = lines[0].strip().upper() if lines else ""

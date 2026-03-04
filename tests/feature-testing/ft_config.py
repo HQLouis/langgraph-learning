@@ -36,6 +36,17 @@ SYSTEM_MODEL: str = "google_genai:gemini-2.0-flash"
 Feature tests always call the real LLM — there is no mocking."""
 
 # ---------------------------------------------------------------------------
+# LangSmith tracing for judge calls
+# ---------------------------------------------------------------------------
+
+import os as _os
+
+JUDGE_LANGSMITH_TRACING: bool = _os.environ.get("JUDGE_LANGSMITH_TRACING", "false").lower() == "true"
+"""Whether judge LLM calls are traced in LangSmith.
+Defaults to false to avoid polluting traces with evaluation calls.
+Set JUDGE_LANGSMITH_TRACING=true to enable."""
+
+# ---------------------------------------------------------------------------
 # Strategy B (fully-simulated) defaults
 # ---------------------------------------------------------------------------
 
