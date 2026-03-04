@@ -1,0 +1,63 @@
+Verwendete Geschichte:
+Geschichte:
+
+“Pia muss nicht perfekt sein“
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten.Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen“ und „Dankeschön“.Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie.Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?“, wollten sie wissen.„Von mir aus kann’s losgehen!“, antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß.Sie nannten sie nur „das Mädchen, das immer alles richtig macht“,denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler.Er aß seine Wachsmalkreide und malte mit grünen Bohnen.Er tanzte mit den Händen und spielte mit den Füßen Klavier.Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam.Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus.Die Eier flogen in hohem Bogen durch die Luft.Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht!„Das war knapp!“, dachte Pia. „Tut mir leid, Pia … Ich habe ein Stück Rhabarber fallen lassen.“„Öfft doch nöcht slömm, Möllö.“
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.„Komm doch zu uns!“, rief Millie.„Es macht Spaß!“, sagte Sarah.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten.Millie und Sarah lachten, während sie übers Eis stolperten.„Nein, danke“, sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an.„Ist alles in Ordnung, Spätzchen?“, fragte ihr Vater.„Ich habe Angst, dass ich es heute verpatze“, gestand Pia.„Und alle werden es sehen.“„Angst? Aber du machst doch nie etwas falsch!“, sagte ihr Vater mit einem Lächeln.
+Pia versuchte, auch zu lächeln.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit.Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte.Dann holte sie den Salzstreuer vom Küchentisch.Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!In Pias Bauch ging es drunter und drüber.
+Pia wartete darauf, dass ihre Jonglier-Musik einsetzte.
+„Da ist sie! Das ist das Mädchen, das immer alles richtig macht!“, sagte eine Frau.„Oh! Bei ihr läuft immer alles perfekt, immer!“, rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft.
+SUPER PIA! Als Nächstes kam der Salzstreuer.Und zum Schluss der Wasserballon.Pia war ganz bei der Sache!Die Zuschauer klatschten begeistert.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf …Die Körner, die herausrieselten, waren nicht weiß!
+HATSCHI!
+Hubert war von seinem eigenen Niesen so überrascht,dass er sich mit seinen kleinen Krallen am Luftballon festklammerte.
+PENG! Hubert, kleine Ballonfetzen und Pfeffer:Alles regnete auf Pias Kopf.
+Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht.Und was für einen …
+Die Musik verstummte.Pia wusste nicht, was sie machen sollte.
+Weinen?Von der Bühne rennen?
+Die Zuschauer hockten wie versteinert da.Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war!
+Pia schaute zu Hubert.Der schaute zurück.Sein Hamsterfell war pitschnass und voller kleiner Ballonreste.Pia musste kichern.Ihr Kichern wurde zu einem Glucksen.Und aus dem Glucksen wurde ein richtig lautes Lachen.
+Eigenschaft:
+Auf die Antwort des Kindes eingehen
+Beispiel 1:
+
+Ja, der Ballon platzt! Was passiert mit Pia? Ist Pia traurig oder lacht Pia?
+
+Kind: Pia lacht
+
+Ja, Pia lacht! Das war eine tolle Geschichte, nicht wahr?
+
+(Hier sollte vertieft werden, warum Pia lacht: über Gefühle des Kindes kurz sprechen, ob es auch mal witzige Situationen erlebt hätte..bevor es zum Schluß kommt.)
+
+mögliche KI Antwort:
+Ja, Pia lacht! Das war eine tolle Geschichte, nicht wahr?
+Was meinst du, warum lacht Pia?
+Kind: … z. B. antwortet Kind, dass es lustig war.
+Ja, das war lustig! Stell dir vor: der Hamster ist pitschnass und voller kleiner Ballonreste. So was ist Pia noch nie passiert,oder?
+Kind…Ja
+Hast du auch schon mal so etwas Lustiges gesehen?
+Kind…ja
+Erzähl mal kurz, was das war…
+Kind erzählt:
+KI bestätigt, dass es …
+Kind weiß nicht:
+KI kehrt sanft zu der Geschichte:
+“Vielleicht erinnerst du dich beim nächsten Mal und erzählst es mir dann. Lass uns dann jetzt überlegen, wie die Geschichte über Pia weiter geht, ok?”
+
+Anforderung für eine bessere KI Antwort:
+
+KI soll bei der Gelegenheit, wenn die Geschichte es zulässt (wenn es um: Grundgefühle geht/Ereignisse, die diese hervorrufen können/…) die Möglichkeit nutzen, und die Gefühle in der Geschichte erkennen, kurz ansprechen und über die Meinung/persönlichen Erlebnissen des Kindes dazu nachzufragen. 2-3x Dialogwechsel, dann wieder zu dem Hauptthema zurück.
