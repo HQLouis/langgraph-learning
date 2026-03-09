@@ -114,3 +114,4 @@ Dynamic prompt loading from AWS S3 with TTL-based caching (15s). Falls back to l
 - Clean code — Typing, modularity, maintainability
 - Testing-first mindset — For new modules, discuss testing strategy before implementation (approaches, tradeoffs, recommendations)
 - Unit tests — Always consider them for functions
+- Use Context7 to check up-to-date docs when needed for implementing new libraries or frameworks, or adding features using them
