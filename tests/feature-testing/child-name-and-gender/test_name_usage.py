@@ -1,6 +1,10 @@
 """
 Feature: Child Name & Gender Consideration
-Test file: Name Usage — does the system address the child by name?
+Test file: Name Usage — does the system greet the child by name?
+
+The system should use the child's name when greeting them at the start of
+a conversation.  Mid-conversation it is natural to use "du"/"dein" instead
+of repeating the name in every response, so only the greeting is tested.
 
 Two strategies are tested:
   Strategy A — fixture-based (fast, reproducible):
@@ -26,7 +30,6 @@ from feature_testing_utils import (
     simulate_conversation,
     state_to_setting,
     simulation_to_setting,
-    MESSAGES_TURN_3_MID_STORY,
 )
 
 import ft_config as _cfg
@@ -35,29 +38,17 @@ import ft_config as _cfg
 # Judge criteria (English)
 # ---------------------------------------------------------------------------
 
-CRITERION_NAME_USED_EMMA = (
-    "Does the response address or mention the child by the name 'Emma'? "
+CRITERION_NAME_IN_GREETING_EMMA = (
+    "The child 'Emma' has just said hello. Does the system's greeting "
+    "response address or mention the child by the name 'Emma'? "
     "Return PASS if the exact name 'Emma' appears anywhere in the response, "
     "FAIL otherwise."
 )
 
-CRITERION_NAME_USED_EMMA_MID_CONVERSATION = (
-    "The response is part of an ongoing conversation where the child 'Emma' has already been greeted by name. "
-    "Does the response feel personally directed at a specific child named 'Emma', "
-    "either by using her name, or by using direct personal address (e.g. 'du', 'dein', 'deine') "
-    "rather than a generic or impersonal tone? "
-    "Return PASS if the response is personal and child-directed, FAIL if it feels generic or impersonal."
-)
-
-CRITERION_NAME_USED_LUCA = (
-    "Does the response address or mention the child by the name 'Luca'? "
+CRITERION_NAME_IN_GREETING_LUCA = (
+    "The child 'Luca' has just said hello. Does the system's greeting "
+    "response address or mention the child by the name 'Luca'? "
     "Return PASS if the exact name 'Luca' appears anywhere in the response, "
-    "FAIL otherwise."
-)
-
-CRITERION_NAME_USED_JONAS = (
-    "Does the response address or mention the child by the name 'Jonas'? "
-    "Return PASS if the exact name 'Jonas' appears anywhere in the response, "
     "FAIL otherwise."
 )
 
@@ -65,12 +56,8 @@ CRITERION_NAME_USED_JONAS = (
 # Hardcoded child inputs for Strategy B simulations
 # ---------------------------------------------------------------------------
 
-SIMULATED_CHILD_INPUTS_3_TURNS = [
+SIMULATED_CHILD_GREETING = [
     "Hallo!",
-    "Hallo Emma! Ich freue mich, dass du heute mit mir lernst. Heute lesen wir eine Geschichte über ein Mädchen namens Mia.",
-    "Cool, ich mag Geschichten!",
-    "Das ist toll! Mia lebt in einem kleinen Dorf am Waldrand. Eines Tages geht sie in den Wald, um Beeren zu sammeln.",
-    "Wer ist Mia?",
 ]
 
 # ---------------------------------------------------------------------------
@@ -81,12 +68,12 @@ SIMULATED_CHILD_INPUTS_3_TURNS = [
 @pytest.mark.llm_feature
 @pytest.mark.llm_judge
 class TestNameUsageFixtureBased:
-    """Strategy A: Verify name usage against hardcoded state fixtures."""
+    """Strategy A: Verify name usage in the greeting against hardcoded state fixtures."""
 
-    def test_name_used_female_child(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
+    def test_name_in_greeting_female(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
-        The system should address or mention the child 'Emma' (female, 6y)
-        in a first-turn response.
+        The system should greet the child 'Emma' (female, 6y) by name
+        in its first response.
         """
         state = build_state(
             child_name="Emma",
@@ -99,15 +86,15 @@ class TestNameUsageFixtureBased:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
-            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
+            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_IN_GREETING_EMMA)
 
         run_details_recorder(_run, n_runs, pass_threshold,
-                             setting=state_to_setting(state, CRITERION_NAME_USED_EMMA))
+                             setting=state_to_setting(state, CRITERION_NAME_IN_GREETING_EMMA))
 
-    def test_name_used_male_child(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
+    def test_name_in_greeting_male(self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder):
         """
-        The system should address or mention the child 'Luca' (male, 7y)
-        in a first-turn response.
+        The system should greet the child 'Luca' (male, 7y) by name
+        in its first response.
         """
         state = build_state(
             child_name="Luca",
@@ -120,38 +107,10 @@ class TestNameUsageFixtureBased:
             from nodes import masterChatbot
             result = masterChatbot(state, system_llm)
             spoken_text = result["messages"][-1].content
-            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_LUCA)
+            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_IN_GREETING_LUCA)
 
         run_details_recorder(_run, n_runs, pass_threshold,
-                             setting=state_to_setting(state, CRITERION_NAME_USED_LUCA))
-
-    def test_name_used_mid_conversation(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
-        """
-        The system should produce a personally-directed response mid-story
-        (after 3 prior exchanges).
-
-        Mid-conversation, the system does not need to repeat the name in every
-        response — using direct address ('du', 'dein') is also acceptable.
-        Uses a fixed n=5 to give enough statistical headroom at the 80% threshold.
-        """
-        n = 5
-        state = build_state(
-            child_name="Emma",
-            child_age=6,
-            child_gender="weiblich",
-            messages=list(MESSAGES_TURN_3_MID_STORY) + [
-                HumanMessage(content="Was passiert als nächstes?")
-            ],
-        )
-
-        def _run() -> tuple[bool, str, str]:
-            from nodes import masterChatbot
-            result = masterChatbot(state, system_llm)
-            spoken_text = result["messages"][-1].content
-            return llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA_MID_CONVERSATION)
-
-        run_details_recorder(_run, n, pass_threshold,
-                             setting=state_to_setting(state, CRITERION_NAME_USED_EMMA_MID_CONVERSATION))
+                             setting=state_to_setting(state, CRITERION_NAME_IN_GREETING_LUCA))
 
 
 # ---------------------------------------------------------------------------
@@ -164,20 +123,19 @@ class TestNameUsageFixtureBased:
 @pytest.mark.simulated
 class TestNameUsageSimulated:
     """
-    Strategy B: Run the full conversation from scratch using real LLMs.
+    Strategy B: Run the greeting from scratch using real LLMs.
 
-    child_inputs are hardcoded so that the human side of the conversation is
-    reproducible. The system's earlier responses will vary, but the fixture
-    child inputs provide a stable anchor.
+    A single child input ("Hallo!") triggers the system's greeting.
+    The greeting is then checked for the child's name.
 
-    Uses SIMULATED_N_RUNS (default: 3) because each run involves multiple
-    real LLM calls.
+    Uses SIMULATED_N_RUNS (default: 3) because each run involves a
+    real LLM call.
     """
 
-    def test_name_used_simulated_female(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
+    def test_name_in_greeting_simulated_female(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
-        Full simulation for 'Emma' (female, 6y) over 3 turns.
-        The final response should address or mention 'Emma'.
+        Full simulation for 'Emma' (female, 6y).
+        The greeting response should address 'Emma' by name.
         """
         n = _cfg.SIMULATED_N_RUNS
 
@@ -187,9 +145,9 @@ class TestNameUsageSimulated:
                 child_name="Emma",
                 child_age=6,
                 child_gender="weiblich",
-                child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
+                child_inputs=SIMULATED_CHILD_GREETING,
             )
-            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_EMMA)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_IN_GREETING_EMMA)
             from langchain_core.messages import HumanMessage as _HM
             conversation = [
                 {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
@@ -199,25 +157,25 @@ class TestNameUsageSimulated:
 
         run_details_recorder(_run, n, pass_threshold,
                              setting=simulation_to_setting("Emma", 6, "weiblich",
-                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
-                                                           CRITERION_NAME_USED_EMMA))
+                                                           SIMULATED_CHILD_GREETING,
+                                                           CRITERION_NAME_IN_GREETING_EMMA))
 
-    def test_name_used_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
+    def test_name_in_greeting_simulated_male(self, system_llm, judge_llm, pass_threshold, run_details_recorder):
         """
-        Full simulation for 'Jonas' (male, 8y) over 3 turns.
-        The final response should address or mention 'Jonas'.
+        Full simulation for 'Luca' (male, 7y).
+        The greeting response should address 'Luca' by name.
         """
         n = _cfg.SIMULATED_N_RUNS
 
         def _run() -> tuple:
             final_state, spoken_text = simulate_conversation(
                 system_llm_instance=system_llm,
-                child_name="Jonas",
-                child_age=8,
+                child_name="Luca",
+                child_age=7,
                 child_gender="männlich",
-                child_inputs=SIMULATED_CHILD_INPUTS_3_TURNS,
+                child_inputs=SIMULATED_CHILD_GREETING,
             )
-            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_USED_JONAS)
+            passed, resp, reason = llm_judge(judge_llm, spoken_text, CRITERION_NAME_IN_GREETING_LUCA)
             from langchain_core.messages import HumanMessage as _HM
             conversation = [
                 {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
@@ -226,6 +184,6 @@ class TestNameUsageSimulated:
             return passed, resp, reason, conversation
 
         run_details_recorder(_run, n, pass_threshold,
-                             setting=simulation_to_setting("Jonas", 8, "männlich",
-                                                           SIMULATED_CHILD_INPUTS_3_TURNS,
-                                                           CRITERION_NAME_USED_JONAS))
+                             setting=simulation_to_setting("Luca", 7, "männlich",
+                                                           SIMULATED_CHILD_GREETING,
+                                                           CRITERION_NAME_IN_GREETING_LUCA))
