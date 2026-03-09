@@ -111,10 +111,20 @@ def masterChatbot(state: State, llm):
     - Nutze die Regeln nur, um die Form deiner Antwort zu steuern.
     """)
 
+    aufgaben_val = state.get('aufgaben', '')
+    satzbaubegrenzung_val = state.get('satzbaubegrenzung', '')
+    logger.info(
+        f"masterChatbot: Received from background graph — "
+        f"aufgaben: {len(aufgaben_val)} chars (empty: {not aufgaben_val.strip() if aufgaben_val else True}), "
+        f"satzbaubegrenzung: {len(satzbaubegrenzung_val)} chars (empty: {not satzbaubegrenzung_val.strip() if satzbaubegrenzung_val else True})"
+    )
+
     messages = [system_message]
-    if is_normal_phase(message_count) and (state.get('aufgaben') or state.get('satzbaubegrenzung')):
+    if is_normal_phase(message_count) and (aufgaben_val or satzbaubegrenzung_val):
         messages.append(meta_system)
-        logger.info(f"masterChatbot: Added meta_system with aufgaben and satzbaubegrenzung")
+        logger.info(f"masterChatbot: Injected meta_system message with aufgaben and satzbaubegrenzung")
+    else:
+        logger.info(f"masterChatbot: No meta_system injected (normal_phase: {is_normal_phase(message_count)}, has_aufgaben: {bool(aufgaben_val)}, has_satzbaubegrenzung: {bool(satzbaubegrenzung_val)})")
     if not is_normal_phase(message_count):
         termination_prompt = get_termination_prompt(message_count)
         termination_system = SystemMessage(content=f"""
@@ -205,20 +215,24 @@ def speechGrammarWorker(state: BackgroundState, config, llm):
     :return: Command with grammar analysis update
     """
     logger.info("speechGrammarWorker: Starting grammar analysis")
-    system_message = SystemMessage(content=getSpeechGrammarWorker_prompt())
+    prompt_content = getSpeechGrammarWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"speechGrammarWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"speechGrammarWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...' " if child_profile else "speechGrammarWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}. "
     )
 
     response = llm.invoke([system_message, analysis_message])
-    logger.info(f"speechGrammarWorker: Analysis completed with length: {len(response.content)}")
+    logger.info(f"speechGrammarWorker: Output → grammar_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"grammar_analysis": response.content})
 
@@ -232,19 +246,25 @@ def speechComprehensionWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with speech comprehension analysis update
     """
-    system_message = SystemMessage(content=getSpeechComprehensionWorker_prompt())
+    logger.info("speechComprehensionWorker: Starting comprehension analysis")
+    prompt_content = getSpeechComprehensionWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"speechComprehensionWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"speechComprehensionWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...'" if child_profile else "speechComprehensionWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}. "
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"speechComprehensionWorker: Output → speech_comprehension_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"speech_comprehension_analysis": response.content})
 
@@ -258,19 +278,25 @@ def sprachhandlungsAnalyseWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with interaction analysis update
     """
-    system_message = SystemMessage(content=getSprachhandlungAnalyseWorker_prompt())
+    logger.info("sprachhandlungsAnalyseWorker: Starting interaction analysis")
+    prompt_content = getSprachhandlungAnalyseWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"sprachhandlungsAnalyseWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"sprachhandlungsAnalyseWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...'" if child_profile else "sprachhandlungsAnalyseWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"sprachhandlungsAnalyseWorker: Output → sprachhandlung_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"sprachhandlung_analysis": response.content})
 
@@ -284,19 +310,25 @@ def speechVocabularyWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with vocabulary analysis update
     """
-    system_message = SystemMessage(content=getSpeechVocabularyWorker_prompt())
+    logger.info("speechVocabularyWorker: Starting vocabulary analysis")
+    prompt_content = getSpeechVocabularyWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"speechVocabularyWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"speechVocabularyWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...'" if child_profile else "speechVocabularyWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}."
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"speechVocabularyWorker: Output → vocabulary_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"vocabulary_analysis": response.content})
 
@@ -310,19 +342,25 @@ def boredomWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with boredom analysis update
     """
-    system_message = SystemMessage(content=getBoredomWorker_prompt())
+    logger.info("boredomWorker: Starting boredom analysis")
+    prompt_content = getBoredomWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"boredomWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"boredomWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...'" if child_profile else "boredomWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"boredomWorker: Output → boredom_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"boredom_analysis": response.content})
 
@@ -338,11 +376,14 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
     :return: Command with förderfokus analysis update
     """
     logger.info("foerderfokusWorker: Starting overall educational value analysis")
-    system_message = SystemMessage(content=getFoerderfokusWorker_prompt())
+    prompt_content = getFoerderfokusWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"foerderfokusWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
     grammar_analysis = state.get('grammar_analysis', '')
@@ -350,6 +391,14 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
     sprachhandlung_analysis = state.get('sprachhandlung_analysis', '')
     vocabulary_analysis = state.get('vocabulary_analysis', '')
     boredom_analysis = state.get('boredom_analysis', '')
+    logger.info(
+        f"foerderfokusWorker: Input analyses — "
+        f"grammar: {len(grammar_analysis)} chars (empty: {not grammar_analysis.strip()}), "
+        f"comprehension: {len(speech_comprehension_analysis)} chars (empty: {not speech_comprehension_analysis.strip()}), "
+        f"sprachhandlung: {len(sprachhandlung_analysis)} chars (empty: {not sprachhandlung_analysis.strip()}), "
+        f"vocabulary: {len(vocabulary_analysis)} chars (empty: {not vocabulary_analysis.strip()}), "
+        f"boredom: {len(boredom_analysis)} chars (empty: {not boredom_analysis.strip()})"
+    )
     analysis_message = HumanMessage(
 
         content=f"Child profile:\n{child_profile}.\n\n"
@@ -362,7 +411,7 @@ def foerderfokusWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
-    logger.info(f"foerderfokusWorker: Analysis completed - {response.content[:100]}...")
+    logger.info(f"foerderfokusWorker: Output → foerderfokus ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"foerderfokus": response.content})
 
@@ -377,14 +426,18 @@ def aufgabenWorker(state: BackgroundState, config, llm):
     :return: Command with task suggestions update
     """
     logger.info("aufgabenWorker: Starting task suggestions generation")
-    system_message = SystemMessage(content=getAufgabenWorker_prompt())
+    prompt_content = getAufgabenWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"aufgabenWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
     foerderfokus = state.get('foerderfokus', '')
+    logger.info(f"aufgabenWorker: Input — foerderfokus: {len(foerderfokus)} chars (empty: {not foerderfokus.strip()}), {len(messages_history)} messages")
     analysis_message = HumanMessage(
         content=f"Förderfokus analysis:\n{foerderfokus}\n\n"
                 f"Child profile:\n{child_profile}\n\n"
@@ -392,7 +445,7 @@ def aufgabenWorker(state: BackgroundState, config, llm):
     )
 
     response = llm.invoke([system_message, analysis_message])
-    logger.info(f"aufgabenWorker: Task suggestions generated - {response.content[:100]}...")
+    logger.info(f"aufgabenWorker: Output → aufgaben ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"aufgaben": response.content})
 
@@ -406,19 +459,25 @@ def satzbauAnalyseWorker(state: BackgroundState, config, llm):
     :param llm: Language model instance
     :return: Command with satzbau analysis update
     """
-    system_message = SystemMessage(content=getSatzbauAnalyseWorker_prompt())
+    logger.info("satzbauAnalyseWorker: Starting sentence structure analysis")
+    prompt_content = getSatzbauAnalyseWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"satzbauAnalyseWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     # Analyze the conversation without participating in it
+    messages_history = get_messages_history_from_immediate_graph_state(config)
     conversation_summary = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in get_messages_history_from_immediate_graph_state(config)
+        f"{msg.type}: {msg.content}" for msg in messages_history
     ])
     child_profile = state.get('child_profile', '')
+    logger.info(f"satzbauAnalyseWorker: Input — {len(messages_history)} messages, child_profile: '{child_profile[:60]}...'" if child_profile else "satzbauAnalyseWorker: Input — no child_profile")
     analysis_message = HumanMessage(
         content=f"Child profile: {child_profile}\n\n"
                 f"Conversation: {conversation_summary}"
     )
 
     response = llm.invoke([system_message, analysis_message])
+    logger.info(f"satzbauAnalyseWorker: Output → satzbau_analysis ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"satzbau_analysis": response.content})
 
@@ -433,15 +492,18 @@ def satzbauBegrenzungsWorker(state: BackgroundState, config, llm):
     :return: Command with satzbaubegrenzung update
     """
     logger.info("satzbauBegrenzungsWorker: Starting sentence structure constraints generation")
-    system_message = SystemMessage(content=getSatzbauBegrenzungsWorker_prompt())
+    prompt_content = getSatzbauBegrenzungsWorker_prompt()
+    system_message = SystemMessage(content=prompt_content)
+    logger.info(f"satzbauBegrenzungsWorker: Prompt length: {len(prompt_content)} chars (empty: {not prompt_content.strip()})")
 
     satzbau_analyse = state.get('satzbau_analysis', '')
+    logger.info(f"satzbauBegrenzungsWorker: Input — satzbau_analysis: {len(satzbau_analyse)} chars (empty: {not satzbau_analyse.strip()})")
     analysis_message = HumanMessage(
         content=f"Satzbauanalyse: {satzbau_analyse}"
     )
 
     response = llm.invoke([system_message, analysis_message])
-    logger.info(f"satzbauBegrenzungsWorker: Constraints generated - {response.content[:100]}...")
+    logger.info(f"satzbauBegrenzungsWorker: Output → satzbaubegrenzung ({len(response.content)} chars): {response.content[:200]}...")
     # Store analysis separately from conversation
     return Command(update={"satzbaubegrenzung": response.content})
 
@@ -488,13 +550,25 @@ def load_analysis(state: State, config, background_graph_instance) -> dict:
     """
     # TODO LNG: Make this conditional executed e.g. every third interaction.
     # TODO LNG: Add conditional edge if this node takes to much time.
+    logger.info("load_analysis: Reading analysis results from background graph")
     bg_thread_id = config["configurable"]["thread_id"] + "_analysis"
     snapshot = background_graph_instance.get_state({
         "configurable": {"thread_id": bg_thread_id}
     })
+    aufgaben = snapshot.values.get("aufgaben", "")
+    satzbaubegrenzung = snapshot.values.get("satzbaubegrenzung", "")
+    logger.info(
+        f"load_analysis: Read from background state — "
+        f"aufgaben: {len(aufgaben)} chars (empty: {not aufgaben.strip()}), "
+        f"satzbaubegrenzung: {len(satzbaubegrenzung)} chars (empty: {not satzbaubegrenzung.strip()})"
+    )
+    if aufgaben.strip():
+        logger.info(f"load_analysis: aufgaben preview: {aufgaben[:200]}...")
+    if satzbaubegrenzung.strip():
+        logger.info(f"load_analysis: satzbaubegrenzung preview: {satzbaubegrenzung[:200]}...")
     analyses = {
-        "aufgaben": snapshot.values.get("aufgaben", ""),
-        "satzbaubegrenzung": snapshot.values.get("satzbaubegrenzung", ""),
+        "aufgaben": aufgaben,
+        "satzbaubegrenzung": satzbaubegrenzung,
     }
     return analyses
 
