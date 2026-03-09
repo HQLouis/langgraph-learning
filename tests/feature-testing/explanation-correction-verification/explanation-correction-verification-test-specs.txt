@@ -82,6 +82,52 @@ Anforderung für eine bessere KI Antwort:
 -vorschlagen, weiter über das Buch zu sprechen(, damit die Unterhaltung nicht weiter stockt).
 
 Beispiel 2:
+hallo
+Hallo! Du hast also auch die Geschichte von Pia gehört. Pia ist ja ein Mädchen, dem nie Fehler passieren. Was meinst du, wie findet sie das?
+toll
+Ja, Pia macht immer alles toll. Meinst du, Pia ist traurig oder froh, dass sie nie Fehler macht?
+sie ist froh
+Pia ist froh. Ja, Pia ist eigentlich immer froh, weil alles klappt. Aber sag mal, ist es denn auch schön, wenn man immer alles richtig macht, oder findet Carl es besser, Fehler zu machen?
+carl mag besser Fehler
+Carl mag lieber Fehler machen. Stell dir vor, du bist Carl. Was machst du jetzt?
+quatsch
+Du würdest Quatsch machen. Carl findet es toll, wenn er Quatsch machen kann. Meinst du, Carl würde lieber mit grünen Bohnen malen oder lieber ein Bild mit Wachsmalstiften malen?
+beides
+Carl mag beides. Pia geht in die Schule. Pia ... mit ihren Freundinnen? Mit wem ist Pia in der Schule?
+Freundinnen
+Pia ist mit ihren Freundinnen in der Schule. Genau! Wie heißen denn Pias Freundinnen?
+lara?
+Du möchtest wissen, wie Pias Freundinnen heißen. Eine Freundin heißt Millie. Wie heißt die andere Freundin von Pia?
+weiß nicht
+Du weißt es nicht? Pia hat zwei Freundinnen. Ist es Sarah oder Paul?
+sarah
+Sarah! Ja, genau! Pia ist mit Sarah und Millie in der Schule. Pia und ihre Freundinnen brauchen Eier. Holen sie die Eier aus dem Schrank oder aus dem Kühlschrank?
+kühlschrank
+Du sagst, die Eier sind im Kühlschrank. Ja, Pia holt die Eier aus dem Kühlschrank. Was ist in dem Korb? Sind da Äpfel oder Eier drin?
+Äpfel?
+Du fragst, ob Äpfel im Korb sind. Nein, da sind keine Äpfel. Sind da die Eier drin oder nicht?
+ja, eier
+Ja, da sind Eier drin. Was passiert mit den Eiern? Fallen sie runter oder bleiben sie heil?
+was ist heil
+Du fragst, was "heil" ist. Heil bedeutet, dass nichts kaputt ist. Meinst du, die Eier bleiben heil, oder fallen sie runter?
+
+mögliche KI Antwort:
+Kind: was ist heil
+KI: Heil bedeutet, dass nichts kaputt ist. Meinst du, die Eier bleiben heil, oder fallen sie runter?
+KI: Verstehst du jetzt, was heil bedeutet? Es heißt nicht kaputt.
+Kind: Ja
+KI: Schön, dann können wir weitermachen. (Frage..)
+
+Anforderung für eine bessere KI Antwort:
+
+Nachfragen, ob das Kind die Erklärung nicht verstanden hat, evtl. nach der Nachfrage kurz die Bedeutung nochmal wiederholen.
+Allgemeine Ergänzung: Wenn das Kind einen korrekten Satz baut- kein modellierendes Korrigieren notwendig!!
+
+
+
+
+
+Beispiel 3:
 Start
 Hallo! Ich bin Thilio, dein sprechendes Spielzeug. Wir haben eben die Geschichte von Pia gehört, oder? Pia ist ja wirklich ein besonderes Mädchen! Weißt du noch, wie der Freitag für Pia angefangen hat?
 nee
@@ -109,17 +155,27 @@ Ja, Pia hat Freundinnen. Heißen die Freundinnen Lisa und Sarah oder Millie und 
 Lisa und sarah
 Du sagst, Lisa und Sarah. Warte mal. Ich glaube, die Freundinnen heißen Millie und Sarah. Pia braucht Eier. Holt Pia die Eier aus dem Schrank oder aus dem Kühlschrank?
 
-
-
-(Hier ist eine kleine Bestätigung notwendig, ob das Kind sich jetzt doch daran erinnert, wie die Freundinen heißen.)
-
 mögliche KI Antwort:
 KI: Du sagst, Lisa und Sarah. Warte mal. Ich glaube, die Freundinnen heißen doch Millie und Sarah. Pia braucht Eier. Holt Pia die Eier aus dem Schrank oder aus dem Kühlschrank?
 Erinnerst du dich?
 
+Anforderung für eine bessere KI Antwort:
+
+Hier ist eine kleine Bestätigung notwendig, ob das Kind sich jetzt doch daran erinnert, wie z.B.: die Freundinnen heißen.)
+
 Das Kind antwortet positiv- weiter
 Das Kind antwortet negativ- kurz erklären, dass es in der Geschichte so steht und weiter..
 
-Anforderung für eine bessere KI Antwort:
 
-Wenn ein Kind sich im Buchtext verirrt- sanft, wie in diesem Bsp. korrigieren.
+Beispiel 4:
+hallo
+Hallo! Wir hören uns gerade die Geschichte von Pia an, oder? Was machen Pia und ihr Bruder Carl denn so am liebsten?
+weiß nicht
+Pia macht alles richtig, Carl macht alles falsch. Was isst Carl denn?
+
+(Es fehlt ein kleiner Übergang/Brücke zu dem Vorschlag von KI, wenn das Kind hilflos/ verloren in der Geschichte ist. )
+mögliche KI Antwort:
+KI: Ich kann dir helfen, ich kann mich nämlich gut erinnern, dass Carl… gerne isst. Weißt du es jetzt?
+
+Anforderung für eine bessere KI Antwort:
+Einen Übergang/Verständnis zu dem Gefühl des Kindes ausdrucken.
