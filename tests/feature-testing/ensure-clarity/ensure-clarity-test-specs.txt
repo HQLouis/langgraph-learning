@@ -38,16 +38,13 @@ Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfen
 
 
 Eigenschaft:
-Mehrdeutigkeit/ Unklarheit/ "weiß nicht", “vergessen” /o. ä. adäquat reagieren.
-Erläuterungen zu den Unklaren Antworten des Kindes:
+Mehrdeutigkeit/ Unklarheit/ "weiß nicht", “vergessen” /o. ä., adäquat reagieren.
 
+Erläuterungen zu den Unklaren Antworten des Kindes:
 Das Kind hat nicht gut verstanden, wenn die Antworten/das Kind:
 	•	sehr kurz sind
-	•	nur ein Wort aus der Frage wiederholt
 	•	nur „ja“ oder „nein“ sind
-	•	unklar sind und worauf sie sich beziehen
 	•	nicht zur Frage passen
-	•	ausweichend reagiert oder Thema wechselt
 	•	fragt nach, obwohl es gerade erklärt wurde
 	•	Einwortreaktionen auf komplexe Fragen
 	•	grundsätzlich nicht nachfragt
@@ -56,13 +53,25 @@ Das Kind hat nicht gut verstanden, wenn die Antworten/das Kind:
 
 Beispiel 1
 
+hallo
+Hallo! Ich bin Thilo. Hast du auch die Geschichte von Pia gehört, die immer alles richtig macht?
+ja
+Pia hat einen Hamster. Wie heißt der Hamster?
+hubert
+Der Hamster mag es gern grün und es ist sein Lieblingsessen. Was frisst Hubert am liebsten?
+brokkoli
+Ja, Hubert frisst Brokkoli. Pia schmiert ihrem Bruder ein Pausenbrot. Nimmt sie Nutella oder Erdnussbutter?
+erdnussbutter
+Genau, Pia nimmt Erdnussbutter. Und noch etwas Süßes kommt auf das Brot. Was schmiert Pia noch auf das Brot?
+Marmelade
 Ja, Pia schmiert Marmelade auf das Brot. Macht sie das, weil Carl das so mag oder weil sie selbst Marmelade mag?
-Kind: Carl?
-Pia macht das Brot für Carl. Was macht Carl denn lieber, als ordentlich zu sein wie Pia?
+
+
 
 (Sie soll erstmal klären, was das Kind mit "Carl" gemeint hat.)
 
 mögliche KI Antwort:
+Pia macht das Brot für Carl. Was macht Carl denn lieber, als ordentlich zu sein wie Pia?
 „Meinst du, sie macht es für Carl?“
 oder
 „Willst du sagen: für Carl?“
@@ -80,18 +89,30 @@ Intonation in der menschlichen Sprache macht einen großen Unterschied für das 
 
 Folglich muss KI öfter nachfragen, damit sie sicherstellen kann, was das Kind meint, statt eine Wahrscheinlichkeit auszurechnen.
 
-In diesen Fällen muss eine kurze Bedeutungsabsicherung passieren.
-
-
-
 
 Beispiel2:
 
+hallo
+Hallo! Hast du auch die Geschichte von Pia gehört, die immer alles richtig macht?
+ja
+Pia hat immer alles richtig gemacht. Was hat Pia ihrem Hamster Hubert zu fressen gegeben?
+möhren
+Nein, Pia gab Hubert keinen Möhren. Was frisst Hubert denn?
+weiß nicht
+Ich helfe dir! Pia gab Hubert Brokkoli. Hat Carl auch Brokkoli bekommen oder lieber Marmelade?
+nee, er haben Marmelade bekommt
+Carl hat keine Marmelade bekommen. Carl hat lieber Wachsmalkreide gegessen. Was hat Pia denn für den Wettbewerb vorbereitet?
+etwas, ich weißt nicht, heißt
+Pia übt für einen Wettbewerb. Hat Pia gesungen oder gezaubert?
+getanzen
+Pia hat nicht getanzt. Pia wollte mit Sachen jonglieren. Hat Pia mit Bällen oder mit Tüchern jongliert?
+nein
+Pia wollte jonglieren. Hat Pia mit Salzstreuer oder mit Bällen jongliert?
+salz
 Pia jongliert mit dem Salz, das findet das Publikum ganz famos. Was passiert denn mit Hubert, dem Hamsterheld?
 famos?
 Pia wirft Hubert hoch in die Luft. Dann niest Hubert. Was passiert dann?
 ballon kaputt
-(In diesem Fall sollte sie nachdenken, dass das Kind wahrscheinlich die Bedeutung des Wortes nicht verstanden hatte, die sie erklären sollte.)
 
 mögliche KI Antwort:
 
@@ -99,7 +120,7 @@ Pia jongliert mit dem Salz, das findet das Publikum ganz famos. Was passiert den
 famos?
 Möchtest du wissen, was “famos” bedeutet?
 Kind: ja
-„Famos“ heißt: richtig toll oder großartig. Das Publikum findet also: Pia macht das super! Sollen wir weiter machen?
+„Famos“ heißt: richtig toll oder großartig. Das Publikum findet also: Pia macht das super! Verstehst du es jetzt?
 
 Anforderung für eine bessere KI Antwort:
 Wenn das Kind ein einzelnes Wort aus der KI-Antwort wiederholt, muss KI nachfragen, höchstwahrscheinlich kennt das Kind die Bedeutung des Wortes nicht.
@@ -107,15 +128,24 @@ Wenn das Kind ein einzelnes Wort aus der KI-Antwort wiederholt, muss KI nachfrag
 
 Beispiel 3:
 
-Was haben sie zum Basteln benutzt? Haben sie Farbe oder Papier genommen?
+hallo
+Hallo! Ich bin Thilio, dein Sprachförder-Spielzeug. Wir haben eben die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Wollen wir uns noch ein bisschen darüber unterhalten? Weißt du noch, was Bobo und Papa am Anfang der Geschichte zusammen gemacht haben?
+ja
+Du weißt es noch! Hat Bobo denn den Adventskalender ganz alleine gebastelt?
+ja
+Du denkst, Bobo hat den Kalender alleine gebastelt. Wer hat denn mit Bobo zusammen den Kalender gebastelt?
+papa
+Ja, Bobo hat mit Papa zusammen gebastelt. Was haben Bobo und Papa denn alles zum Basteln benutzt? Haben sie Farbe oder Papier genommen?
 ja
 Ja, sie haben Sachen zum Basteln genommen. Brauchen sie Schere? Oder brauchen sie Stifte?
+
 
 (Auf diese Art der Frage passt die Antwort mit "ja" nicht, weil es unklar ist, was das Kind genau damit meint.)
 mögliche KI Antwort:
 Was haben sie zum Basteln benutzt? Haben sie Farbe oder Papier genommen?
 ja
-Was meinst du mit "ja"? Haben Papa und Bobo Papier genommen?
+Ja, sie haben Sachen zum Basteln genommen. Brauchen sie Schere? Oder brauchen sie Stifte?
+Was meinst du mit "ja"? Meinst du Papa und Bobo haben Papier genommen?
 
 Anforderung für eine bessere KI Antwort:
 Sie soll nachfragen, was das Kind mit seiner Antwort gemeint hat und das letzte Teil der Frage nochmal wiederholen, da es am wahrscheinlichsten, dass das Kind das gemeint hat.
@@ -123,12 +153,27 @@ Sie soll nachfragen, was das Kind mit seiner Antwort gemeint hat und das letzte 
 
 Beispiel 4:
 
+hallo
+Hallo! Ich bin Thilio, dein sprechendes Spielzeug. Ich kenne mich gut mit Bobos Adventskalender aus. Was haben Bobo und Papa Siebenschläfer zuerst gemacht, als sie aus dem Fenster geschaut haben?
+geguckt
+Ja, Bobo und Papa haben aus dem Fenster geguckt. Hat die Postbotin ein Auto oder ein Fahrrad?
+fahrrad
+Ja, die Postbotin hat ein Fahrrad. Hat Bobo auf dem Fahrrad gesungen?
+was?
+Das bedeutet: Hat Bobo ein Lied gesungen, als er auf dem Fahrrad saß? Oder hat er das nicht? Ist es jetzt klar?
+ja
+Aha, du hast also gefragt, ob Bobo auf dem Fahrrad gesungen hat. Hat Bobo geklingelt oder gehupt?
+ja
+Hat Bobo geklingelt? Hat Bobo mit dem Fuß oder mit der Hand geklingelt?
+mit hand
 Ja, Bobo hat mit der Hand geklingelt. Die Postbotin ist nett. Fällt dir ein Reim dazu ein?
 nein, und dir?
 Ich helfe dir! Die Postbotin ist nett. Sie fährt ...?
 
-(Hat KI hier das Kind nicht verstanden oder ignoriert sie die Aufforderung des Kindes- die Aufgabe selbst zu erledigen. man könnte anpassen, dass sie in so einem Fall das Kind Fragt, ob das Kind sie darum bittet, weil es zu schwer ist?
-Bemerkung: Kann/würde das ältere Kind rausfinden, dass KI, alle Antworten selber geben kann?!)
+
+
+(Hat KI hier das Kind nicht verstanden oder ignoriert sie die Aufforderung des Kindes- die Aufgabe selbst zu erledigen. man könnte anpassen, dass sie in so einem Fall das Kind fragt, ob das Kind sie darum bittet, weil es zu schwer ist?
+Bemerkung: Kann/würde das ältere Kind herausfinden, dass KI alle Antworten selber geben kann?!)
 
 mögliche KI Antwort:
 Ok, du möchtest, dass ich dazu einen Reim mache?
@@ -145,36 +190,96 @@ Sie motiviert das Kind weiterzumachen mit der Rücksicht auf seine Aufforderung.
 
 Beispiel 5:
 
-Pia hatte einen Salzstreuer dabei. Und dann ist etwas ganz Unerwartetes passiert! Was war denn das für eine Überraschung bei Pias Auftritt?
+hallo
+Hallo! Ich bin Thilio. Hast du die Geschichte von Pia gehört, die eigentlich immer alles richtig macht?
+ja
+Super! Pia ist wirklich besonders, oder? Sie begrüßt zum Beispiel jeden Morgen ihre Fans vor der Tür. Hat sie ihnen "Guten Morgen" oder "Guten Abend" gesagt?
+guten Morgen
+Ja, genau, sie hat "Guten Morgen" gesagt. Pia ist echt ordentlich, nicht wahr? Findest du das auch gut?
+ja gut
+Pia ist wirklich super organisiert. Sie hat sogar darauf geachtet, dass ihr Hamster Hubert sein Lieblingsessen bekommt. Weißt du noch, was Hubert am liebsten gefuttert hat? War es Marmelade oder Brokkoli?
+es ist Brokkolis
+Ja, Brokkoli! Hubert mag Brokkoli. Es ist grün und gesund, und Hubert knabbert es gern. Was ist das?
+Brokolis?
+Ja, stimmt genau! Der Brokkoli ist grün. Und wer bekommt ihn? Der Brokkoli gehört ...?
+Hubert?
+Ja, super! Der Brokkoli ist für Hubert. Stell dir vor, du bist Hubert, der Hamster. Was machst du jetzt mit dem Brokkoli?
+ich esse Brokkol
+Mmmh, lecker! Hubert mag seinen Brokkoli. Pia hat auch ihrem Bruder Carl ein Pausenbrot gemacht. Sie hat Erdnussbutter und Marmelade drauf geschmiert. Weißt du noch, wie viel von jedem? War es gleich viel, oder mehr Erdnussbutter?
+gleich viel
+Ja, genau! Pia hat gleich viel Erdnussbutter und Marmelade genommen. Pia hat ... geschmiert. Was passt da rein?
+brot
+Ja, Pia hat das Brot geschmiert. Pia ist echt genau, findest du nicht?
+ja, pia genau
+Ja, Pia ist sehr genau. Sie macht fast alles richtig. Aber Carl, ihr Bruder, macht lieber Sachen falsch! Er findet das toll. Carl macht Sachen...?
+falsch?
+Ja, Carl macht Sachen falsch. Er findet es lustig, Dinge anders zu machen. Pia macht alles richtig, und Carl macht vieles falsch. Was denkst du, macht mehr Spaß?
+richtig machen?
+Du findest, richtig machen macht mehr Spaß? Pia findet das bestimmt auch! In der Schule wollte Pia mit ihren Freundinnen Muffins backen. Was haben sie für den Teig gebraucht?
+eier
+Ja, genau, sie brauchten Eier! Pia wollte die Eier holen und dann ist ihr fast ein Fehler passiert! Was ist denn da bloß passiert?
+runter fallen alles fast
+Ja, fast wären alle Eier runtergefallen! Zum Glück hat Pia sie gefangen. Pia wollte die ... holen. Was passt da rein?
+eier
+Ja, Pia wollte die Eier holen. Sie ist ganz schön geschickt, oder?
+ja
+Findest du, Pia soll die Eier jetzt ganz vorsichtig in eine Schüssel legen oder schnell weiterlaufen?
+vorsichtig
+Ja, das finde ich auch. Lieber vorsichtig sein, damit nichts mehr passiert. Pia hat ja fast einen Fehler gemacht. Aber sie hat ihn nicht gemacht. Sie ist eben super vorsichtig. Pia ist fast ...?
+gefallt
+Fast gefallen sind die Eier. Aber Pia hat sie ja noch gefangen. Sie hat fast einen ... gemacht. Was meinst du?
+weiß nicht
+Das ist nicht schlimm. Sie hat fast einen Fehler gemacht. Aber eben nur fast.
+ach so
+Genau! Und dann wollte Pia eigentlich mit ihren Freundinnen Schlittschuh laufen. Aber sie hatte ein bisschen Angst. Kannst du das verstehen?
+ja
+Ja, ein bisschen Angst kann man da schon haben, oder? War Pia mutig oder ängstlich, als sie Schlittschuh laufen sollte?
+mutig
+Pia war nicht so mutig. Sie hatte ja ein bisschen Angst. Aber was meinst du: Hätte sie es trotzdem mal probieren sollen mit dem Schlittschuhlaufen?
+nein
+Du meinst, es ist besser, wenn Pia nicht Schlittschuh läuft? Vielleicht wäre es ihr ja doch zu gefährlich gewesen. Pia hatte ja schon Angst, dass sie einen Fehler macht. Sie sagte sogar: „Ich habe Angst, dass ich es heute ...“ Was hat sie gesagt?
+vermasele?
+Ja, genau! Sie hatte Angst, dass sie es vermasselt. Pia hatte Angst, dass sie einen ... macht. Was passt da rein?
+fehler
+Ja, Pia hatte Angst, einen Fehler zu machen. Sie wollte ja alles richtig machen.
+ja
+Und dann kam der Abend des Talentwettbewerbs! Pia hatte sich gut vorbereitet, aber sie war trotzdem aufgeregt. Was hat sie denn alles für ihren Auftritt eingepackt?
+hubert
+Ja, genau, ihren Hamster Hubert! Und was noch? Hatte sie einen Ball oder einen Salzstreuer dabei?
+salz
+Ja, einen Salzstreuer! Und was noch? War da noch ein Hut oder ein Wasserballon?
+ballon wasser
+Ja, ein Wasserballon! Pia hatte ganz schön viel eingepackt für ihren Auftritt. Sie hatte den Hamster ... dabei. Was passt da rein?
+hubert
+Ja, genau! Sie hatte ihren Hamster Hubert dabei. Ich denke an etwas, das Pia für ihren Auftritt eingepackt hat. Es ist klein und rund, und man kann es zum Würzen von Essen benutzen. Was ist es?
+weiß nicht wie heißt das
+Das ist nicht schlimm. Es ist ein Salzstreuer. Da kommt Salz raus. Pia hatte einen ... dabei. Was passt da rein?
+satzstreuer
+Fast richtig! Salzstreuer. Kannst du das auch sagen?
+was
+Salzstreuer.
+salzstreuer
+Super! Pia hatte einen Salzstreuer dabei. Und dann ist etwas ganz Unerwartetes passiert! Was war denn das für eine Überraschung bei Pias Auftritt?
 vergessen
 Fast! Sie hat nicht etwas vergessen, aber es ist trotzdem etwas schiefgegangen. Was ist denn passiert, als Pia auf der Bühne stand? Ist sie hingefallen oder hat Hubert geniest?
+
 
 (Die Kindantwort "vergessen"- wird von KI als Antwort verstanden, und nicht, dass dass Kind die Anwort nicht weiß. Also, sollte sie bei Einwortantworten lieber nachfragen.)
 
 mögliche KI Antwort:
-KI: Meinst du Pia hat bei ihrem Auftritt etwas vergessen, oder hast du vergessen was genau bei Pias Auftritt passiert ist?
+KI: Meinst du, Pia hat bei ihrem Auftritt etwas vergessen, oder hast du vergessen, was genau bei Pias Auftritt passiert ist?
 
 Anforderung für eine bessere KI Antwort:
 
 Bei “vergessen” - wenn das Wort “vergessen” zur Antwort passt -immer zusätzlich klären, ob das Kind auch nicht “ich habe es vergessen” meinte.
 
-Beispiel 7:
-Hallo! Wir hören uns gerade die Geschichte von Pia an, oder? Was machen Pia und ihr Bruder Carl denn so am liebsten?
-weiß nicht
-Pia macht alles richtig, Carl macht alles falsch. Was isst Carl denn?
-
-(Es fehlt ein kleiner Übergang/Brücke zu dem Vorschlag von KI, wenn das Kind hilflos/ verloren in der Geschichte ist. )
-mögliche KI Antwort:
-KI: Ich kann dir helfen, ich kann mich nämlich gut erinnern, dass Carl… gerne ißt. Weißt du es jetzt?
-
-Anforderung für eine bessere KI Antwort:
-Einen Übergang/Verständnis zu dem Gefühl des Kindes ausdrucken.
-
-Beispiel 9:
+Beispiel 6:
+hallo
+Hallo! Ich bin Thilio, dein Sprachbegleiter. Bobo und Papa Siebenschläfer haben zusammen einen Adventskalender gebastelt. Weißt du, was sie als Erstes gemacht haben, bevor sie mit dem Basteln angefangen haben?
 nein
 Du bist gespannt, was zuerst passiert ist. Fast richtig! Im Buch haben Bobo und Papa zuerst ein großes Paket von der Post geholt. Was war denn in dem Paket drin?
 weiß nicht
-Du bist neugierig, was im Paket war. Im Buch war ein großer Fotokalender in dem Paket. Was machen Bobo und Papa
+Du bist neugierig, was im Paket war. Im Buch war ein großer Fotokalender in dem Paket. Was machen Bobo und Papa dann mit dem Kalender?
 
 (1.das Kind antwortet mit nein- KI interpretiert es als Spannung?? Warum?
 2.weitere komische Reaktion auf die Antwort des Kindes " weiß nicht")
@@ -187,23 +292,35 @@ Anforderung für eine bessere KI Antwort:
 Warum reagiert KI auf nein und weiß nicht so komisch?
 
 
+Beispiel 7:
 
-
-Beispiel 10:
-
+hallo
+Hallo! Du hast also auch die Geschichte von Pia gehört. Pia ist ja ein Mädchen, dem nie Fehler passieren. Was meinst du, wie findet sie das?
+toll
+Ja, Pia macht immer alles toll. Meinst du, Pia ist traurig oder froh, dass sie nie Fehler macht?
+sie ist froh
+Pia ist froh. Ja, Pia ist eigentlich immer froh, weil alles klappt. Aber sag mal, ist es denn auch schön, wenn man immer alles richtig macht, oder findet Carl es besser, Fehler zu machen?
+carl mag besser Fehler
+Carl mag lieber Fehler machen. Stell dir vor, du bist Carl. Was machst du jetzt?
+quatsch
+Du würdest Quatsch machen. Carl findet es toll, wenn er Quatsch machen kann. Meinst du, Carl würde lieber mit grünen Bohnen malen oder lieber ein Bild mit Wachsmalstiften malen?
+beides
+Carl mag beides. Pia geht in die Schule. Pia ... mit ihren Freundinnen? Mit wem ist Pia in der Schule?
+Freundinnen
+Pia ist mit ihren Freundinnen in der Schule. Genau! Wie heißen denn Pias Freundinnen?
+lara?
 Du möchtest wissen, wie Pias Freundinnen heißen. Eine Freundin heißt Millie. Wie heißt die andere Freundin von Pia?
 weiß nicht
 Du weißt es nicht? Pia hat zwei Freundinnen. Ist es Sarah oder Paul?
+
 
 mögliche KI Antwort:
 
 KI: Du möchtest wissen, wie Pias Freundinnen heißen. Eine Freundin heißt Millie. Wie heißt die andere Freundin von Pia?
 Kind: weiß nicht
-Du weißt es nicht? Pia hat zwei Freundinnen. Ist es Sarah oder Paul?
 KI: Soll ich dir das verraten?
 Kind: Ja
-KI: Sie heißen… Erinnerst du dich?
+KI: Sie heißen Millie und Sarah. Erinnerst du dich?
 
 Anforderung für eine bessere KI Antwort:
 Nicht auf der Fortsetzung beharren, wenn das Kind "nicht weiß" sagt, - die Frage auflösen.
-
