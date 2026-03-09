@@ -83,7 +83,7 @@ def pass_threshold(request: pytest.FixtureRequest) -> float:
 def system_llm():
     """Real LLM instance used to run the dialog system under test."""
     from langchain.chat_models import init_chat_model
-    return init_chat_model(_cfg.SYSTEM_MODEL)
+    return init_chat_model(_cfg.SYSTEM_MODEL, temperature=_cfg.SYSTEM_TEMPERATURE)
 
 
 @pytest.fixture(scope="session")

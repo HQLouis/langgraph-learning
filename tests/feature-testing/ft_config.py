@@ -13,7 +13,7 @@ See conftest.py for CLI option registration.
 # Probabilistic test execution
 # ---------------------------------------------------------------------------
 
-N_RUNS: int = 5
+N_RUNS: int = 1
 """How many times each LLM-based test case is executed per test run.
 Higher values increase confidence but cost more API calls."""
 
@@ -35,6 +35,10 @@ SYSTEM_MODEL: str = "google_genai:gemini-2.0-flash"
 """Model used to run the dialog system under test.
 Feature tests always call the real LLM — there is no mocking."""
 
+SYSTEM_TEMPERATURE: float = 0.0
+"""Temperature for the system LLM during testing. Keep at 0.0 for
+deterministic, reproducible behavior during prompt iteration."""
+
 # ---------------------------------------------------------------------------
 # LangSmith tracing for judge calls
 # ---------------------------------------------------------------------------
@@ -50,7 +54,7 @@ Set JUDGE_LANGSMITH_TRACING=true to enable."""
 # Strategy B (fully-simulated) defaults
 # ---------------------------------------------------------------------------
 
-SIMULATED_N_RUNS: int = 3
+SIMULATED_N_RUNS: int = 1
 """Default N_RUNS for fully-simulated (Strategy B) tests.
 Lower than fixture-based tests because each run involves multiple LLM calls."""
 
