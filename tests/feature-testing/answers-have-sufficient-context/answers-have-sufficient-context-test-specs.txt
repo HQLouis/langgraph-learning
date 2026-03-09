@@ -1,0 +1,120 @@
+Verwendete Geschichte:
+Geschichte:
+
+“Pia muss nicht perfekt sein“
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten.Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen“ und „Dankeschön“.Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie.Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?“, wollten sie wissen.„Von mir aus kann’s losgehen!“, antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß.Sie nannten sie nur „das Mädchen, das immer alles richtig macht“,denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler.Er aß seine Wachsmalkreide und malte mit grünen Bohnen.Er tanzte mit den Händen und spielte mit den Füßen Klavier.Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam.Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus.Die Eier flogen in hohem Bogen durch die Luft.Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht!„Das war knapp!“, dachte Pia. „Tut mir leid, Pia … Ich habe ein Stück Rhabarber fallen lassen.“„Öfft doch nöcht slömm, Möllö.“
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.„Komm doch zu uns!“, rief Millie.„Es macht Spaß!“, sagte Sarah.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten.Millie und Sarah lachten, während sie übers Eis stolperten.„Nein, danke“, sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an.„Ist alles in Ordnung, Spätzchen?“, fragte ihr Vater.„Ich habe Angst, dass ich es heute verpatze“, gestand Pia.„Und alle werden es sehen.“„Angst? Aber du machst doch nie etwas falsch!“, sagte ihr Vater mit einem Lächeln.
+Pia versuchte, auch zu lächeln.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit.Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte.Dann holte sie den Salzstreuer vom Küchentisch.Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!In Pias Bauch ging es drunter und drüber.
+Pia wartete darauf, dass ihre Jonglier-Musik einsetzte.
+„Da ist sie! Das ist das Mädchen, das immer alles richtig macht!“, sagte eine Frau.„Oh! Bei ihr läuft immer alles perfekt, immer!“, rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft.
+SUPER PIA! Als Nächstes kam der Salzstreuer.Und zum Schluss der Wasserballon.Pia war ganz bei der Sache!Die Zuschauer klatschten begeistert.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf …Die Körner, die herausrieselten, waren nicht weiß!
+HATSCHI!
+Hubert war von seinem eigenen Niesen so überrascht,dass er sich mit seinen kleinen Krallen am Luftballon festklammerte.
+PENG! Hubert, kleine Ballonfetzen und Pfeffer:Alles regnete auf Pias Kopf.
+Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht.Und was für einen …
+Die Musik verstummte.Pia wusste nicht, was sie machen sollte.
+Weinen?Von der Bühne rennen?
+Die Zuschauer hockten wie versteinert da.Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war!
+Pia schaute zu Hubert.Der schaute zurück.Sein Hamsterfell war pitschnass und voller kleiner Ballonreste.Pia musste kichern.Ihr Kichern wurde zu einem Glucksen.Und aus dem Glucksen wurde ein richtig lautes Lachen.
+
+Eigenschaft:
+In der Antwort mehr Kontext geben, ist sonst unklar, warum/ was für eine Frage gestellt wurde.
+
+Beispiel 1:
+
+hallo
+Hallo! Ich bin Thilio. Hast du die Geschichte von Pia gehört, die eigentlich immer alles richtig macht?
+ja
+Pia macht fast nie Fehler. Sie begrüßt ihre Fans und hat ihre Mathehausaufgaben gemacht. Was macht Pia mit ihrem Hamster Hubert?
+gibt essn
+Ja, Pia gibt Hubert Essen. Mag Hubert lieber Brokkoli oder lieber Nudeln?
+Brokkoli mag
+Ja, Hubert mag Brokkoli! Pia hat auch einen Bruder. Pia schmiert ein Pausenbrot. Was kommt auf das Brot?
+Marmelade und erdnussbutter
+Genau, Pia nimmt Marmelade und Erdnussbutter. Pia will gleichen Mengen nehmen. Was macht sie?
+sie nimmt gleich viel Erdnussbutter und Marmelade
+Ja, Pia nimmt gleich viel Erdnussbutter und Marmelade. Pia ist gut vorbereitet. Sie macht alles richtig. Pia geht jetzt ...?
+schule
+Ja, Pia geht in die Schule. In der Schule kocht Pia mit ihren Freundinnen. Was wollen sie kochen?
+
+mögliche KI Antwort:
+
+Ja, Pia nimmt gleich viel Erdnussbutter und Marmelade.
+Jetzt ist Pia fertig. Wo möchte sie nach dem Frühstück hingehen? Pia geht jetzt...?
+schule
+Ja, Pia geht in die Schule. In der Schule kocht Pia mit ihren Freundinnen. Was wollen sie kochen?
+
+Anforderung für eine bessere KI Antwort:
+
+Es fehlt zum Beispiel, dass die Frage-Aufgabe mit mehr Kontext beschrieben wird.
+Wie soll sie wissen, dass mehr Kontext rein muss??
+
+Beispiel 2
+(In diesem Bsp. viele andere Probleme)
+hallo
+Hallo! Ich bin Thilo, dein Sprachförder-Spielzeug. Ich kenne die Geschichte von Pia, die immer alles richtig macht. Sprechen wir zusammen darüber? Was hat Pia als Erstes an diesem besonderen Freitag gemacht?
+gegessen
+Pia hat an diesem Morgen gegessen. Hat Pia Socken angezogen oder Zähne geputzt?
+socken
+Ja, Pia hat Socken angezogen. Hat Pia die Socken gefunden oder nicht gefunden?
+gefunden
+Pia hat die Socken gefunden. Pia sucht … Was sucht Pia?
+ich verstehe dich nicht
+Ach so, du verstehst das Wort "suchen" nicht. Suchen bedeutet, dass man etwas finden möchte, was man noch nicht sehen kann. Ist es jetzt klar?
+nein, ich weiß nicht, was du von mir willst
+Ich möchte mit dir über die Geschichte von Pia sprechen. Pia ist ein Mädchen. Pia macht viele Sachen. Magst du die Geschichte hören oder nicht?
+
+mögliche KI Antwort:
+Kind: nein, ich weiß nicht, was du von mir willst
+KI: Ich möchte mit dir über die Geschichte von Pia sprechen. Pia ist ein Mädchen.
+Über Pia, die alles perfekt macht.
+Anforderung für eine bessere KI Antwort:
+Hier kollidieren mehrere Probleme gleichzeitig. Ich berücksichtige nur eins. Dadurch, dass es zu einem größeren Missverständnis kommt, muss jeder Satz “klarer” sein.
+
+Beispiel 3
+hallo
+Hallo! Ich bin Thilio. Hast du die Geschichte von Pia gehört, die eigentlich immer alles richtig macht?
+ja
+Super! Pia ist wirklich besonders, oder? Sie begrüßt zum Beispiel jeden Morgen ihre Fans vor der Tür. Hat sie ihnen "Guten Morgen" oder "Guten Abend" gesagt?
+guten Morgen
+Ja, genau, sie hat "Guten Morgen" gesagt. Pia ist echt ordentlich, nicht wahr? Findest du das auch gut?
+ja gut
+Pia ist wirklich super organisiert. Sie hat sogar darauf geachtet, dass ihr Hamster Hubert sein Lieblingsessen bekommt. Weißt du noch, was Hubert am liebsten gefuttert hat? War es Marmelade oder Brokkoli?
+es ist Brokkolis
+Ja, Brokkoli! Hubert mag Brokkoli. Es ist grün und gesund, und Hubert knabbert es gern. Was ist das?
+Brokolis?
+Ja, stimmt genau! Der Brokkoli ist grün. Und wer bekommt ihn? Der Brokkoli gehört ...?
+Hubert?
+Ja, super! Der Brokkoli ist für Hubert. Stell dir vor, du bist Hubert, der Hamster. Was machst du jetzt mit dem Brokkoli?
+ich esse Brokkol
+Mmmh, lecker! Hubert mag seinen Brokkoli. Pia hat auch ihrem Bruder Carl ein Pausenbrot gemacht. Sie hat Erdnussbutter und Marmelade drauf geschmiert. Weißt du noch, wie viel von jedem? War es gleich viel, oder mehr Erdnussbutter?
+gleich viel
+Ja, genau! Pia hat gleich viel Erdnussbutter und Marmelade genommen. Pia hat ... geschmiert. Was passt da rein?
+brot
+Ja, Pia hat das Brot geschmiert. Pia ist echt genau, findest du nicht?
+ja, pia genau
+Ja, Pia ist sehr genau. Sie macht fast alles richtig. Aber Carl, ihr Bruder, macht lieber Sachen falsch! Er findet das toll. Carl macht Sachen...?
+
+mögliche KI Antwort:
+Kind: ja, pia genau
+KI: Ja, Pia ist sehr genau. Sie macht fast alles richtig. Aber Carl, ihr Bruder, macht lieber Sachen falsch! Er findet das toll, alles falsch zu machen…
+
+Anforderung für eine bessere KI Antwort:
+
+Manchmal schwer zu beschreiben, weil es manchmal sehr kleine Sachen, die dem besseren Verständnis im Dialog beitragen könnten.
+
