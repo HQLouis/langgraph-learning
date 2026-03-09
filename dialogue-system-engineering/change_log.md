@@ -81,3 +81,28 @@ Every prompt change and its measured impact on test results is documented here.
 2. `responding-to-answer::test_emotion_engagement_after_correct_answer` — ARCHITECTURAL ISSUE: conversation has 45 messages (message_count=22), triggering hard termination which strips ALL rules including REGEL 7 (emotions). See architectural-improvements.md.
 
 **Regressions**: None
+
+---
+
+### [2026-03-09] Architectural Improvements — Always-active master prompt + repetitive starter detection
+
+**What changed**:
+1. **Master prompt always active** (`nodes.py`): Removed the conditional `getMasterPrompt() if not is_conversation_ended(message_count) else ''`. The master prompt (all 7 REGELn) now persists through all conversation phases including hard termination. Termination guidance is layered on top via a separate SystemMessage.
+2. **Repetitive starter detection** (`nodes.py`): New `_detect_repetitive_starters()` function scans the last 5 AI messages. If ≥60% start with the same word, a SystemMessage nudge is injected at the end of the message list (maximum recency weight) telling the LLM to use a different opener.
+3. **Hard termination prompt rewritten** (`conversation_termination_policy.py`): Now instructs the system to acknowledge the child's last answer FIRST, then transition to goodbye. Removes the old "Stelle keine Fragen!" which conflicted with acknowledging answers.
+
+**Files modified**: `agentic-system/nodes.py`, `agentic-system/config/conversation_termination_policy.py`
+
+**Motivation**: 2 remaining test failures from prompt engineering iteration — both architectural issues documented in `architectural-improvements.md`
+
+**Test results before**: 26 passed (Strategy A only), 2 failed
+**Test results after (full suite incl. Strategy B)**: 54 passed, 1 failed (98% pass rate)
+
+**Improvements** (+2 previously-failing tests fixed):
+- `different-sentence-starters::test_varied_starters_long_conversation` — FIXED (starter detection nudge)
+- `responding-to-answer::test_emotion_engagement_after_correct_answer` — FIXED (master prompt persists through termination)
+
+**Still failing (1)**:
+1. `responding-to-answer::test_disengage_acknowledge_transition_simulated` — Strategy B (simulated) only. The fixture-based (Strategy A) version passes. The simulated conversation generates different context each run, and the system sometimes asks a follow-up question after acknowledging disengagement. This is inherent non-determinism in Strategy B with n_runs=1.
+
+**Regressions**: None

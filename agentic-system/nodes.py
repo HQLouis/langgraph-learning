@@ -46,6 +46,33 @@ def initialize_beat_manager(content_dir: Path):
     beat_manager = BeatPackManager(content_dir)
     logger.info(f"Initialized beat manager with content_dir: {content_dir}")
 
+def _detect_repetitive_starters(messages: list, window: int = 5) -> str | None:
+    """
+    Scan the last *window* AI messages for a repeated first-word pattern.
+    Returns a German-language nudge to inject into the prompt, or None.
+    """
+    ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
+    recent = ai_msgs[-window:] if len(ai_msgs) >= window else ai_msgs
+    if len(recent) < 3:
+        return None
+
+    first_words = [m.content.strip().split()[0] if m.content.strip() else "" for m in recent]
+    from collections import Counter
+    counts = Counter(first_words)
+    most_common_word, most_common_count = counts.most_common(1)[0]
+
+    # If ≥60 % of recent messages start with the same word → inject nudge
+    if most_common_count / len(recent) >= 0.6:
+        return (
+            f'[ACHTUNG — SATZANFANG-WIEDERHOLUNG ERKANNT]\n'
+            f'Deine letzten {len(recent)} Antworten begannen überwiegend mit "{most_common_word}".\n'
+            f'Beginne diese Antwort ZWINGEND mit einem ANDEREN Wort. '
+            f'Nutze z.B.: "Genau!", "Stimmt!", "Richtig!", "Ah!", "Super!", '
+            f'"Hmm...", "Weißt du noch...", "Schau mal..." oder einen anderen natürlichen Einstieg.'
+        )
+    return None
+
+
 def masterChatbot(state: State, llm):
     """
     Main chatbot node that generates responses to the child.
@@ -61,9 +88,11 @@ def masterChatbot(state: State, llm):
     message_count = len(state["messages"]) // 2  # Assuming each interaction has a user and bot message
     logger.info(f"masterChatbot: Processing message count: {message_count}, is_first_message: {is_first_message}")
 
-    # Build system context (WITHOUT output contract JSON instructions)
+    # Build system context — master prompt is ALWAYS included so conversation
+    # rules (clarity, empathy, verification, etc.) remain active even during
+    # termination phases.  Termination guidance is layered on top separately.
     system_context = f"""
-    {getMasterPrompt() if not is_conversation_ended(message_count) else ''}
+    {getMasterPrompt()}
     """
 
     # Inject child profile so the LLM knows the child's name, age, and gender
@@ -144,6 +173,12 @@ def masterChatbot(state: State, llm):
         logger.info(f"masterChatbot: Added termination prompt for message count: {message_count}")
 
     messages += state["messages"]
+
+    # Detect repetitive sentence starters and inject a targeted nudge
+    starter_nudge = _detect_repetitive_starters(state["messages"])
+    if starter_nudge:
+        messages.append(SystemMessage(content=starter_nudge))
+        logger.info("masterChatbot: Injected repetitive-starter nudge")
 
     # Get natural language response (no JSON formatting)
     logger.info("masterChatbot: Starting LLM invocation for natural response")
