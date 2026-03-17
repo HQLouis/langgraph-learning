@@ -159,6 +159,22 @@ CRITERION_MEMORY_HINT = (
     "FAIL if it just states the answer directly without any recall aid."
 )
 
+CRITERION_REFLECT_AND_PERSONALIZE = (
+    "The child answered 'richtig machen?' to a question about whether making "
+    "things right or making mistakes is more fun. Does the system response: "
+    "(1) name the action more precisely (e.g. 'Du findest, alles richtig "
+    "machen macht mehr Spaß?'), AND "
+    "(2) wait for or encourage the child's input (not rush past it), AND "
+    "(3) mirror the child's thought or ask about the child's personal "
+    "experience (e.g. 'Machst du auch alles richtig?') — RATHER than "
+    "immediately jumping to a new story scene without engaging with "
+    "the child's answer? "
+    "Return PASS if the system engages with the child's answer by "
+    "reflecting, personalizing, or asking about the child's own experience "
+    "before transitioning to a new scene, "
+    "FAIL if it immediately jumps to a new story topic without engaging."
+)
+
 CRITERION_DISENGAGE_ACKNOWLEDGE_TRANSITION = (
     "The child has repeatedly disengaged throughout the conversation (saying "
     "'nee', 'weiß nicht', 'nein' multiple times). Does the system response: "
@@ -440,6 +456,84 @@ SCRIPT_DISENGAGED = [
     'nein',                                                                      # 128
 ]
 
+# Example 4: Child says "richtig machen?" — system should reflect, personalize,
+# ask about child's own experience before transitioning to a new scene.
+SCRIPT_RICHTIG_MACHEN = [
+    # child
+    'hallo',
+    # system
+    'Hallo! Du hast also auch die Geschichte von Pia geh\u00f6rt.'
+    ' Pia ist ja ein M\u00e4dchen, dem nie Fehler passieren.'
+    ' Was meinst du, wie findet sie das?',
+    # child
+    'toll',
+    # system
+    'Ja, Pia macht immer alles toll.'
+    ' Meinst du, Pia ist traurig oder froh,'
+    ' dass sie nie Fehler macht?',
+    # child
+    'sie ist froh',
+    # system
+    'Pia ist froh. Ja, Pia ist eigentlich immer froh, weil alles klappt.'
+    ' Aber sag mal, ist es denn auch sch\u00f6n,'
+    ' wenn man immer alles richtig macht,'
+    ' oder findet Carl es besser, Fehler zu machen?',
+    # child
+    'carl mag besser Fehler',
+    # system
+    'Carl mag lieber Fehler machen.'
+    ' Stell dir vor, du bist Carl. Was machst du jetzt?',
+    # child
+    'quatsch',
+    # system
+    'Du w\u00fcrdest Quatsch machen.'
+    ' Carl findet es toll, wenn er Quatsch machen kann.'
+    ' Meinst du, Carl w\u00fcrde lieber mit gr\u00fcnen Bohnen malen'
+    ' oder lieber ein Bild mit Wachsmalstiften malen?',
+    # child
+    'beides',
+    # system
+    'Carl mag beides. Pia geht in die Schule.'
+    ' Pia ist mit ihren Freundinnen in der Schule.'
+    ' Wie hei\u00dfen denn Pias Freundinnen?',
+    # child
+    'lara?',
+    # system
+    'Eine Freundin hei\u00dft Millie.'
+    ' Wie hei\u00dft die andere Freundin von Pia?',
+    # child
+    'wei\u00df nicht',
+    # system
+    'Pia hat zwei Freundinnen: Millie und Sarah.'
+    ' Pia und ihre Freundinnen brauchen Eier.'
+    ' Holen sie die Eier aus dem Schrank oder aus dem K\u00fchlschrank?',
+    # child
+    'k\u00fchlschrank',
+    # system
+    'Ja, Pia holt die Eier aus dem K\u00fchlschrank.'
+    ' Was passiert mit den Eiern?'
+    ' Fallen sie runter oder bleiben sie heil?',
+    # child
+    'was ist heil',
+    # system
+    'Heil bedeutet, dass nichts kaputt ist.'
+    ' Meinst du, die Eier bleiben heil, oder fallen sie runter?',
+    # child
+    'heil bleiben',
+    # system
+    'Die Eier bleiben heil.'
+    ' Aber fallen die Eier wirklich nicht runter, oder purzeln sie doch?',
+    # child
+    'fast runter',
+    # system
+    'Sie fallen fast runter.'
+    ' Pia sagt: "Das war knapp!"'
+    ' Pia macht alles richtig, und Carl macht vieles falsch.'
+    ' Was denkst du, macht mehr Spa\u00df?',
+    # child — TESTED: system response to this is judged
+    'richtig machen?',
+]
+
 
 # ---------------------------------------------------------------------------
 # Helper — convert child-first script to LangChain message list
@@ -528,6 +622,35 @@ class TestRespondingToAnswerFixtureBased:
         run_details_recorder(
             _run, n_runs, pass_threshold,
             setting=state_to_setting(state, CRITERION_MEMORY_HINT),
+        )
+
+    def test_reflect_and_personalize(
+        self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder
+    ):
+        """
+        Example 4 (richtig machen?): The child says 'richtig machen?' when
+        asked what is more fun.  The system should reflect the child's thought,
+        ask about personal experience, and gently return to the story scene.
+        """
+        state = build_state(
+            child_name="Emma",
+            child_age=6,
+            child_gender="weiblich",
+            messages=_script_to_messages(SCRIPT_RICHTIG_MACHEN),
+            audio_book=FIXTURE_PIA_AUDIO_BOOK,
+            story_id=FIXTURE_PIA_STORY_ID,
+            chapter_id=FIXTURE_PIA_CHAPTER_ID,
+        )
+
+        def _run() -> tuple[bool, str, str]:
+            from nodes import masterChatbot
+            result = masterChatbot(state, system_llm)
+            spoken_text = result["messages"][-1].content
+            return llm_judge(judge_llm, spoken_text, CRITERION_REFLECT_AND_PERSONALIZE)
+
+        run_details_recorder(
+            _run, n_runs, pass_threshold,
+            setting=state_to_setting(state, CRITERION_REFLECT_AND_PERSONALIZE),
         )
 
     def test_disengage_acknowledge_transition(
@@ -649,6 +772,44 @@ class TestRespondingToAnswerSimulated:
             setting=simulation_to_setting(
                 "Emma", 6, "weiblich", SCRIPT_VERGESSEN,
                 CRITERION_MEMORY_HINT,
+            ),
+        )
+
+    def test_reflect_and_personalize_simulated(
+        self, system_llm, judge_llm, pass_threshold, run_details_recorder
+    ):
+        """
+        Example 4 (richtig machen?): Full simulation.
+        Final response should reflect, personalize, and ask about experience.
+        """
+        n = _cfg.SIMULATED_N_RUNS
+
+        def _run() -> tuple:
+            final_state, spoken_text = simulate_conversation(
+                system_llm_instance=system_llm,
+                child_name="Emma",
+                child_age=6,
+                child_gender="weiblich",
+                child_inputs=SCRIPT_RICHTIG_MACHEN,
+                audio_book=FIXTURE_PIA_AUDIO_BOOK,
+                story_id=FIXTURE_PIA_STORY_ID,
+                chapter_id=FIXTURE_PIA_CHAPTER_ID,
+            )
+            passed, resp, reason = llm_judge(
+                judge_llm, spoken_text, CRITERION_REFLECT_AND_PERSONALIZE,
+            )
+            from langchain_core.messages import HumanMessage as _HM
+            conversation = [
+                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
+                for m in final_state.get("messages", [])
+            ]
+            return passed, resp, reason, conversation
+
+        run_details_recorder(
+            _run, n, pass_threshold,
+            setting=simulation_to_setting(
+                "Emma", 6, "weiblich", SCRIPT_RICHTIG_MACHEN,
+                CRITERION_REFLECT_AND_PERSONALIZE,
             ),
         )
 
