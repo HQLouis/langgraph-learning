@@ -106,3 +106,59 @@ Every prompt change and its measured impact on test results is documented here.
 1. `responding-to-answer::test_disengage_acknowledge_transition_simulated` — Strategy B (simulated) only. The fixture-based (Strategy A) version passes. The simulated conversation generates different context each run, and the system sometimes asks a follow-up question after acknowledging disengagement. This is inherent non-determinism in Strategy B with n_runs=1.
 
 **Regressions**: None
+
+---
+
+### [2026-03-17] Worker Activation + New Rules (REGELn 7-10) + 4 New Test Suites
+
+**What changed**:
+1. **All 9 background worker prompts populated** (`local_fallback_prompts.py`): Based on expert pedagogue originals from `dialogue-system-engineering/oroginal_promts.txt`. Workers: Grammar, Comprehension, Speech Acts, Vocabulary, Boredom, Förderfokus, Aufgaben, Satzbau Analysis, Satzbau Constraints.
+2. **4 new test suites created** for features 8-12: `story-not-extended` (4 tests), `story-summary` (4 tests), `incorrect-story-facts` (4 tests), `child-prompts-ai` (4 tests). Plus `test_reflect_and_personalize` added to `responding-to-answer`.
+3. **3 new master prompt rules added**:
+   - REGEL 7: Falsche Angaben neutral korrigieren (overrides REGEL 2 — directly state correct answer)
+   - REGEL 8: Ende der Geschichte nicht verlängern (recognize last scene, wrap up)
+   - REGEL 9: Kurzfassung der Geschichte (shortened retelling on request + proactive offer)
+   - REGEL 10: Emotionen erforschen (renumbered from old REGEL 7)
+4. **REGEL 4B extended**: story-end + disengaged → say goodbye, don't offer alternatives.
+5. **Fixed judge criteria**: `answers-have-sufficient-context` criteria were testing for specific content instead of actual requirement.
+6. **Master first message prompt refined** from expert original.
+
+**Files modified**: `agentic-system/local_fallback_prompts.py`, test files in 4 new + 2 existing suites
+
+**Test results baseline (workers empty, no new rules, 73 tests)**: 62 passed, 11 failed
+**Test results after iteration (73 tests)**: 65 passed, 8 failed
+
+**Net improvement**: +3 passing tests (62→65), while total test count stayed at 73.
+
+**New tests passing (9 of 17 new)**: story-not-extended 2/4, story-summary 3/4, incorrect-story-facts 3/4, child-prompts-ai 4/4, reflect-and-personalize 1/2
+
+**Regressions (3 previously-passing tests now fail)**:
+- `test_emotion_engagement_after_correct_answer` + simulated — REGEL 8 (end story) overrides REGEL 10 (explore emotions) because "Pia lacht" IS the last scene
+- `test_disengage_acknowledge_transition` + simulated — REGEL 4B story-end exception too aggressive
+
+**Still failing (5 net-new)**: story-not-extended disengagement (2), proactive retelling (1), topic_transition simulated (1), reflect_and_personalize simulated (1)
+
+**Key insight**: REGEL 8 and REGEL 10 conflict when emotional scene is the last scene. Need priority resolution.
+
+**Regressions**: 3 (documented above — all REGEL 8 vs REGEL 10 conflict)
+
+---
+
+### [2026-03-17] REGEL 10 Priority Fix — Emotions before wrap-up
+
+**What changed**: Added explicit priority to REGEL 10: "HAT VORRANG VOR REGEL 8!" — when the last scene involves emotions, explore them FIRST, then wrap up.
+
+**Test results**: 69 passed, 4 failed (95% pass rate)
+
+**Fixes**:
+- `test_emotion_engagement_after_correct_answer` — NOW PASSING (REGEL 10 > REGEL 8)
+- `test_disengage_acknowledge_transition` (fixture) — NOW PASSING
+- `test_stop_forcing_when_child_disengages` — NOW PASSING
+
+**Still failing (4)**:
+1. `test_gender_simulated_female` — Strategy B flaky (non-deterministic)
+2. `test_disengage_acknowledge_transition_simulated` — Strategy B flaky
+3. `test_wrap_up_simulated` — Strategy B, model asks "Warum ist Bobo müde?" at story end in simulation
+4. `test_proactive_retelling_offer` — model doesn't proactively offer to retell after repeated errors (REGEL 9B not strong enough to override the default "correct and ask question" pattern)
+
+**Regressions**: None from this change
