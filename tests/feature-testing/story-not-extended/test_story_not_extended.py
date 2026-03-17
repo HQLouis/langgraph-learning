@@ -21,6 +21,9 @@ import pytest
 from langchain_core.messages import HumanMessage, AIMessage
 
 from feature_testing_utils import (
+    FIXTURE_BOBO_AUDIO_BOOK,
+    FIXTURE_BOBO_CHAPTER_ID,
+    FIXTURE_BOBO_STORY_ID,
     build_state,
     llm_judge,
     simulate_conversation,
@@ -32,65 +35,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import ft_config as _cfg
-
-# ---------------------------------------------------------------------------
-# Bobo story fixture
-# ---------------------------------------------------------------------------
-
-FIXTURE_BOBO_AUDIO_BOOK: str = """\
-Bobos Adventskalender. \
-Was machen Bobo und Papa Siebenschl\u00e4fer denn da? \
-Sie schauen aus dem K\u00fcchenfenster. Die B\u00e4ume sind kahl. \
-Es ist Ende November. Da kommt die Postbotin angefahren. \
-Bobo und Papa gehen zu ihr nach drau\u00dfen. \
-Die Postbotin hat ein neues Fahrrad. \
-M\u00f6chtest du mal darauf sitzen? fragt die Postbotin Bobo. \
-Das m\u00f6chte Bobo gern! Papa hilft ihm auf den Sattel. \
-Klingeling!, macht die Fahrradklingel. \
-Jetzt muss die Postbotin aber weiter. \
-Vorher gibt sie Papa Siebenschl\u00e4fer noch die Post. \
-Bobo darf die Werbeprospekte ins Haus tragen. \
-Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. \
-Wir m\u00fcssen zur Post gehen, Bobo. Da liegt ein Paket f\u00fcr uns, sagt er. \
-Papa holt sein Fahrrad. Bobo freut sich: \
-Er liebt es hinten auf dem Kindersitz mitzufahren. \
-Nur noch den Helm aufsetzen - und fertig! \
-Hui! Papa und Bobo sausen den H\u00fcgel hinunter! \
-Vor der Post schlie\u00dft Papa das Fahrrad an. Dann gehen sie hinein. \
-Am Postschalter darf Bobo den Zettel abgeben. \
-Die Beamtin holt ein gro\u00dfes Paket. \
-Sie muss um den Schalter herumgehen, \
-damit Papa und Bobo es nehmen k\u00f6nnen. \
-Bobo und Papa tragen das Paket zusammen. \
-Aber wie sollen sie mit dem gro\u00dfen Paket Fahrrad fahren? \
-Wir m\u00fcssen schieben, sagt Papa. \
-Papa und Bobo gehen zu Fu\u00df nach Hause. \
-Das Paket darf auf Bobos Kindersitz mitfahren. \
-Zu Hause packen Bobo und Papa das Paket aus. \
-Darin ist ein gro\u00dfer Fotokalender f\u00fcr das n\u00e4chste Jahr. \
-Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, \
-fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln. \
-Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: \
-eine gro\u00dfe Pappe, Transparentpapier, ein scharfes Messer, \
-Filzstifte und einen Klebestift. \
-Papa schneidet mit dem scharfen Messer 24 \u00d6ffnungen in die Pappe. \
-Dann klebt er das Transparentpapier auf die Pappe. \
-Jetzt darf Bobo ein gro\u00dfes Haus auf die Pappe malen. \
-Die \u00d6ffnungen sind die Fenster. Bobo malt auch B\u00e4ume. \
-Und einen Mond. Das wird ein sch\u00f6nes Bild! \
-Nun wird der Kalender noch am Fenster aufgeh\u00e4ngt. Fertig! \
-Da kommt Mama nach Hause. Sie hat eingekauft. \
-Dann darf Bobo alle T\u00fcrchen schlie\u00dfen. \
-Papa malt 24 Zahlen darauf. \
-Oh, das ist aber ein sch\u00f6ner Adventskalender!, staunt sie. \
-Hast du das Bild gemalt, Bobo? \
-Aber Bobo antwortet nicht. \
-Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.\
-"""
-
-FIXTURE_BOBO_STORY_ID: str = "bobos_adventskalender"
-FIXTURE_BOBO_CHAPTER_ID: str = "chapter_01"
-
 
 # ---------------------------------------------------------------------------
 # Helper

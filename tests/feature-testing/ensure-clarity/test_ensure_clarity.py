@@ -40,6 +40,12 @@ import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from feature_testing_utils import (
+    FIXTURE_BOBO_AUDIO_BOOK,
+    FIXTURE_BOBO_CHAPTER_ID,
+    FIXTURE_BOBO_STORY_ID,
+    FIXTURE_PIA_AUDIO_BOOK,
+    FIXTURE_PIA_CHAPTER_ID,
+    FIXTURE_PIA_STORY_ID,
     build_state,
     llm_judge,
     simulate_conversation,
@@ -48,143 +54,6 @@ from feature_testing_utils import (
 )
 
 import ft_config as _cfg
-
-# ---------------------------------------------------------------------------
-# Story fixture — "Pia muss nicht perfekt sein"
-# ---------------------------------------------------------------------------
-
-FIXTURE_PIA_AUDIO_BOOK: str = """\
-Pia muss nicht perfekt sein. \
-F\u00fcr Pia Piretti begann der Freitag wie jeder andere Tag. \
-Sie suchte Socken aus, die zusammenpassten. \
-Und nat\u00fcrlich zog sie jeden Schuh an den richtigen Fu\u00df. \
-Sie verga\u00df nicht, ihrem Hamster Hubert sein Lieblingsessen zu f\u00fcttern: Brokkoli. \
-Und als sie das Pausenbrot f\u00fcr ihren Bruder Carl schmierte, \
-nahm sie daf\u00fcr haargenau so viel Erdnussbutter wie Marmelade. \
-Als sie vor die T\u00fcr ging, um ihre Fans zu begr\u00fc\u00dfen, \
-sagte sie 'Guten Morgen' und 'Dankesch\u00f6n'. \
-Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. \
-Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. N\u00f6. \
-'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. \
-'Von mir aus kann's losgehen!', antwortete Pia l\u00e4chelnd. \
-Schlie\u00dflich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen. \
-Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hie\u00df. \
-Sie nannten sie nur 'das M\u00e4dchen, das immer alles richtig macht', \
-denn solange man denken konnte, war ihr noch nie ein Fehler passiert. \
-Anders als Pia machte Carl jede Menge Fehler. \
-Er a\u00df seine Wachsmalkreide und malte mit gr\u00fcnen Bohnen. \
-Er tanzte mit den H\u00e4nden und spielte mit den F\u00fc\u00dfen Klavier. \
-F\u00fcr Carl war es das Gr\u00f6\u00dfte, Dinge falsch zu machen! \
-In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. \
-F\u00fcr ihren Riesenrhabarbermuffin brauchten sie Eier. \
-Pia ging zum K\u00fchlschrank und w\u00e4hlte sorgf\u00e4ltig die gr\u00f6\u00dften und \
-sch\u00f6nsten Eier aus, die sie finden konnte. \
-Doch auf dem R\u00fcckweg rutschte sie aus. \
-Die Eier flogen in hohem Bogen durch die Luft. \
-Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! \
-'Das war knapp!', dachte Pia. \
-'Tut mir leid, Pia... Ich habe ein St\u00fcck Rhabarber fallen lassen.' \
-Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. \
-'Komm doch zu uns!', rief Millie. 'Es macht Spa\u00df!', sagte Sarah. \
-Pia beobachtete, wie sie \u00fcber den gefrorenen Teich rutschten und schlidderten. \
-Millie und Sarah lachten, w\u00e4hrend sie \u00fcbers Eis stolperten. \
-'Nein, danke', sagte Pia. \
-Beim Abendessen r\u00fchrte Pia ihr Essen kaum an. \
-'Ist alles in Ordnung, Sp\u00e4tzchen?', fragte ihr Vater. \
-'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' \
-'Angst? Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem L\u00e4cheln. \
-Pia versuchte, auch zu l\u00e4cheln. \
-Nach dem Essen machte sich Pia f\u00fcr den Talentwettbewerb bereit. \
-Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte. \
-Dann holte sie den Salzstreuer vom K\u00fcchentisch. \
-Am Ende bef\u00fcllte sie einen Luftballon mit Wasser. \
-Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und dr\u00fcber. \
-Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. \
-'Da ist sie! Das ist das M\u00e4dchen, das immer alles richtig macht!', sagte eine Frau. \
-'Oh! Bei ihr l\u00e4uft immer alles perfekt, immer!', rief ein Mann. \
-Als die Musik einsetzte, warf Pia Hubert in die Luft. \
-SUPER PIA! Als N\u00e4chstes kam der Salzstreuer. Und zum Schluss der Wasserballon. \
-Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. \
-Doch dann fiel Pia am Salzstreuer etwas Komisches auf... \
-Die K\u00f6rner, die herausrieselten, waren nicht wei\u00df! \
-HATSCHI! \
-Hubert war von seinem eigenen Niesen so \u00fcberrascht, \
-dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. \
-PENG! Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. \
-Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. \
-Und was f\u00fcr einen... \
-Die Musik verstummte. Pia wusste nicht, was sie machen sollte. \
-Weinen? Von der B\u00fchne rennen? \
-Die Zuschauer hockten wie versteinert da. \
-Sie konnten nicht glauben, dass dem M\u00e4dchen, das immer alles richtig macht, \
-ein Fehler passiert war! \
-Pia schaute zu Hubert. Der schaute zur\u00fcck. \
-Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. \
-Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. \
-Und aus dem Glucksen wurde ein richtig lautes Lachen.\
-"""
-
-FIXTURE_PIA_STORY_ID: str = "pia_muss_nicht_perfekt_sein"
-FIXTURE_PIA_CHAPTER_ID: str = "chapter_01"
-
-# ---------------------------------------------------------------------------
-# Story fixture — "Bobos Adventskalender"
-# ---------------------------------------------------------------------------
-
-FIXTURE_BOBO_AUDIO_BOOK: str = """\
-Bobos Adventskalender. \
-Was machen Bobo und Papa Siebenschl\u00e4fer denn da? \
-Sie schauen aus dem K\u00fcchenfenster. Die B\u00e4ume sind kahl. \
-Es ist Ende November. Da kommt die Postbotin angefahren. \
-Bobo und Papa gehen zu ihr nach drau\u00dfen. \
-Die Postbotin hat ein neues Fahrrad. \
-M\u00f6chtest du mal darauf sitzen? fragt die Postbotin Bobo. \
-Das m\u00f6chte Bobo gern! Papa hilft ihm auf den Sattel. \
-Klingeling!, macht die Fahrradklingel. \
-Jetzt muss die Postbotin aber weiter. \
-Vorher gibt sie Papa Siebenschl\u00e4fer noch die Post. \
-Bobo darf die Werbeprospekte ins Haus tragen. \
-Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. \
-Wir m\u00fcssen zur Post gehen, Bobo. Da liegt ein Paket f\u00fcr uns, sagt er. \
-Papa holt sein Fahrrad. Bobo freut sich: \
-Er liebt es hinten auf dem Kindersitz mitzufahren. \
-Nur noch den Helm aufsetzen - und fertig! \
-Hui! Papa und Bobo sausen den H\u00fcgel hinunter! \
-Vor der Post schlie\u00dft Papa das Fahrrad an. Dann gehen sie hinein. \
-Am Postschalter darf Bobo den Zettel abgeben. \
-Die Beamtin holt ein gro\u00dfes Paket. \
-Sie muss um den Schalter herumgehen, \
-damit Papa und Bobo es nehmen k\u00f6nnen. \
-Bobo und Papa tragen das Paket zusammen. \
-Aber wie sollen sie mit dem gro\u00dfen Paket Fahrrad fahren? \
-Wir m\u00fcssen schieben, sagt Papa. \
-Papa und Bobo gehen zu Fu\u00df nach Hause. \
-Das Paket darf auf Bobos Kindersitz mitfahren. \
-Zu Hause packen Bobo und Papa das Paket aus. \
-Darin ist ein gro\u00dfer Fotokalender f\u00fcr das n\u00e4chste Jahr. \
-Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, \
-fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln. \
-Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: \
-eine gro\u00dfe Pappe, Transparentpapier, ein scharfes Messer, \
-Filzstifte und einen Klebestift. \
-Papa schneidet mit dem scharfen Messer 24 \u00d6ffnungen in die Pappe. \
-Dann klebt er das Transparentpapier auf die Pappe. \
-Jetzt darf Bobo ein gro\u00dfes Haus auf die Pappe malen. \
-Die \u00d6ffnungen sind die Fenster. Bobo malt auch B\u00e4ume. \
-Und einen Mond. Das wird ein sch\u00f6nes Bild! \
-Nun wird der Kalender noch am Fenster aufgeh\u00e4ngt. Fertig! \
-Da kommt Mama nach Hause. Sie hat eingekauft. \
-Dann darf Bobo alle T\u00fcrchen schlie\u00dfen. \
-Papa malt 24 Zahlen darauf. \
-Oh, das ist aber ein sch\u00f6ner Adventskalender!, staunt sie. \
-Hast du das Bild gemalt, Bobo? \
-Aber Bobo antwortet nicht. \
-Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.\
-"""
-
-FIXTURE_BOBO_STORY_ID: str = "bobos_adventskalender"
-FIXTURE_BOBO_CHAPTER_ID: str = "chapter_01"
-
 
 # ---------------------------------------------------------------------------
 # Judge criteria (English)

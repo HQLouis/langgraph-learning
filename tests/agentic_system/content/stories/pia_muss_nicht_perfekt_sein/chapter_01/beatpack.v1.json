@@ -1,7 +1,7 @@
 {
   "story_id": "pia_muss_nicht_perfekt_sein",
   "chapter_id": "chapter_01",
-  "content_version": "2026-03-17T20:13:19.847707",
+  "content_version": "2026-03-17T21:27:08.648127",
   "beatpack_version": "v1",
   "chapter_hash": "sha256:9e78a3873395becb708f336c8f33454ce7983fe400872ea41b6af85ef657ae77",
   "beats": [
@@ -14,33 +14,23 @@
       },
       "text": "Pia muss nicht perfekt sein. Für Pia Piretti begann der Freitag wie jeder andere Tag. Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß.",
       "entities": [
-        "Pia",
-        "Für",
-        "Freitag",
         "Schuh",
+        "Fuß",
+        "Freitag",
+        "Sie",
+        "Piretti",
+        "Für",
         "Socken",
         "sie",
-        "Sie",
         "Tag",
-        "Pia Piretti",
-        "Fuß",
-        "Piretti"
+        "Pia",
+        "Pia Piretti"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "muss",
-          "o": "nicht"
-        },
-        {
-          "s": "Pia",
-          "p": "Piretti",
-          "o": "begann"
-        },
-        {
-          "s": "Für",
-          "p": "Pia",
-          "o": "Piretti"
+          "s": "Schuh",
+          "p": "an",
+          "o": "den"
         },
         {
           "s": "Freitag",
@@ -48,9 +38,19 @@
           "o": "jeder"
         },
         {
-          "s": "Schuh",
-          "p": "an",
-          "o": "den"
+          "s": "Sie",
+          "p": "suchte",
+          "o": "Socken"
+        },
+        {
+          "s": "Sie",
+          "p": "jeden",
+          "o": "Schuh"
+        },
+        {
+          "s": "Piretti",
+          "p": "begann",
+          "o": "der"
         }
       ],
       "tags": [],
@@ -65,46 +65,46 @@
       },
       "text": "Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli. Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.",
       "entities": [
-        "ihren Bruder",
-        "Hamster",
         "Brokkoli",
-        "Hubert",
-        "sie",
         "Sie",
-        "ihrem Hamster",
-        "Marmelade",
-        "ihr",
         "Lieblingsessen",
-        "Carl",
+        "Hamster",
         "Bruder",
+        "Pausenbrot",
+        "Marmelade",
+        "Hubert",
+        "Carl",
+        "ihrem Hamster",
+        "sie",
+        "ihr",
         "Erdnussbutter",
-        "Pausenbrot"
+        "ihren Bruder"
       ],
       "facts": [
         {
-          "s": "ihren Bruder",
-          "p": "Carl",
-          "o": "schmierte"
+          "s": "Sie",
+          "p": "vergaß",
+          "o": "nicht"
+        },
+        {
+          "s": "Sie",
+          "p": "das",
+          "o": "Pausenbrot"
+        },
+        {
+          "s": "Sie",
+          "p": "dafür",
+          "o": "haargenau"
+        },
+        {
+          "s": "Lieblingsessen",
+          "p": "zu",
+          "o": "füttern"
         },
         {
           "s": "Hamster",
           "p": "Hubert",
           "o": "sein"
-        },
-        {
-          "s": "Hubert",
-          "p": "sein",
-          "o": "Lieblingsessen"
-        },
-        {
-          "s": "sie",
-          "p": "vergaß",
-          "o": "nicht"
-        },
-        {
-          "s": "sie",
-          "p": "das",
-          "o": "Pausenbrot"
         }
       ],
       "tags": [],
@@ -119,45 +119,45 @@
       },
       "text": "Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie 'Guten Morgen' und 'Dankeschön'. Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte.",
       "entities": [
-        "Bett",
         "Guten",
-        "Tür",
-        "Morgen",
-        "sie",
-        "Dankeschön",
-        "Sie",
-        "Als",
-        "ihr",
         "Fans",
-        "Hatte",
+        "Als",
         "Mathehausaufgaben",
+        "Morgen",
+        "Sie",
+        "Hatte",
+        "ihr",
+        "Dankeschön",
+        "sie",
+        "Bett",
+        "Tür",
         "Leute"
       ],
       "facts": [
         {
-          "s": "Bett",
-          "p": "gemacht",
+          "s": "Fans",
+          "p": "zu",
+          "o": "begrüßen"
+        },
+        {
+          "s": "Als",
+          "p": "sie",
+          "o": "vor"
+        },
+        {
+          "s": "Mathehausaufgaben",
+          "p": "vergessen",
           "o": "hatte"
         },
         {
-          "s": "sie",
+          "s": "Sie",
           "p": "vor",
           "o": "die"
         },
         {
-          "s": "sie",
+          "s": "Sie",
           "p": "ihr",
           "o": "Bett"
-        },
-        {
-          "s": "sie",
-          "p": "wollten",
-          "o": "wissen"
-        },
-        {
-          "s": "sie",
-          "p": "vielleicht",
-          "o": "ihre"
         }
       ],
       "tags": [
@@ -175,19 +175,34 @@
       },
       "text": "Nö. 'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. 'Von mir aus kann's losgehen!', antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.",
       "entities": [
-        "Pia",
-        "Abend",
-        "Talentwettbewerb",
-        "Jahren",
-        "sie",
-        "Nö",
-        "Schließlich",
         "Was",
+        "Schließlich",
         "Jongliernummer",
+        "Nö",
+        "Talentwettbewerb",
+        "Abend",
+        "Jahren",
+        "Von",
+        "sie",
         "ihr",
-        "Von"
+        "Pia"
       ],
       "facts": [
+        {
+          "s": "Was",
+          "p": "ist",
+          "o": "mit"
+        },
+        {
+          "s": "Schließlich",
+          "p": "hatte",
+          "o": "sie"
+        },
+        {
+          "s": "Jongliernummer",
+          "p": "in",
+          "o": "den"
+        },
         {
           "s": "Talentwettbewerb",
           "p": "heute",
@@ -197,21 +212,6 @@
           "s": "Jahren",
           "p": "immer",
           "o": "gewonnen"
-        },
-        {
-          "s": "sie",
-          "p": "mit",
-          "o": "ihrer"
-        },
-        {
-          "s": "Schließlich",
-          "p": "hatte",
-          "o": "sie"
-        },
-        {
-          "s": "Was",
-          "p": "ist",
-          "o": "mit"
         }
       ],
       "tags": [
@@ -228,29 +228,24 @@
       },
       "text": "Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur 'das Mädchen, das immer alles richtig macht', denn solange man denken konnte, war ihr noch nie ein Fehler passiert.",
       "entities": [
-        "Pia",
-        "das Mädchen, das immer alles richtig macht",
         "Stadt",
+        "das Mädchen, das immer alles richtig macht",
         "Mädchen",
-        "sie",
-        "Menschen",
         "Sie",
+        "Menschen",
+        "Fehler",
+        "sie",
         "ihr",
-        "Fehler"
+        "Pia"
       ],
       "facts": [
-        {
-          "s": "Pia",
-          "p": "wirklich",
-          "o": "hieß"
-        },
         {
           "s": "Stadt",
           "p": "wussten",
           "o": "nicht"
         },
         {
-          "s": "sie",
+          "s": "Sie",
           "p": "nannten",
           "o": "sie"
         },
@@ -260,9 +255,14 @@
           "o": "der"
         },
         {
-          "s": "Sie",
+          "s": "sie",
           "p": "nannten",
           "o": "sie"
+        },
+        {
+          "s": "ihr",
+          "p": "noch",
+          "o": "nie"
         }
       ],
       "tags": [],
@@ -277,31 +277,26 @@
       },
       "text": "Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen!",
       "entities": [
-        "Pia",
-        "Für",
-        "Anders",
-        "Bohnen",
         "Wachsmalkreide",
-        "Größte",
         "Menge",
-        "Füßen",
-        "Er",
+        "Bohnen",
+        "Anders",
+        "Fehler",
+        "Für",
         "Dinge",
+        "Händen",
+        "Füßen",
         "Klavier",
         "Carl",
-        "Fehler",
-        "Händen"
+        "Größte",
+        "Er",
+        "Pia"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "machte",
-          "o": "Carl"
-        },
-        {
-          "s": "Für",
-          "p": "Carl",
-          "o": "war"
+          "s": "Wachsmalkreide",
+          "p": "und",
+          "o": "malte"
         },
         {
           "s": "Anders",
@@ -309,14 +304,19 @@
           "o": "Pia"
         },
         {
-          "s": "Wachsmalkreide",
-          "p": "und",
-          "o": "malte"
+          "s": "Für",
+          "p": "Carl",
+          "o": "war"
         },
         {
-          "s": "Er",
-          "p": "aß",
-          "o": "seine"
+          "s": "Dinge",
+          "p": "falsch",
+          "o": "zu"
+        },
+        {
+          "s": "Händen",
+          "p": "und",
+          "o": "spielte"
         }
       ],
       "tags": [],
@@ -331,45 +331,45 @@
       },
       "text": "In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier. Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.",
       "entities": [
-        "Pia",
-        "Für",
-        "Sarah",
-        "In",
-        "sie",
-        "Eier",
-        "Kühlschrank",
         "Freundinnen",
-        "Schule",
-        "ihr",
-        "Kochteam",
         "Riesenrhabarbermuffin",
-        "Millie"
+        "Kühlschrank",
+        "Millie",
+        "Sarah",
+        "Schule",
+        "Für",
+        "In",
+        "Kochteam",
+        "Eier",
+        "sie",
+        "ihr",
+        "Pia"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "mit",
-          "o": "ihren"
+          "s": "Riesenrhabarbermuffin",
+          "p": "brauchten",
+          "o": "sie"
         },
         {
-          "s": "Pia",
-          "p": "ging",
-          "o": "zum"
+          "s": "Kühlschrank",
+          "p": "und",
+          "o": "wählte"
+        },
+        {
+          "s": "Millie",
+          "p": "und",
+          "o": "Sarah"
+        },
+        {
+          "s": "Schule",
+          "p": "war",
+          "o": "Pia"
         },
         {
           "s": "Für",
           "p": "ihren",
           "o": "Riesenrhabarbermuffin"
-        },
-        {
-          "s": "In",
-          "p": "der",
-          "o": "Schule"
-        },
-        {
-          "s": "In",
-          "p": "einem",
-          "o": "Kochteam"
         }
       ],
       "tags": [
@@ -386,23 +386,23 @@
       },
       "text": "Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! 'Das war knapp!', dachte Pia. 'Tut mir leid, Pia...",
       "entities": [
-        "Pia",
-        "Tut",
         "Tat",
-        "sie",
-        "Luft",
-        "Eier",
+        "Tut",
         "Doch",
-        "Bogen",
         "Rückweg",
+        "Bogen",
+        "Fehler",
+        "Eier",
+        "sie",
         "ihr",
-        "Fehler"
+        "Pia",
+        "Luft"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "war",
-          "o": "kurz"
+          "s": "Tat",
+          "p": "sie",
+          "o": "aber"
         },
         {
           "s": "Tut",
@@ -410,19 +410,19 @@
           "o": "leid"
         },
         {
-          "s": "Tat",
-          "p": "sie",
-          "o": "aber"
+          "s": "Doch",
+          "p": "auf",
+          "o": "dem"
         },
         {
-          "s": "sie",
-          "p": "aber",
-          "o": "nicht"
+          "s": "Rückweg",
+          "p": "rutschte",
+          "o": "sie"
         },
         {
-          "s": "Eier",
-          "p": "flogen",
-          "o": "in"
+          "s": "Bogen",
+          "p": "durch",
+          "o": "die"
         }
       ],
       "tags": [],
@@ -437,25 +437,25 @@
       },
       "text": "Ich habe ein Stück Rhabarber fallen lassen.' Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. 'Komm doch zu uns!', rief Millie. 'Es macht Spaß!', sagte Sarah.",
       "entities": [
-        "Pia",
-        "Heimweg",
-        "Komm",
-        "Sarah",
-        "Auf",
-        "Schlittschuh",
-        "Park",
         "Spaß",
         "Es",
+        "Komm",
+        "Stück",
+        "Schlittschuh",
+        "Millie",
+        "Sarah",
+        "Park",
+        "Heimweg",
+        "Pia",
         "Rhabarber",
         "Ich",
-        "Stück",
-        "Millie"
+        "Auf"
       ],
       "facts": [
         {
-          "s": "Heimweg",
-          "p": "schaute",
-          "o": "Pia"
+          "s": "Es",
+          "p": "macht",
+          "o": "Spaß"
         },
         {
           "s": "Komm",
@@ -463,19 +463,19 @@
           "o": "zu"
         },
         {
+          "s": "Stück",
+          "p": "Rhabarber",
+          "o": "fallen"
+        },
+        {
+          "s": "Millie",
+          "p": "und",
+          "o": "Sarah"
+        },
+        {
           "s": "Sarah",
           "p": "im",
           "o": "Park"
-        },
-        {
-          "s": "Auf",
-          "p": "dem",
-          "o": "Heimweg"
-        },
-        {
-          "s": "Park",
-          "p": "Schlittschuh",
-          "o": "liefen"
         }
       ],
       "tags": [
@@ -493,25 +493,15 @@
       },
       "text": "Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. 'Nein, danke', sagte Pia.",
       "entities": [
-        "Pia",
+        "Teich",
+        "Eis",
+        "Millie",
         "Sarah",
         "sie",
         "Nein",
-        "Eis",
-        "Teich",
-        "Millie"
+        "Pia"
       ],
       "facts": [
-        {
-          "s": "sie",
-          "p": "über",
-          "o": "den"
-        },
-        {
-          "s": "sie",
-          "p": "übers",
-          "o": "Eis"
-        },
         {
           "s": "Teich",
           "p": "rutschten",
@@ -521,6 +511,16 @@
           "s": "Millie",
           "p": "und",
           "o": "Sarah"
+        },
+        {
+          "s": "sie",
+          "p": "über",
+          "o": "den"
+        },
+        {
+          "s": "sie",
+          "p": "übers",
+          "o": "Eis"
         }
       ],
       "tags": [
@@ -537,25 +537,20 @@
       },
       "text": "Beim Abendessen rührte Pia ihr Essen kaum an. 'Ist alles in Ordnung, Spätzchen?', fragte ihr Vater. 'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' 'Angst?",
       "entities": [
-        "Pia",
+        "Ordnung",
         "ihr Vater",
-        "Vater",
-        "Angst",
         "Ist",
+        "Angst",
         "Essen",
         "Abendessen",
         "Spätzchen",
-        "Ordnung",
+        "Vater",
         "ihr",
         "Beim",
+        "Pia",
         "Ich"
       ],
       "facts": [
-        {
-          "s": "Pia",
-          "p": "ihr",
-          "o": "Essen"
-        },
         {
           "s": "Ist",
           "p": "alles",
@@ -575,6 +570,11 @@
           "s": "Abendessen",
           "p": "rührte",
           "o": "Pia"
+        },
+        {
+          "s": "ihr",
+          "p": "Essen",
+          "o": "kaum"
         }
       ],
       "tags": [
@@ -591,24 +591,24 @@
       },
       "text": "Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem Lächeln. Pia versuchte, auch zu lächeln. Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte.",
       "entities": [
-        "Pia",
-        "Nickerchen",
         "ihr Vater",
-        "Lächeln",
-        "Hubert",
-        "Vater",
+        "Nickerchen",
         "Nach",
+        "Essen",
+        "Zuerst",
         "Talentwettbewerb",
+        "Vater",
+        "Hubert",
         "sie",
         "ihr",
-        "Essen",
-        "Zuerst"
+        "Pia",
+        "Lächeln"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "für",
-          "o": "den"
+          "s": "ihr Vater",
+          "p": "mit",
+          "o": "einem"
         },
         {
           "s": "Nickerchen",
@@ -616,19 +616,19 @@
           "o": "hatte"
         },
         {
-          "s": "ihr Vater",
-          "p": "mit",
-          "o": "einem"
-        },
-        {
-          "s": "Vater",
-          "p": "mit",
-          "o": "einem"
-        },
-        {
           "s": "Nach",
           "p": "dem",
           "o": "Essen"
+        },
+        {
+          "s": "Essen",
+          "p": "machte",
+          "o": "sich"
+        },
+        {
+          "s": "Zuerst",
+          "p": "weckte",
+          "o": "sie"
         }
       ],
       "tags": [
@@ -679,47 +679,47 @@
       },
       "text": "Am Ende befüllte sie einen Luftballon mit Wasser. Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und drüber. Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. 'Da ist sie!",
       "entities": [
-        "Pia",
-        "Wasser",
-        "Musik",
-        "In",
-        "Pias",
-        "sie",
-        "Bauch",
-        "Da",
-        "Am",
-        "Schule",
-        "ihr",
         "Aula",
         "Ende",
+        "Bauch",
+        "Am",
+        "Da",
+        "Schule",
+        "Pias",
+        "In",
+        "Luftballon",
+        "Musik",
+        "sie",
+        "Wasser",
+        "ihr",
         "Jonglier",
-        "Luftballon"
+        "Pia"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "wartete",
-          "o": "darauf"
+          "s": "Aula",
+          "p": "der",
+          "o": "Schule"
         },
         {
-          "s": "In",
-          "p": "Pias",
-          "o": "Bauch"
-        },
-        {
-          "s": "Pias",
-          "p": "Bauch",
-          "o": "ging"
-        },
-        {
-          "s": "sie",
-          "p": "einen",
-          "o": "Luftballon"
+          "s": "Ende",
+          "p": "befüllte",
+          "o": "sie"
         },
         {
           "s": "Bauch",
           "p": "ging",
           "o": "es"
+        },
+        {
+          "s": "Am",
+          "p": "Ende",
+          "o": "befüllte"
+        },
+        {
+          "s": "Da",
+          "p": "ist",
+          "o": "sie"
         }
       ],
       "tags": [
@@ -736,31 +736,31 @@
       },
       "text": "Das ist das Mädchen, das immer alles richtig macht!', sagte eine Frau. 'Oh! Bei ihr läuft immer alles perfekt, immer!', rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft. SUPER PIA! Als Nächstes kam der Salzstreuer.",
       "entities": [
-        "Pia",
-        "das Mädchen, das immer alles richtig macht",
-        "Bei",
-        "Nächstes",
-        "Salzstreuer",
-        "Hubert",
-        "Mädchen",
-        "Luft",
-        "Als",
-        "ihr",
-        "Musik",
         "Mann",
+        "Als",
+        "Mädchen",
+        "das Mädchen, das immer alles richtig macht",
+        "Nächstes",
+        "Bei",
+        "Oh",
         "Frau",
-        "Oh"
+        "Hubert",
+        "Musik",
+        "Salzstreuer",
+        "Luft",
+        "ihr",
+        "Pia"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "Hubert",
-          "o": "in"
+          "s": "Als",
+          "p": "die",
+          "o": "Musik"
         },
         {
-          "s": "Bei",
-          "p": "ihr",
-          "o": "läuft"
+          "s": "Als",
+          "p": "Nächstes",
+          "o": "kam"
         },
         {
           "s": "Nächstes",
@@ -768,14 +768,14 @@
           "o": "der"
         },
         {
+          "s": "Bei",
+          "p": "ihr",
+          "o": "läuft"
+        },
+        {
           "s": "Hubert",
           "p": "in",
           "o": "die"
-        },
-        {
-          "s": "Als",
-          "p": "die",
-          "o": "Musik"
         }
       ],
       "tags": [
@@ -793,31 +793,16 @@
       },
       "text": "Und zum Schluss der Wasserballon. Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. Doch dann fiel Pia am Salzstreuer etwas Komisches auf...",
       "entities": [
-        "Pia",
-        "Salzstreuer",
         "Zuschauer",
-        "Sache",
-        "Komisches",
         "Doch",
+        "Komisches",
+        "Wasserballon",
+        "Sache",
         "Schluss",
-        "Wasserballon"
+        "Salzstreuer",
+        "Pia"
       ],
       "facts": [
-        {
-          "s": "Pia",
-          "p": "war",
-          "o": "ganz"
-        },
-        {
-          "s": "Pia",
-          "p": "am",
-          "o": "Salzstreuer"
-        },
-        {
-          "s": "Salzstreuer",
-          "p": "etwas",
-          "o": "Komisches"
-        },
         {
           "s": "Zuschauer",
           "p": "klatschten",
@@ -827,6 +812,21 @@
           "s": "Doch",
           "p": "dann",
           "o": "fiel"
+        },
+        {
+          "s": "Schluss",
+          "p": "der",
+          "o": "Wasserballon"
+        },
+        {
+          "s": "Salzstreuer",
+          "p": "etwas",
+          "o": "Komisches"
+        },
+        {
+          "s": "Pia",
+          "p": "war",
+          "o": "ganz"
         }
       ],
       "tags": [],
@@ -841,17 +841,17 @@
       },
       "text": "Die Körner, die herausrieselten, waren nicht weiß! HATSCHI! Hubert war von seinem eigenen Niesen so überrascht, dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. PENG!",
       "entities": [
-        "Krallen",
-        "Hubert",
         "Körner",
         "Niesen",
-        "Luftballon"
+        "Hubert",
+        "Luftballon",
+        "Krallen"
       ],
       "facts": [
         {
-          "s": "Krallen",
-          "p": "am",
-          "o": "Luftballon"
+          "s": "Niesen",
+          "p": "so",
+          "o": "überrascht"
         },
         {
           "s": "Hubert",
@@ -859,9 +859,9 @@
           "o": "von"
         },
         {
-          "s": "Niesen",
-          "p": "so",
-          "o": "überrascht"
+          "s": "Krallen",
+          "p": "am",
+          "o": "Luftballon"
         }
       ],
       "tags": [],
@@ -876,21 +876,36 @@
       },
       "text": "Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. Und was für einen... Die Musik verstummte. Pia wusste nicht, was sie machen sollte. Weinen?",
       "entities": [
-        "Pia",
-        "Ballonfetzen",
-        "Hubert",
         "Mal",
         "Pfeffer",
-        "Pias",
-        "Alles",
-        "sie",
-        "Zum",
-        "Musik",
         "Weinen",
         "Kopf",
-        "Fehler"
+        "Alles",
+        "Fehler",
+        "Pias",
+        "Hubert",
+        "Zum",
+        "Musik",
+        "sie",
+        "Pia",
+        "Ballonfetzen"
       ],
       "facts": [
+        {
+          "s": "Alles",
+          "p": "regnete",
+          "o": "auf"
+        },
+        {
+          "s": "Zum",
+          "p": "ersten",
+          "o": "Mal"
+        },
+        {
+          "s": "sie",
+          "p": "machen",
+          "o": "sollte"
+        },
         {
           "s": "Pia",
           "p": "einen",
@@ -900,21 +915,6 @@
           "s": "Pia",
           "p": "wusste",
           "o": "nicht"
-        },
-        {
-          "s": "Ballonfetzen",
-          "p": "und",
-          "o": "Pfeffer"
-        },
-        {
-          "s": "Alles",
-          "p": "regnete",
-          "o": "auf"
-        },
-        {
-          "s": "sie",
-          "p": "machen",
-          "o": "sollte"
         }
       ],
       "tags": [],
@@ -929,31 +929,21 @@
       },
       "text": "Von der Bühne rennen? Die Zuschauer hockten wie versteinert da. Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war! Pia schaute zu Hubert. Der schaute zurück.",
       "entities": [
-        "Pia",
-        "Bühne",
-        "Hubert",
         "Zuschauer",
+        "Bühne",
         "Mädchen",
-        "sie",
         "Sie",
+        "Fehler",
         "Von",
-        "Fehler"
+        "Hubert",
+        "sie",
+        "Pia"
       ],
       "facts": [
-        {
-          "s": "Pia",
-          "p": "schaute",
-          "o": "zu"
-        },
         {
           "s": "Zuschauer",
           "p": "hockten",
           "o": "wie"
-        },
-        {
-          "s": "sie",
-          "p": "konnten",
-          "o": "nicht"
         },
         {
           "s": "Sie",
@@ -961,9 +951,19 @@
           "o": "nicht"
         },
         {
+          "s": "Fehler",
+          "p": "passiert",
+          "o": "war"
+        },
+        {
           "s": "Von",
           "p": "der",
           "o": "Bühne"
+        },
+        {
+          "s": "sie",
+          "p": "konnten",
+          "o": "nicht"
         }
       ],
       "tags": [],
@@ -978,21 +978,21 @@
       },
       "text": "Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen.",
       "entities": [
-        "Pia",
-        "Ballonreste",
-        "Kichern",
         "Ihr",
-        "Hamsterfell",
-        "Lachen",
-        "ihr",
+        "Kichern",
         "Sein",
-        "Glucksen"
+        "Lachen",
+        "Hamsterfell",
+        "Glucksen",
+        "Ballonreste",
+        "ihr",
+        "Pia"
       ],
       "facts": [
         {
-          "s": "Pia",
-          "p": "musste",
-          "o": "kichern"
+          "s": "Ihr",
+          "p": "Kichern",
+          "o": "wurde"
         },
         {
           "s": "Kichern",
@@ -1000,9 +1000,9 @@
           "o": "zu"
         },
         {
-          "s": "Ihr",
-          "p": "Kichern",
-          "o": "wurde"
+          "s": "Sein",
+          "p": "Hamsterfell",
+          "o": "war"
         },
         {
           "s": "Hamsterfell",
@@ -1010,9 +1010,9 @@
           "o": "pitschnass"
         },
         {
-          "s": "ihr",
-          "p": "Kichern",
-          "o": "wurde"
+          "s": "Glucksen",
+          "p": "wurde",
+          "o": "ein"
         }
       ],
       "tags": [],

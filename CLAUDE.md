@@ -65,6 +65,10 @@ pytest tests/agentic_system/test_beat_system.py::test_function_name -v
 
 Core content management enforcing "closed-world" knowledge — the LLM can only discuss content that exists in beats. A `Beat` is the smallest stable content unit (text span, entities, facts, tags). `BeatPack` groups beats per chapter (versioned, hashed). `BeatRetriever` selects relevant beats per turn. `beat_pipeline.py` handles semi-automated beatpack generation.
 
+**Beat progress tracking**: `load_beat_context()` accumulates `covered_beat_ids` across turns and computes `story_near_end` (True when final ~20% of beats reached). This drives beat-aware story-end detection in `_detect_story_end()`, which falls back to keyword matching when no beatpack is available.
+
+**Dual content source architecture**: `audio_book` (raw story text) and beats serve different consumers. `masterChatbot` uses filtered `beat_context` for closed-world prompts when beats are active, falling back to full `audio_book` text otherwise. Background workers always read full `audio_book` text. Both sources exist in state; beatpacks are generated FROM the story text via `beat_pipeline.py`.
+
 ### Output Contract System (`output_contract_builder.py`, `backend/models/output_contract.py`)
 
 Validates that LLM responses are grounded in source material. `ResponseContract` contains grounding evidence (quotes + claims), answer type, and optional task. Uses fuzzy matching (`fuzzy_match_quote_to_beat`) with sliding-window comparison (threshold=0.6) to trace quotes back to beats.
@@ -79,7 +83,7 @@ Dynamic prompt loading from AWS S3 with TTL-based caching (15s). Falls back to l
 
 ### State (`states.py`)
 
-`TypedDict`-based state definitions. Key fields: `messages` (LangChain message list with `add_messages` reducer), `child_profile`, `audio_book`, beat context fields (`story_id`, `chapter_id`, `beat_context`, `active_beat_ids`), analysis results from all 9 workers, and `response_contract`.
+`TypedDict`-based state definitions. Key fields: `messages` (LangChain message list with `add_messages` reducer), `child_profile`, `audio_book`, beat context fields (`story_id`, `chapter_id`, `beat_context`, `active_beat_ids`, `covered_beat_ids`, `story_near_end`), analysis results from all 9 workers, and `response_contract`.
 
 ## Testing Framework
 
@@ -93,6 +97,8 @@ Dynamic prompt loading from AWS S3 with TTL-based caching (15s). Falls back to l
    - Each test runs N times (default 5), must pass ≥80% (configurable via `--n-runs`, `--pass-threshold`).
    - Tests organized by feature folder. Markers: `contract`, `llm_feature`, `llm_judge`, `simulated`.
    - Config in `tests/feature-testing/ft_config.py`.
+   - **Story fixtures**: All story text constants (`FIXTURE_*_AUDIO_BOOK`, `FIXTURE_*_STORY_ID`, `FIXTURE_*_CHAPTER_ID`) are centralized in `feature_testing_utils.py` as the single source of truth. Test files import from there — never define story text locally. Beatpacks are generated from these same texts via `scripts/generate_test_beatpacks.py`. See `tests/feature-testing/SETUP_GUIDE.md` for full setup instructions.
+   - **Beat system in tests**: The beat manager is auto-initialized for all feature tests via `conftest.py`. Beatpack fixtures live at `tests/agentic_system/content/stories/<story_id>/<chapter_id>/beatpack.v1.json`.
 
 3. **Functional tests** (`functional-testing/`): Stream and response format validation.
 

@@ -35,91 +35,15 @@ from feature_testing_utils import (
     simulate_conversation,
     state_to_setting,
     simulation_to_setting,
+    FIXTURE_PIA_AUDIO_BOOK,
+    FIXTURE_PIA_STORY_ID,
+    FIXTURE_PIA_CHAPTER_ID,
 )
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import ft_config as _cfg
-
-# ---------------------------------------------------------------------------
-# Pia story fixture
-# ---------------------------------------------------------------------------
-
-FIXTURE_PIA_AUDIO_BOOK: str = """\
-Pia muss nicht perfekt sein. \
-F\u00fcr Pia Piretti begann der Freitag wie jeder andere Tag. \
-Sie suchte Socken aus, die zusammenpassten. \
-Und nat\u00fcrlich zog sie jeden Schuh an den richtigen Fu\u00df. \
-Sie verga\u00df nicht, ihrem Hamster Hubert sein Lieblingsessen zu f\u00fcttern: Brokkoli. \
-Und als sie das Pausenbrot f\u00fcr ihren Bruder Carl schmierte, \
-nahm sie daf\u00fcr haargenau so viel Erdnussbutter wie Marmelade. \
-Als sie vor die T\u00fcr ging, um ihre Fans zu begr\u00fc\u00dfen, \
-sagte sie 'Guten Morgen' und 'Dankesch\u00f6n'. \
-Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. \
-Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. N\u00f6. \
-'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. \
-'Von mir aus kann's losgehen!', antwortete Pia l\u00e4chelnd. \
-Schlie\u00dflich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen. \
-Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hie\u00df. \
-Sie nannten sie nur 'das M\u00e4dchen, das immer alles richtig macht', \
-denn solange man denken konnte, war ihr noch nie ein Fehler passiert. \
-Anders als Pia machte Carl jede Menge Fehler. \
-Er a\u00df seine Wachsmalkreide und malte mit gr\u00fcnen Bohnen. \
-Er tanzte mit den H\u00e4nden und spielte mit den F\u00fc\u00dfen Klavier. \
-F\u00fcr Carl war es das Gr\u00f6\u00dfte, Dinge falsch zu machen! \
-In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. \
-F\u00fcr ihren Riesenrhabarbermuffin brauchten sie Eier. \
-Pia ging zum K\u00fchlschrank und w\u00e4hlte sorgf\u00e4ltig die gr\u00f6\u00dften und \
-sch\u00f6nsten Eier aus, die sie finden konnte. \
-Doch auf dem R\u00fcckweg rutschte sie aus. \
-Die Eier flogen in hohem Bogen durch die Luft. \
-Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! \
-'Das war knapp!', dachte Pia. \
-'Tut mir leid, Pia... Ich habe ein St\u00fcck Rhabarber fallen lassen.' \
-Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. \
-'Komm doch zu uns!', rief Millie. 'Es macht Spa\u00df!', sagte Sarah. \
-Pia beobachtete, wie sie \u00fcber den gefrorenen Teich rutschten und schlidderten. \
-Millie und Sarah lachten, w\u00e4hrend sie \u00fcbers Eis stolperten. \
-'Nein, danke', sagte Pia. \
-Beim Abendessen r\u00fchrte Pia ihr Essen kaum an. \
-'Ist alles in Ordnung, Sp\u00e4tzchen?', fragte ihr Vater. \
-'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' \
-'Angst? Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem L\u00e4cheln. \
-Pia versuchte, auch zu l\u00e4cheln. \
-Nach dem Essen machte sich Pia f\u00fcr den Talentwettbewerb bereit. \
-Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte. \
-Dann holte sie den Salzstreuer vom K\u00fcchentisch. \
-Am Ende bef\u00fcllte sie einen Luftballon mit Wasser. \
-Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und dr\u00fcber. \
-Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. \
-'Da ist sie! Das ist das M\u00e4dchen, das immer alles richtig macht!', sagte eine Frau. \
-'Oh! Bei ihr l\u00e4uft immer alles perfekt, immer!', rief ein Mann. \
-Als die Musik einsetzte, warf Pia Hubert in die Luft. \
-SUPER PIA! Als N\u00e4chstes kam der Salzstreuer. Und zum Schluss der Wasserballon. \
-Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. \
-Doch dann fiel Pia am Salzstreuer etwas Komisches auf... \
-Die K\u00f6rner, die herausrieselten, waren nicht wei\u00df! \
-HATSCHI! \
-Hubert war von seinem eigenen Niesen so \u00fcberrascht, \
-dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. \
-PENG! Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. \
-Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. \
-Und was f\u00fcr einen... \
-Die Musik verstummte. Pia wusste nicht, was sie machen sollte. \
-Weinen? Von der B\u00fchne rennen? \
-Die Zuschauer hockten wie versteinert da. \
-Sie konnten nicht glauben, dass dem M\u00e4dchen, das immer alles richtig macht, \
-ein Fehler passiert war! \
-Pia schaute zu Hubert. Der schaute zur\u00fcck. \
-Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. \
-Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. \
-Und aus dem Glucksen wurde ein richtig lautes Lachen.\
-"""
-
-FIXTURE_PIA_STORY_ID: str = "pia_muss_nicht_perfekt_sein"
-FIXTURE_PIA_CHAPTER_ID: str = "chapter_01"
-
 
 # ---------------------------------------------------------------------------
 # Helper

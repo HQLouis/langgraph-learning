@@ -1,7 +1,7 @@
 {
   "story_id": "bobos_adventskalender",
   "chapter_id": "chapter_01",
-  "content_version": "2026-03-17T20:13:19.863164",
+  "content_version": "2026-03-17T21:27:08.664595",
   "beatpack_version": "v1",
   "chapter_hash": "sha256:7792d1ee6503cf62ef27f488de21ce2bb55a4e0c33487678f87568b3ccaa5bbb",
   "beats": [
@@ -14,51 +14,51 @@
       },
       "text": "Bobos Adventskalender. Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen.",
       "entities": [
-        "Küchenfenster",
-        "Sie",
-        "Papa",
+        "Postbotin",
+        "Es",
+        "Was",
+        "Papa Siebenschläfer",
+        "die Postbotin",
+        "Da",
+        "sie",
+        "ihr",
+        "Adventskalender",
         "Bäume",
         "November",
-        "ihr",
-        "Es",
         "er",
-        "sie",
-        "Was",
-        "Ende",
-        "Da",
-        "Adventskalender",
-        "Papa Siebenschläfer",
-        "Postbotin",
-        "Bobo",
         "Bobos",
-        "die Postbotin",
-        "Siebenschläfer"
+        "Küchenfenster",
+        "Ende",
+        "Papa",
+        "Siebenschläfer",
+        "Sie",
+        "Bobo"
       ],
       "facts": [
         {
-          "s": "Sie",
+          "s": "Es",
+          "p": "ist",
+          "o": "Ende"
+        },
+        {
+          "s": "Was",
+          "p": "machen",
+          "o": "Bobo"
+        },
+        {
+          "s": "Papa Siebenschläfer",
+          "p": "denn",
+          "o": "da"
+        },
+        {
+          "s": "Da",
+          "p": "kommt",
+          "o": "die"
+        },
+        {
+          "s": "sie",
           "p": "schauen",
           "o": "aus"
-        },
-        {
-          "s": "Papa",
-          "p": "Siebenschläfer",
-          "o": "denn"
-        },
-        {
-          "s": "Papa",
-          "p": "gehen",
-          "o": "zu"
-        },
-        {
-          "s": "Bäume",
-          "p": "sind",
-          "o": "kahl"
-        },
-        {
-          "s": "ihr",
-          "p": "nach",
-          "o": "draußen"
         }
       ],
       "tags": [],
@@ -73,24 +73,29 @@
       },
       "text": "Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter.",
       "entities": [
-        "Bobo",
-        "er",
-        "Möchtest",
-        "Fahrrad",
-        "Fahrradklingel",
+        "Postbotin",
         "Klingeling",
         "die Postbotin",
-        "Papa",
         "Jetzt",
+        "er",
+        "Papa",
+        "Fahrrad",
+        "Fahrradklingel",
+        "Sattel",
+        "Bobo",
         "ihm",
-        "Postbotin",
-        "Sattel"
+        "Möchtest"
       ],
       "facts": [
         {
-          "s": "Möchtest",
-          "p": "du",
-          "o": "mal"
+          "s": "Postbotin",
+          "p": "hat",
+          "o": "ein"
+        },
+        {
+          "s": "Postbotin",
+          "p": "aber",
+          "o": "weiter"
         },
         {
           "s": "die Postbotin",
@@ -101,11 +106,6 @@
           "s": "die Postbotin",
           "p": "aber",
           "o": "weiter"
-        },
-        {
-          "s": "Papa",
-          "p": "hilft",
-          "o": "ihm"
         },
         {
           "s": "Jetzt",
@@ -125,49 +125,49 @@
       },
       "text": "Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er.",
       "entities": [
-        "Bobo",
-        "er",
-        "Briefen",
         "Werbeprospekte",
-        "Stirn",
-        "sie",
+        "Papa Siebenschläfer",
+        "Siebenschläfer",
+        "Post",
+        "Zwischen",
+        "er",
+        "Paket",
         "Da",
         "Papa",
         "Haus",
-        "Zwischen",
-        "Post",
-        "Paket",
-        "Vorher",
-        "Siebenschläfer",
+        "Stirn",
         "Wir",
+        "sie",
+        "Bobo",
         "Zettel",
-        "Papa Siebenschläfer"
+        "Briefen",
+        "Vorher"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "darf",
+          "s": "Werbeprospekte",
+          "p": "ins",
+          "o": "Haus"
+        },
+        {
+          "s": "Papa Siebenschläfer",
+          "p": "noch",
           "o": "die"
+        },
+        {
+          "s": "Siebenschläfer",
+          "p": "noch",
+          "o": "die"
+        },
+        {
+          "s": "Zwischen",
+          "p": "den",
+          "o": "Briefen"
         },
         {
           "s": "er",
           "p": "gibt",
           "o": "sie"
-        },
-        {
-          "s": "er",
-          "p": "noch",
-          "o": "die"
-        },
-        {
-          "s": "Briefen",
-          "p": "liegt",
-          "o": "ein"
-        },
-        {
-          "s": "Werbeprospekte",
-          "p": "ins",
-          "o": "Haus"
         }
       ],
       "tags": [],
@@ -182,31 +182,36 @@
       },
       "text": "Papa holt sein Fahrrad. Bobo freut sich: Er liebt es hinten auf dem Kindersitz mitzufahren. Nur noch den Helm aufsetzen - und fertig! Hui! Papa und Bobo sausen den Hügel hinunter! Vor der Post schließt Papa das Fahrrad an. Dann gehen sie hinein.",
       "entities": [
-        "Bobo",
+        "Er",
+        "Helm",
+        "Post",
         "er",
-        "Vor",
-        "Fahrrad",
+        "Kindersitz",
+        "Hui",
         "Nur",
+        "Papa",
+        "Fahrrad",
         "Hügel",
         "Dann",
-        "Helm",
+        "Vor",
         "sie",
-        "Hui",
-        "Papa",
-        "Er",
-        "Kindersitz",
-        "Post"
+        "Bobo"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "freut",
-          "o": "sich"
+          "s": "Er",
+          "p": "liebt",
+          "o": "es"
         },
         {
-          "s": "Bobo",
-          "p": "sausen",
-          "o": "den"
+          "s": "Er",
+          "p": "Post",
+          "o": "schließt"
+        },
+        {
+          "s": "Post",
+          "p": "schließt",
+          "o": "Papa"
         },
         {
           "s": "er",
@@ -217,11 +222,6 @@
           "s": "er",
           "p": "Post",
           "o": "schließt"
-        },
-        {
-          "s": "Vor",
-          "p": "der",
-          "o": "Post"
         }
       ],
       "tags": [],
@@ -236,33 +236,28 @@
       },
       "text": "Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Sie muss um den Schalter herumgehen, damit Papa und Bobo es nehmen können. Bobo und Papa tragen das Paket zusammen.",
       "entities": [
-        "Bobo",
+        "Postschalter",
+        "Am",
         "er",
-        "Schalter",
-        "sie",
+        "Paket",
         "Sie",
         "Papa",
-        "Am",
-        "Postschalter",
+        "Schalter",
         "Beamtin",
-        "Paket",
+        "sie",
+        "Bobo",
         "Zettel"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "den",
-          "o": "Zettel"
+          "s": "Postschalter",
+          "p": "darf",
+          "o": "Bobo"
         },
         {
-          "s": "Bobo",
-          "p": "es",
-          "o": "nehmen"
-        },
-        {
-          "s": "Bobo",
-          "p": "und",
-          "o": "Papa"
+          "s": "Am",
+          "p": "Postschalter",
+          "o": "darf"
         },
         {
           "s": "er",
@@ -270,8 +265,13 @@
           "o": "Bobo"
         },
         {
-          "s": "Schalter",
-          "p": "darf",
+          "s": "Sie",
+          "p": "muss",
+          "o": "um"
+        },
+        {
+          "s": "Papa",
+          "p": "und",
           "o": "Bobo"
         }
       ],
@@ -287,44 +287,44 @@
       },
       "text": "Aber wie sollen sie mit dem großen Paket Fahrrad fahren? Wir müssen schieben, sagt Papa. Papa und Bobo gehen zu Fuß nach Hause. Das Paket darf auf Bobos Kindersitz mitfahren. Zu Hause packen Bobo und Papa das Paket aus.",
       "entities": [
-        "Bobo",
-        "Hause",
         "er",
-        "Fahrrad",
-        "Zu",
-        "Bobos",
-        "sie",
-        "Papa",
-        "Kindersitz",
         "Paket",
-        "Fuß",
-        "Wir"
+        "Bobos",
+        "Hause",
+        "Papa",
+        "Fahrrad",
+        "Kindersitz",
+        "Zu",
+        "Wir",
+        "sie",
+        "Bobo",
+        "Fuß"
       ],
       "facts": [
-        {
-          "s": "Bobo",
-          "p": "gehen",
-          "o": "zu"
-        },
-        {
-          "s": "Bobo",
-          "p": "und",
-          "o": "Papa"
-        },
-        {
-          "s": "Hause",
-          "p": "packen",
-          "o": "Bobo"
-        },
         {
           "s": "er",
           "p": "wie",
           "o": "sollen"
         },
         {
-          "s": "Zu",
-          "p": "Fuß",
-          "o": "Hause"
+          "s": "Paket",
+          "p": "Fahrrad",
+          "o": "fahren"
+        },
+        {
+          "s": "Paket",
+          "p": "darf",
+          "o": "auf"
+        },
+        {
+          "s": "Bobos",
+          "p": "Kindersitz",
+          "o": "mitfahren"
+        },
+        {
+          "s": "Hause",
+          "p": "packen",
+          "o": "Bobo"
         }
       ],
       "tags": [],
@@ -339,19 +339,34 @@
       },
       "text": "Darin ist ein großer Fotokalender für das nächste Jahr. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln.",
       "entities": [
-        "Bobo",
-        "er",
-        "Wollen",
         "Fotokalender",
-        "Darin",
-        "Papa",
         "Er",
         "Idee",
-        "Jahr",
+        "er",
         "Adventskalender",
-        "Oh"
+        "Papa",
+        "Wollen",
+        "Oh",
+        "Darin",
+        "Bobo",
+        "Jahr"
       ],
       "facts": [
+        {
+          "s": "Fotokalender",
+          "p": "für",
+          "o": "das"
+        },
+        {
+          "s": "Er",
+          "p": "Fotokalender",
+          "o": "für"
+        },
+        {
+          "s": "Er",
+          "p": "liebt",
+          "o": "basteln"
+        },
         {
           "s": "er",
           "p": "Fotokalender",
@@ -361,21 +376,6 @@
           "s": "er",
           "p": "liebt",
           "o": "basteln"
-        },
-        {
-          "s": "Wollen",
-          "p": "wir",
-          "o": "zusammen"
-        },
-        {
-          "s": "Fotokalender",
-          "p": "für",
-          "o": "das"
-        },
-        {
-          "s": "Darin",
-          "p": "ist",
-          "o": "ein"
         }
       ],
       "tags": [],
@@ -390,24 +390,24 @@
       },
       "text": "Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet mit dem scharfen Messer 24 Öffnungen in die Pappe.",
       "entities": [
-        "Bobo",
-        "er",
+        "Pappe",
+        "Klebestift",
+        "Basteln",
         "Transparentpapier",
+        "Filzstifte",
+        "er",
+        "Papa",
         "Messer",
         "Sachen",
-        "Pappe",
-        "sie",
-        "Papa",
         "Öffnungen",
-        "Klebestift",
-        "Filzstifte",
-        "Basteln"
+        "sie",
+        "Bobo"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "holen",
-          "o": "alle"
+          "s": "Filzstifte",
+          "p": "und",
+          "o": "einen"
         },
         {
           "s": "er",
@@ -415,19 +415,19 @@
           "o": "Öffnungen"
         },
         {
-          "s": "Messer",
-          "p": "24",
-          "o": "Öffnungen"
-        },
-        {
-          "s": "sie",
-          "p": "zum",
-          "o": "Basteln"
-        },
-        {
           "s": "Papa",
           "p": "und",
           "o": "Bobo"
+        },
+        {
+          "s": "Papa",
+          "p": "schneidet",
+          "o": "mit"
+        },
+        {
+          "s": "Messer",
+          "p": "24",
+          "o": "Öffnungen"
         }
       ],
       "tags": [],
@@ -442,17 +442,12 @@
       },
       "text": "Dann klebt er das Transparentpapier auf die Pappe.",
       "entities": [
-        "Dann",
         "er",
+        "Pappe",
         "Transparentpapier",
-        "Pappe"
+        "Dann"
       ],
       "facts": [
-        {
-          "s": "Dann",
-          "p": "klebt",
-          "o": "er"
-        },
         {
           "s": "er",
           "p": "das",
@@ -462,6 +457,11 @@
           "s": "Transparentpapier",
           "p": "auf",
           "o": "die"
+        },
+        {
+          "s": "Dann",
+          "p": "klebt",
+          "o": "er"
         }
       ],
       "tags": [],
@@ -476,38 +476,33 @@
       },
       "text": "Jetzt darf Bobo ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume. Und einen Mond. Das wird ein schönes Bild! Nun wird der Kalender noch am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause.",
       "entities": [
-        "Bobo",
+        "Pappe",
+        "Bild",
         "Mama",
-        "Fenster",
+        "Jetzt",
+        "Mond",
         "er",
         "Kalender",
-        "Mond",
-        "Hause",
-        "Bild",
-        "Pappe",
-        "Fertig",
-        "Da",
+        "Nun",
         "Haus",
+        "Da",
+        "Hause",
         "Öffnungen",
+        "Bobo",
+        "Fertig",
         "Bäume",
-        "Jetzt",
-        "Nun"
+        "Fenster"
       ],
       "facts": [
-        {
-          "s": "Bobo",
-          "p": "ein",
-          "o": "großes"
-        },
-        {
-          "s": "Bobo",
-          "p": "malt",
-          "o": "auch"
-        },
         {
           "s": "Mama",
           "p": "nach",
           "o": "Hause"
+        },
+        {
+          "s": "Jetzt",
+          "p": "darf",
+          "o": "Bobo"
         },
         {
           "s": "er",
@@ -518,6 +513,11 @@
           "s": "Kalender",
           "p": "noch",
           "o": "am"
+        },
+        {
+          "s": "Nun",
+          "p": "wird",
+          "o": "der"
         }
       ],
       "tags": [],
@@ -532,17 +532,17 @@
       },
       "text": "Sie hat eingekauft. Dann darf Bobo alle Türchen schließen.",
       "entities": [
-        "Bobo",
-        "Türchen",
+        "Sie",
         "Dann",
+        "Türchen",
         "sie",
-        "Sie"
+        "Bobo"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "alle",
-          "o": "Türchen"
+          "s": "Sie",
+          "p": "hat",
+          "o": "eingekauft"
         },
         {
           "s": "Dann",
@@ -555,9 +555,9 @@
           "o": "eingekauft"
         },
         {
-          "s": "Sie",
-          "p": "hat",
-          "o": "eingekauft"
+          "s": "Bobo",
+          "p": "alle",
+          "o": "Türchen"
         }
       ],
       "tags": [],
@@ -572,44 +572,44 @@
       },
       "text": "Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt sie. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.",
       "entities": [
-        "Bobo",
-        "er",
-        "sie",
-        "Zahlen",
-        "Papa",
-        "Hast",
         "Er",
-        "Bastelsachen",
+        "Bild",
+        "Hast",
+        "er",
+        "Zahlen",
         "Tisch",
         "Adventskalender",
-        "Bild",
-        "Oh"
+        "Papa",
+        "Bastelsachen",
+        "Oh",
+        "sie",
+        "Bobo"
       ],
       "facts": [
         {
-          "s": "Bobo",
-          "p": "antwortet",
-          "o": "nicht"
+          "s": "Er",
+          "p": "ein",
+          "o": "schöner"
+        },
+        {
+          "s": "Er",
+          "p": "Bobo",
+          "o": "antwortet"
+        },
+        {
+          "s": "Er",
+          "p": "ist",
+          "o": "zwischen"
+        },
+        {
+          "s": "Hast",
+          "p": "du",
+          "o": "das"
         },
         {
           "s": "er",
           "p": "ein",
           "o": "schöner"
-        },
-        {
-          "s": "er",
-          "p": "Bobo",
-          "o": "antwortet"
-        },
-        {
-          "s": "er",
-          "p": "ist",
-          "o": "zwischen"
-        },
-        {
-          "s": "Papa",
-          "p": "malt",
-          "o": "24"
         }
       ],
       "tags": [],

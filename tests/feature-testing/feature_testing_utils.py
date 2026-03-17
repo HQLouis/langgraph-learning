@@ -8,6 +8,8 @@ Importable from any feature test file:
     from feature_testing_utils import build_state, run_n_times, llm_judge, simulate_conversation
     from feature_testing_utils import MESSAGES_TURN_0, MESSAGES_TURN_1_GREETING, MESSAGES_TURN_3_MID_STORY
     from feature_testing_utils import FIXTURE_AUDIO_BOOK, FIXTURE_STORY_ID, FIXTURE_CHAPTER_ID
+    from feature_testing_utils import FIXTURE_PIA_AUDIO_BOOK, FIXTURE_PIA_STORY_ID, FIXTURE_PIA_CHAPTER_ID
+    from feature_testing_utils import FIXTURE_BOBO_AUDIO_BOOK, FIXTURE_BOBO_STORY_ID, FIXTURE_BOBO_CHAPTER_ID
 """
 
 from __future__ import annotations
@@ -82,6 +84,148 @@ FIXTURE_AUDIO_BOOK: str = (
 
 FIXTURE_STORY_ID: str = "mia_und_leo"
 FIXTURE_CHAPTER_ID: str = "chapter_01"
+
+# ---------------------------------------------------------------------------
+# Pia story fixture — "Pia muss nicht perfekt sein"
+# Single source of truth: all test files should import from here.
+# The beatpack at tests/agentic_system/content/stories/pia_muss_nicht_perfekt_sein/
+# is generated from this text via scripts/generate_test_beatpacks.py.
+# ---------------------------------------------------------------------------
+
+FIXTURE_PIA_AUDIO_BOOK: str = """\
+Pia muss nicht perfekt sein. \
+Für Pia Piretti begann der Freitag wie jeder andere Tag. \
+Sie suchte Socken aus, die zusammenpassten. \
+Und natürlich zog sie jeden Schuh an den richtigen Fuß. \
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli. \
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, \
+nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade. \
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, \
+sagte sie 'Guten Morgen' und 'Dankeschön'. \
+Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. \
+Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö. \
+'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. \
+'Von mir aus kann's losgehen!', antwortete Pia lächelnd. \
+Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen. \
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. \
+Sie nannten sie nur 'das Mädchen, das immer alles richtig macht', \
+denn solange man denken konnte, war ihr noch nie ein Fehler passiert. \
+Anders als Pia machte Carl jede Menge Fehler. \
+Er aß seine Wachsmalkreide und malte mit grünen Bohnen. \
+Er tanzte mit den Händen und spielte mit den Füßen Klavier. \
+Für Carl war es das Größte, Dinge falsch zu machen! \
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. \
+Für ihren Riesenrhabarbermuffin brauchten sie Eier. \
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und \
+schönsten Eier aus, die sie finden konnte. \
+Doch auf dem Rückweg rutschte sie aus. \
+Die Eier flogen in hohem Bogen durch die Luft. \
+Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! \
+'Das war knapp!', dachte Pia. \
+'Tut mir leid, Pia... Ich habe ein Stück Rhabarber fallen lassen.' \
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. \
+'Komm doch zu uns!', rief Millie. 'Es macht Spaß!', sagte Sarah. \
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. \
+Millie und Sarah lachten, während sie übers Eis stolperten. \
+'Nein, danke', sagte Pia. \
+Beim Abendessen rührte Pia ihr Essen kaum an. \
+'Ist alles in Ordnung, Spätzchen?', fragte ihr Vater. \
+'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' \
+'Angst? Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem Lächeln. \
+Pia versuchte, auch zu lächeln. \
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. \
+Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte. \
+Dann holte sie den Salzstreuer vom Küchentisch. \
+Am Ende befüllte sie einen Luftballon mit Wasser. \
+Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und drüber. \
+Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. \
+'Da ist sie! Das ist das Mädchen, das immer alles richtig macht!', sagte eine Frau. \
+'Oh! Bei ihr läuft immer alles perfekt, immer!', rief ein Mann. \
+Als die Musik einsetzte, warf Pia Hubert in die Luft. \
+SUPER PIA! Als Nächstes kam der Salzstreuer. Und zum Schluss der Wasserballon. \
+Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. \
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf... \
+Die Körner, die herausrieselten, waren nicht weiß! \
+HATSCHI! \
+Hubert war von seinem eigenen Niesen so überrascht, \
+dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. \
+PENG! Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. \
+Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. \
+Und was für einen... \
+Die Musik verstummte. Pia wusste nicht, was sie machen sollte. \
+Weinen? Von der Bühne rennen? \
+Die Zuschauer hockten wie versteinert da. \
+Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, \
+ein Fehler passiert war! \
+Pia schaute zu Hubert. Der schaute zurück. \
+Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. \
+Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. \
+Und aus dem Glucksen wurde ein richtig lautes Lachen.\
+"""
+
+FIXTURE_PIA_STORY_ID: str = "pia_muss_nicht_perfekt_sein"
+FIXTURE_PIA_CHAPTER_ID: str = "chapter_01"
+
+# ---------------------------------------------------------------------------
+# Bobo story fixture — "Bobos Adventskalender"
+# Single source of truth: all test files should import from here.
+# The beatpack at tests/agentic_system/content/stories/bobos_adventskalender/
+# is generated from this text via scripts/generate_test_beatpacks.py.
+# ---------------------------------------------------------------------------
+
+FIXTURE_BOBO_AUDIO_BOOK: str = """\
+Bobos Adventskalender. \
+Was machen Bobo und Papa Siebenschläfer denn da? \
+Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. \
+Es ist Ende November. Da kommt die Postbotin angefahren. \
+Bobo und Papa gehen zu ihr nach draußen. \
+Die Postbotin hat ein neues Fahrrad. \
+Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. \
+Das möchte Bobo gern! Papa hilft ihm auf den Sattel. \
+Klingeling!, macht die Fahrradklingel. \
+Jetzt muss die Postbotin aber weiter. \
+Vorher gibt sie Papa Siebenschläfer noch die Post. \
+Bobo darf die Werbeprospekte ins Haus tragen. \
+Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. \
+Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er. \
+Papa holt sein Fahrrad. Bobo freut sich: \
+Er liebt es hinten auf dem Kindersitz mitzufahren. \
+Nur noch den Helm aufsetzen - und fertig! \
+Hui! Papa und Bobo sausen den Hügel hinunter! \
+Vor der Post schließt Papa das Fahrrad an. Dann gehen sie hinein. \
+Am Postschalter darf Bobo den Zettel abgeben. \
+Die Beamtin holt ein großes Paket. \
+Sie muss um den Schalter herumgehen, \
+damit Papa und Bobo es nehmen können. \
+Bobo und Papa tragen das Paket zusammen. \
+Aber wie sollen sie mit dem großen Paket Fahrrad fahren? \
+Wir müssen schieben, sagt Papa. \
+Papa und Bobo gehen zu Fuß nach Hause. \
+Das Paket darf auf Bobos Kindersitz mitfahren. \
+Zu Hause packen Bobo und Papa das Paket aus. \
+Darin ist ein großer Fotokalender für das nächste Jahr. \
+Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, \
+fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln. \
+Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: \
+eine große Pappe, Transparentpapier, ein scharfes Messer, \
+Filzstifte und einen Klebestift. \
+Papa schneidet mit dem scharfen Messer 24 Öffnungen in die Pappe. \
+Dann klebt er das Transparentpapier auf die Pappe. \
+Jetzt darf Bobo ein großes Haus auf die Pappe malen. \
+Die Öffnungen sind die Fenster. Bobo malt auch Bäume. \
+Und einen Mond. Das wird ein schönes Bild! \
+Nun wird der Kalender noch am Fenster aufgehängt. Fertig! \
+Da kommt Mama nach Hause. Sie hat eingekauft. \
+Dann darf Bobo alle Türchen schließen. \
+Papa malt 24 Zahlen darauf. \
+Oh, das ist aber ein schöner Adventskalender!, staunt sie. \
+Hast du das Bild gemalt, Bobo? \
+Aber Bobo antwortet nicht. \
+Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.\
+"""
+
+FIXTURE_BOBO_STORY_ID: str = "bobos_adventskalender"
+FIXTURE_BOBO_CHAPTER_ID: str = "chapter_01"
 
 # ---------------------------------------------------------------------------
 # Conversation history fixtures

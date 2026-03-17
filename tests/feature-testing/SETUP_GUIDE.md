@@ -35,7 +35,9 @@ tests/
 
 ### 1.1 Define the story text constant
 
-In your test file, define the story as a constant string:
+**Important**: Story text constants MUST be defined in `feature_testing_utils.py` — the single source of truth. Never define story text locally in test files.
+
+Add your constants to `feature_testing_utils.py`:
 
 ```python
 FIXTURE_MY_STORY_AUDIO_BOOK: str = """\
@@ -47,7 +49,17 @@ FIXTURE_MY_STORY_ID: str = "my_story_name"      # snake_case, matches directory 
 FIXTURE_MY_CHAPTER_ID: str = "chapter_01"
 ```
 
-The story text must exactly match what you use in `build_state(audio_book=...)`.
+Then import in your test file:
+
+```python
+from feature_testing_utils import (
+    FIXTURE_MY_STORY_AUDIO_BOOK,
+    FIXTURE_MY_STORY_ID,
+    FIXTURE_MY_CHAPTER_ID,
+)
+```
+
+This ensures the same text is used in tests, beatpack generation, and documentation — no drift.
 
 ### 1.2 Generate a beatpack
 
