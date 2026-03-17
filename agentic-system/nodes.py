@@ -186,6 +186,40 @@ def _detect_repeated_errors(messages: list, window: int = 8) -> str | None:
     )
 
 
+def _detect_missing_transition_recap(messages: list, threshold: int = 24) -> str | None:
+    """
+    In long conversations (≥threshold messages), the in-context pattern of
+    short Q&A exchanges can override REGEL 6's recap requirement.
+    Inject a reminder when the conversation is long and recent AI messages
+    lack transitional bridging phrases.
+    """
+    if len(messages) < threshold:
+        return None
+
+    bridging_phrases = {"danach", "und dann", "als nächstes", "nachdem",
+                        "weißt du, was als nächstes", "vorher", "inzwischen",
+                        "später", "davor"}
+    ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
+    recent_ai = ai_msgs[-5:] if len(ai_msgs) >= 5 else ai_msgs
+
+    # If recent AI messages already use bridging language, no nudge needed
+    bridging_count = sum(
+        1 for m in recent_ai
+        if any(bp in m.content.lower() for bp in bridging_phrases)
+    )
+    if bridging_count >= 2:
+        return None
+
+    return (
+        '[ERINNERUNG — REGEL 6: SZENENÜBERGANG MIT KURZER ZUSAMMENFASSUNG]\n'
+        'Das Gespräch hat viele Austausche. Wenn du jetzt zu einem neuen Thema '
+        'oder einer neuen Szene wechselst, fasse ZUERST kurz zusammen, was gerade '
+        'passiert ist (1 Satz), BEVOR du die nächste Frage stellst. '
+        'Verwende verbindende Sprache wie "Danach...", "Und dann...", '
+        '"Nachdem Pia die Eier gefangen hat..." usw.'
+    )
+
+
 def masterChatbot(state: State, llm):
     """
     Main chatbot node that generates responses to the child.
@@ -310,6 +344,12 @@ def masterChatbot(state: State, llm):
     if error_nudge:
         messages.append(SystemMessage(content=error_nudge))
         logger.info("masterChatbot: Injected repeated-errors nudge")
+
+    # Detect long conversation needing transition recaps
+    recap_nudge = _detect_missing_transition_recap(state["messages"])
+    if recap_nudge:
+        messages.append(SystemMessage(content=recap_nudge))
+        logger.info("masterChatbot: Injected transition-recap nudge")
 
     # Get natural language response (no JSON formatting)
     logger.info("masterChatbot: Starting LLM invocation for natural response")
