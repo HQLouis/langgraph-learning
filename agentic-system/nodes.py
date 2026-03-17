@@ -103,10 +103,11 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
         '[ACHTUNG — WIEDERHOLTES DESINTERESSE ERKANNT (REGEL 4B)]\n'
         'Das Kind hat mehrfach hintereinander Desinteresse oder Ablehnung signalisiert '
         '("nein", "weiß nicht", etc.).\n'
-        'STRIKT: Stelle KEINE Frage zur Geschichte — weder Verständnisfragen, '
-        'noch Rückfragen wie "Hat dir die Geschichte gefallen?", noch "Warum?".\n'
-        'Reagiere kurz und empathisch. Befolge REGEL 4B für die weitere Vorgehensweise '
-        '(inklusive der AUSNAHME bei weitgehend durchgesprochener Geschichte → verabschieden).'
+        'PFLICHT: Verabschiede dich SOFORT warmherzig. Sage z.B.: '
+        '"Das ist okay! Das war eine schöne Geschichte. Bis zum nächsten Mal!"\n'
+        'STRENG VERBOTEN: Weitere Fragen stellen (auch keine Angebote wie '
+        '"Soll ich dir verraten...?"), neue Aktivitäten vorschlagen, '
+        'oder die Unterhaltung in irgendeiner Form verlängern.'
     )
 
 
@@ -128,10 +129,14 @@ def _detect_story_end(messages: list) -> str | None:
         if any(ew in last_child_text for ew in emotion_words):
             return None
 
-    # Scan recent AI messages for story-end indicators
-    story_end_keywords = {"eingeschlafen", "schläft ein", "schlief ein",
-                          "kichern", "glucksen", "lautes lachen", "lachten",
-                          "augen fielen zu", "fest geschlafen"}
+    # Scan recent AI messages for story-end indicators.
+    # These are GENERIC narrative-ending markers, not story-specific.
+    # For reliable per-story detection, the beat system should be used.
+    story_end_keywords = {
+        "eingeschlafen", "schläft ein", "schlief ein",
+        "kichern", "glucksen", "lautes lachen", "lachten",
+        "augen fielen zu", "fest geschlafen",
+    }
     ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
     recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
 
@@ -144,12 +149,17 @@ def _detect_story_end(messages: list) -> str | None:
         return None
 
     return (
-        '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT (REGEL 8)]\n'
-        'Die Geschichte hat ihre letzte Szene erreicht (Schlüsselwörter erkannt).\n'
-        'Stelle KEINE weitere inhaltliche Frage zur Geschichte. '
-        'Fasse stattdessen die Geschichte kurz und kindgerecht zusammen und '
-        'leite eine Verabschiedung ein. Sage z.B.: "Das war die Geschichte! '
-        'Hat sie dir gefallen?" — Stelle KEINE Detailfragen mehr.'
+        '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT (REGEL 8 — ÜBERSCHREIBT REGEL 3 und REGEL 7)]\n'
+        'Die Geschichte hat ihre letzte Szene erreicht.\n'
+        'PFLICHT: Reagiere KURZ auf die Antwort des Kindes (bestätige oder korrigiere '
+        'in einem Satz), dann verabschiede dich SOFORT warmherzig im SELBEN Atemzug. '
+        'Sage z.B.: "Bobo ist eingeschlafen. Das war eine tolle Geschichte! '
+        'Bis zum nächsten Mal!"\n'
+        'WICHTIG: Stelle KEINE Rückfrage nach der Korrektur — kein "Erinnerst du dich?", '
+        'kein "Verstehst du?", kein "Alles klar?". '
+        'REGEL 3 und REGEL 7 (Verständnisfrage nach Korrektur) gelten hier NICHT.\n'
+        'STRENG VERBOTEN: Neue Fragen stellen, neue Themen einführen, '
+        '"Soll ich dir verraten...?" anbieten, oder die Unterhaltung verlängern.'
     )
 
 
@@ -291,6 +301,8 @@ def masterChatbot(state: State, llm):
     WICHTIG:
     - Antworte auf die LETZTE KIND-NACHRICHT im Verlauf.
     - Nutze die Regeln nur, um die Form deiner Antwort zu steuern.
+    - Bei einem Themenwechsel oder Szenenübergang: Stelle ZUERST ausreichend Kontext her
+      (REGEL 6: kurze Zusammenfassung + konkrete Namen), BEVOR du die Aufgabenform anwendest.
     """)
 
     aufgaben_val = state.get('aufgaben', '')

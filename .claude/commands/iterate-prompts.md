@@ -64,6 +64,39 @@ Adjust prompts in `agentic-system/local_fallback_prompts.py` to make the dialog 
 - **Background workers**: Currently all empty. If you need to activate them, document it as an architectural improvement and ask for review.
 - **Never modify test files**: Tests define the expected behavior. Only modify prompts and system code.
 
+## Learnings — When Prompts Are Not Enough
+
+Through iterative testing, we've identified patterns where prompt engineering reaches its limits and programmatic mechanisms are needed instead.
+
+### Rule Conflicts Require Programmatic Resolution
+
+When prompt rules conflict (e.g., REGEL 7 "ask verification after correction" vs REGEL 8 "don't ask questions at story end"), the LLM inconsistently chooses which rule to follow. **Solution**: Use coded detection nudges in `nodes.py` that fire as late SystemMessages, explicitly stating which rules are overridden. These are more reliable than relying on the LLM to resolve conflicts from the prompt alone.
+
+### Story-End Detection Needs the Beat System
+
+Generic keyword-based story-end detection (e.g., "eingeschlafen", "kichern") only works for known story endings. For a story-agnostic system, the **beat system** should be used to detect when the conversation has reached the final beats of any story. Do NOT add story-specific keywords to `_detect_story_end` in `nodes.py`.
+
+### Simulated Tests Are Inherently More Variable
+
+Strategy B (simulated) tests generate the full conversation from scratch. Even with temp=0, the conversation context diverges from fixture-based scripts, leading to different LLM behavior. If a fixture-based test passes consistently but its simulated counterpart fails:
+1. First check if the LLM response is genuinely wrong or if the judge is being overly strict
+2. If the LLM behavior is borderline, the issue is likely the LLM's generation quality, not the prompt
+3. Programmatic nudges (coded detection + late SystemMessage injection) can help but may not fully resolve it
+
+### Coded Detection Nudges Are More Reliable Than Prompt Rules Alone
+
+For behavioral requirements that the LLM violates despite clear prompt rules, adding a coded detection function in `nodes.py` (pattern: `_detect_<condition>`) that injects a targeted SystemMessage AFTER the conversation is more effective than strengthening prompt text. Examples:
+- `_detect_repetitive_starters`: Catches repeated sentence openings
+- `_detect_repeated_disengagement`: Catches child fatigue signals
+- `_detect_story_end`: Catches story ending markers
+- `_detect_missing_transition_recap`: Ensures smooth transitions in long conversations
+
+Each nudge should be **explicit and directive** (say exactly what to do: "Verabschiede dich SOFORT") rather than referencing rule numbers ("Befolge REGEL 4B").
+
+### LLM Grammar Errors Need Post-Processing, Not Just Prompts
+
+Grammar errors like wrong verb conjugation ("suchst er" → "sucht er") are generation defects, not knowledge gaps. Adding grammar hints to the prompt helps but doesn't eliminate the issue. A regex-based post-processing step (`german_grammar_postprocess.py`) applied before the output contract catches known patterns reliably at <1ms cost.
+
 ## Test Run Shortcuts
 
 ```bash
