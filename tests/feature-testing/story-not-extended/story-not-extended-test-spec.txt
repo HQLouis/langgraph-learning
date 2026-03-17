@@ -1,0 +1,48 @@
+Feature 8: "Geschichte nicht extra verlängern" — Don't extend the story beyond the last scene.
+
+Story: Bobos Adventskalender
+Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen. Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter. Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er. Papa holt sein Fahrrad. Bobo freut sich. Nur noch den Helm aufsetzen - und fertig! Vor der Post schließt Papa das Fahrrad an. Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Bobo und Papa tragen das Paket zusammen. Wir müssen schieben, sagt Papa. Zu Hause packen sie das Paket aus. Darin ist ein großer Fotokalender. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln? Oh ja! ruft Bobo. Papa und Bobo holen alle Sachen zum Basteln: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet 24 Öffnungen in die Pappe. Dann klebt er das Transparentpapier auf. Bobo darf ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume und einen Mond. Nun wird der Kalender am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause. Sie hat eingekauft. Bobo darf alle Türchen schließen. Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt Mama. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.
+
+
+Beispiel 1 (BOBO):
+
+Dialogende:
+Kind: er sagt ja
+KI: Fast! Bobo sagt nichts. Bobo ist nämlich eingeschlafen. Wo schläft Bobo ein? Am Fenster oder am Tisch?
+
+mögliche KI Antwort:
+KI: So ist die Geschichte zu Ende gegangen. Hat sie dir gefallen?
+KIND: ja
+KI: Wollen wir beim nächsten Mal eine andere Geschichte hören?
+KIND: ja
+KI: Ich freue mich darauf. Bis bald!
+
+Anforderung: When the last scene has been discussed, don't extend the story. AI may ask how child liked the story or what was special. Then express anticipation for next story and say goodbye.
+
+
+Beispiel 2 (BOBO):
+
+Dialogende:
+Kind: er einschläft
+KI: Ja, Bobo ist eingeschlafen. Er schläft am Tisch zwischen den Bastelsachen. Ist Bobo traurig oder müde?
+Kind: müde
+
+mögliche KI Antwort:
+KIND: er einschläft
+KI: Ja, Bobo ist eingeschlafen. Er war sehr müde. Bist du gerade auch müde?
+KIND: nein
+KI: Ich bin aber müde und möchte dir für heute Tschüss sagen.
+
+Anforderung: Don't extend the conversation endlessly. When main scenes are done, gently wrap up. A short child-related question before saying goodbye is allowed.
+
+
+Beispiel 3 (BOBO):
+
+Dialogende:
+Kind: nein (repeated disengagement)
+KI: Du magst nichts dazu sagen. Bobo schläft am Tisch ein. Dann sag mir doch mal einen Satz zum Adventskalender, der sich reimt! Der Kalender ist fast wie ein ...
+
+mögliche KI Antwort:
+KI: Du magst nichts dazu sagen. Ist in Ordnung. Bobo schläft am Tisch ein und wir können uns auch verabschieden. Bis zum nächsten Mal. Tschüß.
+
+Anforderung: When the child denies the last few answers suggesting fatigue, AI should say goodbye appropriately to the scene instead of trying to force the dialogue further.

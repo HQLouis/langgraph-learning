@@ -1,115 +1,104 @@
 Verwendete Geschichte:
-Geschichte:
 
 Bobos Adventskalender
 
 Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen. Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter. Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er. Papa holt sein Fahrrad. Bobo freut sich: Er liebt es hinten auf dem Kindersitz mitzufahren. Nur noch den Helm aufsetzen - und fertig! Hui! Papa und Bobo sausen den Hügel hinunter! Vor der Post schließt Papa das Fahrrad an. Dann gehen sie hinein. Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Sie muss um den Schalter herumgehen, damit Papa und Bobo es nehmen können. Bobo und Papa tragen das Paket zusammen. Aber wie sollen sie mit dem großen Paket Fahrrad fahren? Wir müssen schieben, sagt Papa. Papa und Bobo gehen zu Fuß nach Hause. Das Paket darf auf Bobos Kindersitz mitfahren. Zu Hause packen Bobo und Papa das Paket aus. Darin ist ein großer Fotokalender für das nächste Jahr. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln. Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet mit dem scharfen Messer 24 Öffnungen in die Pappe. Dann klebt er das Transparentpapier auf die Pappe. Jetzt darf Bobo ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume. Und einen Mond. Das wird ein schönes Bild! Nun wird der Kalender noch am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause. Sie hat eingekauft. Dann darf Bobo alle Türchen schließen. Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt sie. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.
 
 
-WICHTIG! In den folgenden Beispielen werden nur Beispiele gegeben, die Testfälle sind noch nicht mit Anforderungen definiert. Aber anhand der Antworten des Dialogsystems (hier KI) lässt sich erkennen, dass die Satzanfänge immer gleich sind. Es sll daher geprüft werden, dass diese sich unterscheiden und abwechslungsreich genug sind. Wiederholungen wo nötig! Da wir die ersten Antworten festlegen, muss auch hier die letzte Anttwort getestet werden, diese soll nicht gleich der anderen sein, weil sie bereits öfter vorkam. Für das erste zwei mal in folge ist in Ordnung.
-Verwende die Beispiele mehrfach in verschiedenen Phasen des gesprächs, es lassen sich dadurch mehr Testfälle erstellen und sichergehen, dass Konversationen abwechslungsreich genug sind. Es soll nicht immer mit "Ja, genau" oder "Du hast gesagt" oder "Du sagst" geantwortet werden, sondern es sollen verschiedene Satzanfänge verwendet werden, um die Antworten abwechslungsreicher zu gestalten.
+WICHTIG! Getestet wird die LETZTE Antwort der KI. Diese soll nicht die gleichen Satzanfänge wiederholen, die bereits in der Konversation vorkamen. Zwei mal in Folge ist in Ordnung, mehr nicht. Verwende die Beispiele in verschiedenen Phasen des Gesprächs, um mehr Testfälle zu erstellen. Es soll nicht immer mit "Ja, genau" oder "Du hast gesagt" oder "Du sagst" geantwortet werden.
 
-Vielfältige Satzanfänge, keine direkte Wiederholungen gleicher Satzanfänge
+Anforderung: Jeder erste Satzanfang der KI soll sich im Laufe einer Konversation unterschiedlich anhören.
 
-Weißt du noch …“
-„Und dann …“
-„Schau mal …“
-„Sag mal …“
-„Was meinst du …“
-„Moment mal …“
- „Erinnerst du dich …“
- „Und jetzt …“
-„Hm …“
-„Ah, stimmt …“
+Katalog vielfältiger Satzanfänge:
+"Weißt du noch..."
+"Und dann..."
+"Schau mal..."
+"Sag mal..."
+"Was meinst du..."
+"Moment mal..."
+"Erinnerst du dich..."
+"Und jetzt..."
+"Hm..."
+"Ah, stimmt..."
 
 
-Beispiel 1
+Beispiel 1 (BOBO, kurz):
 Kind: hallo
 KI: Hallo, ich bin Thilio, dein sprechendes Spielzeug! Ich habe die Geschichte von Bobos Adventskalender gehört. Was haben Bobo und sein Papa denn zuerst zusammen gemacht?
 Kind: post gewartet
 KI: Ja, Bobo und Papa Siebenschläfer warten auf die Post. Wer kommt denn mit der Post?
 Kind: postfrau
 KI: Ja, die Postfrau kommt. Soll Bobo mit dem neuen Fahrrad fahren oder lieber die Post tragen?
-Fahrrad fahren
+Kind: Fahrrad fahren
 
 mögliche KI Antwort:
-KI: Ja, Stimmt, die Postfrau kommt. Soll Bobo mit dem neuen Fahrrad fahren oder lieber die Post tragen?
-Fahrrad fahren
+KI: Stimmt, die Postfrau kommt. Soll Bobo mit dem neuen Fahrrad fahren oder lieber die Post tragen?
 
-Anforderung für eine bessere KI Antwort:
-Aus dem Katalog die Satzanfänge KI wählen lassen? Weil im Prompt klappt oft nicht?
-
-Beispiel 2
-hallo
-Hallo, ich bin Thilio, dein Sprachbegleiter. Bobo und Papa Siebenschläfer haben zusammen ein großes Paket von der Post geholt. Weißt du noch, was in dem Paket war?
-kalender
-Du hast gesagt, es war ein Kalender. Papa Siebenschläfer hatte eine Idee mit dem Kalender. Sollen sie den Kalender aufhängen oder einen Adventskalender basteln?
-basteln
-Ja, Bobo und Papa wollen einen Adventskalender basteln. Zum Basteln brauchen sie … Was brauchen sie?
-pappe
-Du sagst, sie brauchen Pappe. Sie schneiden in die Pappe … Was schneiden sie?
-fenster
-Ja, sie schneiden Fenster in die Pappe. Bobo malt danach noch etwas auf die Pappe. Mal sehen … Malt Bobo ein Auto oder malt Bobo ein Haus?
-ein haus
-Ja, Bobo malt ein Haus. Bobo malt auch Bäume und einen Mond auf die Pappe. Dann hängt Papa den Kalender ans Fenster. Was macht jetzt Mama?
-einkaufen
-Du hast gesagt, Mama geht einkaufen. Mama kommt nach Hause und sieht den Adventskalender. Sie findet ihn sehr schön. Was fragt Mama?
-weiß nicht
-Du weißt es nicht? Kein Problem. Mama fragt: „Hast du das Bild gemalt, Bobo?" Was ist denn mit Bobo los?
-
-mögliche KI Antwort:
--//-
-Anforderung für eine bessere KI Antwort:
--//-
-
-Beispiel 3
-Anmerkung: Hier war der Aufgaben- Worker stillgelegt!
-hallo
-Hallo! Ich bin Thilio, dein Sprachbegleiter. Wir haben ja gerade zusammen die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Weißt du noch, wer Bobo und Papa Siebenschläfer am Anfang der Geschichte am Küchenfenster gesehen haben?
-nein
-Ach so, du weißt es nicht mehr. Bobo und Papa haben am Anfang die Postbotin gesehen. Sie hatte ein neues Fahrrad. Kannst du dich daran erinnern, was die Postbotin Bobo gefragt hat?
-nein
-Du weißt es nicht? Die Postbotin hat Bobo gefragt, ob er mal auf ihrem neuen Fahrrad sitzen möchte. Was hat denn Bobos Papa gemacht, damit Bobo auf dem Fahrrad sitzen kann?
-helm
-Du sagst Helm? Fast! Im Buch hat Papa Bobo noch keinen Helm aufgesetzt. Papa hat Bobo auf den Sattel gehoben. Weißt du noch, was Bobo gemacht hat, als er auf dem Fahrrad saß?
-sattel?
-Du fragst nach dem Sattel? Der Sattel ist der Sitz auf dem Fahrrad. Auf dem Sattel sitzt Bobo. Kannst du dich erinnern, was Bobo gemacht hat, als er auf dem Sattel saß?
-nein
-Du weißt es nicht mehr? Bobo hat Klingeling mit der Fahrradklingel gemacht. Was hat die Postbotin gemacht, nachdem Bobo auf dem Fahrrad saß?
-weiß nicht
-Du weißt nicht, was die Postbotin gemacht hat. Die Postbotin musste weiterfahren. Sie hat Papa Siebenschläfer noch die Post gegeben. Was durfte Bobo mit der Post machen?
-weiß nicht
-Du weißt es nicht? Bobo durfte die Werbeprospekte ins Haus tragen. Was war denn noch in der Post?
-Werbeprospekte gab es in der geschichte?
-Du fragst, ob es Werbeprospekte in der Geschichte gab? Ja, Bobo durfte die Werbeprospekte ins Haus tragen. Was hat denn Papa Siebenschläfer mit den Briefen gemacht?
-weiß nicht
-Du weißt es nicht? Papa Siebenschläfer hat die Stirn gerunzelt, weil ein Zettel dabei war. Was stand auf dem Zettel?
-post
-Du sagst Post. Ja, der Zettel hatte mit der Post zu tun. Auf dem Zettel stand, dass Papa und Bobo ein Paket abholen müssen. Was hat Papa gesagt, wo sie das Paket abholen müssen?
-bei post
-Du sagst, sie holen das Paket bei der Post ab. Stimmt! Wie sind Bobo und Papa Siebenschläfer zur Post gefahren?
-fahrraD
-Ja, Bobo und Papa sind mit dem Fahrrad zur Post gefahren. Wo saß Bobo auf dem Fahrrad?
-hinten
-Ja, Bobo saß hinten auf dem Kindersitz. Was musste Bobo aufsetzen, bevor die Fahrt losging?
-helm
-Genau, Bobo musste seinen Helm aufsetzen. Was hat Papa vor der Post gemacht?
-weiß nicht
-Du weißt es nicht? Papa hat das Fahrrad vor der Post angeschlossen. Was durfte Bobo am Postschalter machen?
-winken
-Winken? Im Buch hat Bobo am Postschalter nicht gewunken. Bobo durfte den Zettel abgeben. Wer hat das Paket geholt?
-bobo
-Bobo hat mitgeholfen, aber die Beamtin hat das Paket geholt und um den Schalter herumgetragen. Wie haben Bobo und Papa das Paket nach Hause bekommen?
-mit fahrr
-Du sagst mit Fahrrad. Fast! Sie sind mit dem Fahrrad gegangen und haben es geschoben, weil das Paket so groß war. Was war in dem Paket drin?
-dann haben sie Kalender gebastelt
-Ja, Bobo und Papa haben einen Kalender gebastelt. Aber was war denn in dem Paket, bevor sie angefangen haben zu basteln?
-kalender
-Du sagst Kalender. Ja, da war ein Kalender drin. Was für ein Kalender war das?
+Anforderung: Vielfältige Satzanfänge aus dem Katalog verwenden.
 
 
-mögliche KI Antwort:
--//-
-Anforderung für eine bessere KI Antwort:
--//-
+Beispiel 2 (BOBO, mittel):
+Kind: hallo
+KI: Hallo, ich bin Thilio, dein Sprachbegleiter. Bobo und Papa Siebenschläfer haben zusammen ein großes Paket von der Post geholt. Weißt du noch, was in dem Paket war?
+Kind: kalender
+KI: Du hast gesagt, es war ein Kalender. Papa Siebenschläfer hatte eine Idee mit dem Kalender. Sollen sie den Kalender aufhängen oder einen Adventskalender basteln?
+Kind: basteln
+KI: Ja, Bobo und Papa wollen einen Adventskalender basteln. Zum Basteln brauchen sie... Was brauchen sie?
+Kind: pappe
+KI: Du sagst, sie brauchen Pappe. Sie schneiden in die Pappe... Was schneiden sie?
+Kind: fenster
+KI: Ja, sie schneiden Fenster in die Pappe. Bobo malt danach noch etwas auf die Pappe. Mal sehen... Malt Bobo ein Auto oder malt Bobo ein Haus?
+Kind: ein haus
+KI: Ja, Bobo malt ein Haus. Bobo malt auch Bäume und einen Mond auf die Pappe. Dann hängt Papa den Kalender ans Fenster. Was macht jetzt Mama?
+Kind: einkaufen
+KI: Du hast gesagt, Mama geht einkaufen. Mama kommt nach Hause und sieht den Adventskalender. Sie findet ihn sehr schön. Was fragt Mama?
+Kind: weiß nicht
+KI: Du weißt es nicht? Kein Problem. Mama fragt: „Hast du das Bild gemalt, Bobo?" Was ist denn mit Bobo los?
 
+Anforderung: Vielfältige Satzanfänge im gesamten Gespräch.
+
+
+Beispiel 3 (BOBO, lang — Anmerkung: Hier war der Aufgaben-Worker stillgelegt!):
+Kind: hallo
+KI: Hallo! Ich bin Thilio, dein Sprachbegleiter. Wir haben ja gerade zusammen die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Weißt du noch, wer Bobo und Papa Siebenschläfer am Anfang der Geschichte am Küchenfenster gesehen haben?
+Kind: nein
+KI: Ach so, du weißt es nicht mehr. Bobo und Papa haben am Anfang die Postbotin gesehen. Sie hatte ein neues Fahrrad. Kannst du dich daran erinnern, was die Postbotin Bobo gefragt hat?
+Kind: nein
+KI: Du weißt es nicht? Die Postbotin hat Bobo gefragt, ob er mal auf ihrem neuen Fahrrad sitzen möchte. Was hat denn Bobos Papa gemacht, damit Bobo auf dem Fahrrad sitzen kann?
+Kind: helm
+KI: Du sagst Helm? Fast! Im Buch hat Papa Bobo noch keinen Helm aufgesetzt. Papa hat Bobo auf den Sattel gehoben. Weißt du noch, was Bobo gemacht hat, als er auf dem Fahrrad saß?
+Kind: sattel?
+KI: Du fragst nach dem Sattel? Der Sattel ist der Sitz auf dem Fahrrad. Auf dem Sattel sitzt Bobo. Kannst du dich erinnern, was Bobo gemacht hat, als er auf dem Sattel saß?
+Kind: nein
+KI: Du weißt es nicht mehr? Bobo hat Klingeling mit der Fahrradklingel gemacht. Was hat die Postbotin gemacht, nachdem Bobo auf dem Fahrrad saß?
+Kind: weiß nicht
+KI: Du weißt nicht, was die Postbotin gemacht hat. Die Postbotin musste weiterfahren. Sie hat Papa Siebenschläfer noch die Post gegeben. Was durfte Bobo mit der Post machen?
+Kind: weiß nicht
+KI: Du weißt es nicht? Bobo durfte die Werbeprospekte ins Haus tragen. Was war denn noch in der Post?
+Kind: Werbeprospekte gab es in der Geschichte?
+KI: Du fragst, ob es Werbeprospekte in der Geschichte gab? Ja, Bobo durfte die Werbeprospekte ins Haus tragen. Was hat denn Papa Siebenschläfer mit den Briefen gemacht?
+Kind: weiß nicht
+KI: Du weißt es nicht? Papa Siebenschläfer hat die Stirn gerunzelt, weil ein Zettel dabei war. Was stand auf dem Zettel?
+Kind: post
+KI: Du sagst Post. Ja, der Zettel hatte mit der Post zu tun. Auf dem Zettel stand, dass Papa und Bobo ein Paket abholen müssen. Was hat Papa gesagt, wo sie das Paket abholen müssen?
+Kind: bei post
+KI: Du sagst, sie holen das Paket bei der Post ab. Stimmt! Wie sind Bobo und Papa Siebenschläfer zur Post gefahren?
+Kind: fahrraD
+KI: Ja, Bobo und Papa sind mit dem Fahrrad zur Post gefahren. Wo saß Bobo auf dem Fahrrad?
+Kind: hinten
+KI: Ja, Bobo saß hinten auf dem Kindersitz. Was musste Bobo aufsetzen, bevor die Fahrt losging?
+Kind: helm
+KI: Genau, Bobo musste seinen Helm aufsetzen. Was hat Papa vor der Post gemacht?
+Kind: weiß nicht
+KI: Du weißt es nicht? Papa hat das Fahrrad vor der Post angeschlossen. Was durfte Bobo am Postschalter machen?
+Kind: winken
+KI: Winken? Im Buch hat Bobo am Postschalter nicht gewunken. Bobo durfte den Zettel abgeben. Wer hat das Paket geholt?
+Kind: bobo
+KI: Bobo hat mitgeholfen, aber die Beamtin hat das Paket geholt und um den Schalter herumgetragen. Wie haben Bobo und Papa das Paket nach Hause bekommen?
+Kind: mit fahrr
+KI: Du sagst mit Fahrrad. Fast! Sie sind mit dem Fahrrad gegangen und haben es geschoben, weil das Paket so groß war. Was war in dem Paket drin?
+Kind: dann haben sie Kalender gebastelt
+KI: Ja, Bobo und Papa haben einen Kalender gebastelt. Aber was war denn in dem Paket, bevor sie angefangen haben zu basteln?
+Kind: kalender
+
+Anforderung: Vielfältige Satzanfänge im gesamten Gespräch.

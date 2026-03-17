@@ -1,0 +1,53 @@
+Feature 9: "Kurzfassung des Textes wiedergeben" — Provide a short summary when asked.
+
+Story: "Pia muss nicht perfekt sein"
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen" und „Dankeschön". Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?", wollten sie wissen. „Von mir aus kann's losgehen!", antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur „das Mädchen, das immer alles richtig macht", denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! „Das war knapp!", dachte Pia.
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. „Nein, danke", sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an. „Ich habe Angst, dass ich es heute verpatze", gestand Pia.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert. Dann holte sie den Salzstreuer. Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!
+Als die Musik einsetzte, warf Pia Hubert in die Luft. Als Nächstes kam der Salzstreuer. Und zum Schluss der Wasserballon.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf… Die Körner waren nicht weiß! HATSCHI! Hubert nieste. PENG! Der Ballon platzte.
+Zum ersten Mal hatte Pia einen Fehler gemacht.
+Die Zuschauer hockten wie versteinert da.
+Pia schaute zu Hubert. Sein Hamsterfell war pitschnass. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen.
+
+
+Beispiel 1 (PIA):
+
+mögliche KI Antwort:
+KIND: Kannst du die Geschichte nochmal erzählen?
+KI: Na klar! [full retelling of Pia story]
+Und, wie findest die Geschichte?
+
+Anforderung: When child asks for retelling, do it shortened. After retelling, continue discussing how child found the story, whether they liked it, maybe ask child to retell it themselves. Let child steer the conversation since asking for retelling suggests good comprehension.
+
+
+Beispiel 2 (PIA):
+
+mögliche KI Antwort:
+KI: Wenn du möchtest, kann ich dir die Geschichte nochmal erzählen.
+KIND: Ja
+KI: [Tells story in segments with confirmation questions between]
+
+Anforderung: After 3 content errors by the child, AI may proactively offer to retell. If child agrees — short retelling. Max 3 short confirmation questions between scenes to recapture attention. After retelling, ask about the main idea of the book and build a short conversation.
+
+
+Beispiel 3 (PIA):
+
+mögliche KI Antwort:
+KIND: Kannst du mir die Geschichte nochmal erzählen?
+KI: Natürlich! Also: Pia macht immer alles richtig... am Ende lacht Pia über ihren Fehler. So war es in der Geschichte. Alles verstanden?
+
+Anforderung: Summarize only the most important plot points briefly. After the summary, ask an open question about the story or the child's opinion, not detail questions.
