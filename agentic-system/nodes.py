@@ -111,10 +111,25 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
     )
 
 
-def _detect_story_end(messages: list) -> str | None:
+def _check_story_near_end(
+    covered_beat_ids: list,
+    active_beat_ids: list,
+    all_beats: list,
+) -> bool:
+    """Detect if conversation has reached final ~20% of the story."""
+    total = len(all_beats)
+    if total == 0:
+        return False
+    final_threshold = max(1, int(total * 0.2))  # last 20% of beats
+    final_beat_ids = {b.beat_id for b in all_beats if b.order > total - final_threshold}
+    covered_or_active = set(covered_beat_ids or []) | set(active_beat_ids or [])
+    return bool(covered_or_active & final_beat_ids)
+
+
+def _detect_story_end(messages: list, state: dict) -> str | None:
     """
-    Scan recent AIMessage instances for final-scene keywords indicating the story
-    has reached its end. Returns a nudge to wrap up, or None.
+    Detect if the story has reached its end. Uses beat-based progress tracking
+    when available (primary), falling back to keyword matching (legacy).
 
     Respects REGEL 10: if the child's last message contains an emotion word,
     do NOT fire — let emotion exploration take precedence.
@@ -129,31 +144,12 @@ def _detect_story_end(messages: list) -> str | None:
         if any(ew in last_child_text for ew in emotion_words):
             return None
 
-    # Scan recent AI messages for story-end indicators.
-    # These are GENERIC narrative-ending markers, not story-specific.
-    # For reliable per-story detection, the beat system should be used.
-    story_end_keywords = {
-        "eingeschlafen", "schläft ein", "schlief ein",
-        "kichern", "glucksen", "lautes lachen", "lachten",
-        "augen fielen zu", "fest geschlafen",
-    }
-    ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
-    recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
-
-    story_ended = any(
-        any(kw in m.content.lower() for kw in story_end_keywords)
-        for m in recent_ai
-    )
-
-    if not story_ended:
-        return None
-
-    return (
+    _WRAP_UP_NUDGE = (
         '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT (REGEL 8 — ÜBERSCHREIBT REGEL 3 und REGEL 7)]\n'
         'Die Geschichte hat ihre letzte Szene erreicht.\n'
         'PFLICHT: Reagiere KURZ auf die Antwort des Kindes (bestätige oder korrigiere '
         'in einem Satz), dann verabschiede dich SOFORT warmherzig im SELBEN Atemzug. '
-        'Sage z.B.: "Bobo ist eingeschlafen. Das war eine tolle Geschichte! '
+        'Sage z.B.: "Das war eine tolle Geschichte! '
         'Bis zum nächsten Mal!"\n'
         'WICHTIG: Stelle KEINE Rückfrage nach der Korrektur — kein "Erinnerst du dich?", '
         'kein "Verstehst du?", kein "Alles klar?". '
@@ -161,6 +157,33 @@ def _detect_story_end(messages: list) -> str | None:
         'STRENG VERBOTEN: Neue Fragen stellen, neue Themen einführen, '
         '"Soll ich dir verraten...?" anbieten, oder die Unterhaltung verlängern.'
     )
+
+    # Primary: beat-based story-end detection
+    story_near_end = state.get('story_near_end')
+    if story_near_end is True:
+        logger.info("_detect_story_end: Beat-based detection triggered (story_near_end=True)")
+        return _WRAP_UP_NUDGE
+
+    # Fallback: keyword-based detection (when beat system is not active)
+    if story_near_end is None:
+        logger.debug("_detect_story_end: No beat system active, using keyword fallback")
+        story_end_keywords = {
+            "eingeschlafen", "schläft ein", "schlief ein",
+            "kichern", "glucksen", "lautes lachen", "lachten",
+            "augen fielen zu", "fest geschlafen",
+        }
+        ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
+        recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
+
+        story_ended = any(
+            any(kw in m.content.lower() for kw in story_end_keywords)
+            for m in recent_ai
+        )
+
+        if story_ended:
+            return _WRAP_UP_NUDGE
+
+    return None
 
 
 def _detect_repeated_errors(messages: list, window: int = 8) -> str | None:
@@ -347,7 +370,7 @@ def masterChatbot(state: State, llm):
         logger.info("masterChatbot: Injected disengagement nudge")
 
     # Detect story end and inject nudge
-    story_end_nudge = _detect_story_end(state["messages"])
+    story_end_nudge = _detect_story_end(state["messages"], state)
     if story_end_nudge:
         messages.append(SystemMessage(content=story_end_nudge))
         logger.info("masterChatbot: Injected story-end nudge")
@@ -408,6 +431,11 @@ def masterChatbot(state: State, llm):
     )
 
     logger.info(f"masterChatbot: Built contract with {len(response_contract.grounding.evidence)} evidence items")
+
+    # Grounding quality observability
+    if active_beats and response_contract.grounding:
+        claims = response_contract.grounding.claims if response_contract.grounding.claims else []
+        logger.info(f"masterChatbot: Grounding: {len(claims)} claims from {len(active_beats)} beats")
 
     # Return both the spoken text as message and the full contract in state
     return {
@@ -897,9 +925,20 @@ def load_beat_context(state: State) -> dict:
 
     logger.info(f"load_beat_context: Loaded {len(beats)} beats: {active_beat_ids}")
 
+    # Beat progress tracking: accumulate covered beats and check story-near-end
+    prev_covered = list(state.get("covered_beat_ids") or [])
+    covered_beat_ids = list(set(prev_covered) | set(active_beat_ids))
+
+    # Check if conversation has reached final beats
+    all_beats = retriever.get_all_beats()
+    story_near_end = _check_story_near_end(covered_beat_ids, active_beat_ids, all_beats)
+    logger.info(f"load_beat_context: covered={len(covered_beat_ids)}/{len(all_beats)} beats, story_near_end={story_near_end}")
+
     return {
         "beat_context": beat_context,
-        "active_beat_ids": active_beat_ids
+        "active_beat_ids": active_beat_ids,
+        "covered_beat_ids": covered_beat_ids,
+        "story_near_end": story_near_end,
     }
 
 

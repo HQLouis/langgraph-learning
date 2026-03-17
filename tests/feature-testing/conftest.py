@@ -40,6 +40,20 @@ load_dotenv(_PROJECT_ROOT / ".env")
 import ft_config as _cfg
 
 # ---------------------------------------------------------------------------
+# Beat system initialization — make beatpacks available to all feature tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _init_beat_manager():
+    """Initialize the global beat manager so load_beat_context() finds beatpacks."""
+    from nodes import initialize_beat_manager
+
+    content_dir = _FEATURE_TESTING_DIR.parent / "agentic_system" / "content"
+    if content_dir.exists():
+        initialize_beat_manager(content_dir)
+
+# ---------------------------------------------------------------------------
 # pytest CLI option registration
 # ---------------------------------------------------------------------------
 

@@ -51,6 +51,7 @@ _BG_ANALYSIS_FIELDS: tuple[str, ...] = tuple(
     and field not in {
         "child_id", "audio_book_id", "child_profile", "audio_book",
         "story_id", "chapter_id", "beat_context", "active_beat_ids", "num_planned_tasks",
+        "covered_beat_ids", "story_near_end",
     }
 )
 
@@ -122,6 +123,8 @@ def build_state(
         story_id: str = FIXTURE_STORY_ID,
         chapter_id: str = FIXTURE_CHAPTER_ID,
         active_beat_ids: list | None = None,
+        covered_beat_ids: list | None = None,
+        story_near_end: bool | None = None,
         background_state: dict | None = None,
         num_planned_tasks: int = 5,
 ) -> State:
@@ -191,6 +194,8 @@ def build_state(
         chapter_id=chapter_id,
         beat_context=None,
         active_beat_ids=active_beat_ids or [],
+        covered_beat_ids=covered_beat_ids or [],
+        story_near_end=story_near_end,
         num_planned_tasks=num_planned_tasks,
         response_contract=None,
     )
@@ -695,6 +700,10 @@ def simulate_conversation(
     # None on the first turn — build_state will default all analysis fields to "".
     current_background_state: dict | None = None
 
+    # Beat progress tracking carried across turns
+    current_covered_beat_ids: list = []
+    current_story_near_end: bool | None = None
+
     for turn_index, child_input in enumerate(child_turns):
         is_last_turn = turn_index == total_child_turns - 1
 
@@ -711,9 +720,18 @@ def simulate_conversation(
                 audio_book=audio_book,
                 story_id=story_id,
                 chapter_id=chapter_id,
+                covered_beat_ids=current_covered_beat_ids,
+                story_near_end=current_story_near_end,
                 background_state=current_background_state,
                 num_planned_tasks=num_planned_tasks,
             )
+
+            # Run beat context loading before masterChatbot (mirrors immediate graph)
+            from nodes import load_beat_context as _load_beat_context
+            beat_updates = _load_beat_context(turn_state)
+            if beat_updates:
+                for k, v in beat_updates.items():
+                    turn_state[k] = v  # type: ignore[literal-required]
 
             result = masterChatbot(turn_state, system_llm_instance)
             ai_messages = result.get("messages", [])
@@ -734,6 +752,25 @@ def simulate_conversation(
             ai_message = AIMessage(content=system_response)
             accumulated_messages = accumulated_messages + [ai_message]
             spoken_text = system_response
+
+            # Track beat progress across intermediate turns
+            from nodes import load_beat_context as _load_beat_context
+            intermediate_state = build_state(
+                child_name=child_name,
+                child_age=child_age,
+                child_gender=child_gender,
+                messages=accumulated_messages,
+                audio_book=audio_book,
+                story_id=story_id,
+                chapter_id=chapter_id,
+                covered_beat_ids=current_covered_beat_ids,
+                story_near_end=current_story_near_end,
+                num_planned_tasks=num_planned_tasks,
+            )
+            beat_updates = _load_beat_context(intermediate_state)
+            if beat_updates:
+                current_covered_beat_ids = beat_updates.get("covered_beat_ids", current_covered_beat_ids)
+                current_story_near_end = beat_updates.get("story_near_end", current_story_near_end)
 
             logger.info(
                 "simulate_conversation: turn %d/%d — using pre-defined system response",
@@ -777,6 +814,8 @@ def simulate_conversation(
         audio_book=audio_book,
         story_id=story_id,
         chapter_id=chapter_id,
+        covered_beat_ids=current_covered_beat_ids,
+        story_near_end=current_story_near_end,
         background_state=current_background_state,
         num_planned_tasks=num_planned_tasks,
     )

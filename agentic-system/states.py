@@ -43,6 +43,10 @@ class State(TypedDict):
     active_beat_ids: Optional[list]  # List of beat IDs currently in use
     num_planned_tasks: Optional[int]  # Number of tasks planned for this chapter (default: 5)
 
+    # Beat progress tracking
+    covered_beat_ids: Optional[list]  # Cumulative set of beat IDs discussed so far
+    story_near_end: Optional[bool]  # Whether conversation has reached final beats
+
     # Output Contract fields
     response_contract: Optional[ResponseContract]  # Structured output contract for validation
 
@@ -72,4 +76,8 @@ class BackgroundState(TypedDict):
     beat_context: Optional[str]
     active_beat_ids: Optional[list]
     num_planned_tasks: Optional[int]
+
+    # Beat progress tracking
+    covered_beat_ids: Optional[list]
+    story_near_end: Optional[bool]
 

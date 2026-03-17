@@ -122,13 +122,16 @@ class BeatPipeline:
 
                 # Check if adding this sentence would exceed max length
                 if current_beat_text and len(current_beat_text) + sentence_len > self.max_beat_length:
-                    # Save current beat
-                    beat_end = current_beat_start + len(current_beat_text)
-                    if len(current_beat_text) >= self.min_beat_length:
-                        candidates.append((current_beat_start, beat_end, current_beat_text.strip()))
+                    # Save current beat — find actual span in chapter_text
+                    stripped = current_beat_text.strip()
+                    if len(stripped) >= self.min_beat_length:
+                        actual_start = self.chapter_text.find(stripped, current_beat_start)
+                        if actual_start == -1:
+                            actual_start = current_beat_start
+                        candidates.append((actual_start, actual_start + len(stripped), stripped))
 
                     # Start new beat
-                    current_beat_start = beat_end
+                    current_beat_start = current_beat_start + len(current_beat_text)
                     current_beat_text = sentence
                 else:
                     # Add to current beat
@@ -139,16 +142,22 @@ class BeatPipeline:
 
                 # Check for transition markers that might split beats
                 if self._has_transition_marker(sentence):
-                    beat_end = current_beat_start + len(current_beat_text)
-                    if len(current_beat_text) >= self.min_beat_length:
-                        candidates.append((current_beat_start, beat_end, current_beat_text.strip()))
-                        current_beat_start = beat_end
+                    stripped = current_beat_text.strip()
+                    if len(stripped) >= self.min_beat_length:
+                        actual_start = self.chapter_text.find(stripped, current_beat_start)
+                        if actual_start == -1:
+                            actual_start = current_beat_start
+                        candidates.append((actual_start, actual_start + len(stripped), stripped))
+                        current_beat_start = current_beat_start + len(current_beat_text)
                         current_beat_text = ""
 
             # Add remaining text as beat
-            if current_beat_text and len(current_beat_text) >= self.min_beat_length:
-                beat_end = current_beat_start + len(current_beat_text)
-                candidates.append((current_beat_start, beat_end, current_beat_text.strip()))
+            if current_beat_text and len(current_beat_text.strip()) >= self.min_beat_length:
+                stripped = current_beat_text.strip()
+                actual_start = self.chapter_text.find(stripped, current_beat_start)
+                if actual_start == -1:
+                    actual_start = current_beat_start
+                candidates.append((actual_start, actual_start + len(stripped), stripped))
 
         logger.info(f"Generated {len(candidates)} beat candidates")
         return candidates
