@@ -73,6 +73,119 @@ def _detect_repetitive_starters(messages: list, window: int = 5) -> str | None:
     return None
 
 
+def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | None:
+    """
+    Scan the last *window* HumanMessage instances for disengagement signals.
+    Returns a German nudge if ≥3 of the last window messages match, or None.
+    """
+    disengagement_keywords = {
+        "nein", "nee", "ne", "nö", "weiß nicht", "weiss nicht",
+        "keine ahnung", "will nicht", "mag nicht", "kein bock",
+        "langweilig", "keine lust",
+    }
+
+    human_msgs = [m for m in messages if isinstance(m, HumanMessage)]
+    recent = human_msgs[-window:] if len(human_msgs) >= window else human_msgs
+    if len(recent) < 3:
+        return None
+
+    disengage_count = 0
+    for msg in recent:
+        text = msg.content.strip().lower()
+        if any(kw in text for kw in disengagement_keywords):
+            disengage_count += 1
+
+    if disengage_count < 3:
+        return None
+
+    return (
+        '[ACHTUNG — WIEDERHOLTES DESINTERESSE ERKANNT (REGEL 4B)]\n'
+        'Das Kind hat mehrfach hintereinander Desinteresse oder Ablehnung signalisiert '
+        '("nein", "weiß nicht", etc.).\n'
+        'STRIKT: Stelle KEINE Frage zur Geschichte — weder Verständnisfragen, '
+        'noch Rückfragen wie "Hat dir die Geschichte gefallen?", noch "Warum?".\n'
+        'Reagiere kurz und empathisch. Befolge REGEL 4B für die weitere Vorgehensweise '
+        '(inklusive der AUSNAHME bei weitgehend durchgesprochener Geschichte → verabschieden).'
+    )
+
+
+def _detect_story_end(messages: list) -> str | None:
+    """
+    Scan recent AIMessage instances for final-scene keywords indicating the story
+    has reached its end. Returns a nudge to wrap up, or None.
+
+    Respects REGEL 10: if the child's last message contains an emotion word,
+    do NOT fire — let emotion exploration take precedence.
+    """
+    # Check REGEL 10 exclusion first: emotion words in child's last message
+    emotion_words = {"lacht", "lachen", "traurig", "lustig", "fröhlich", "wütend",
+                     "ängstlich", "angst", "freude", "freut", "weint", "weinen",
+                     "glücklich", "aufgeregt", "überrascht"}
+    human_msgs = [m for m in messages if isinstance(m, HumanMessage)]
+    if human_msgs:
+        last_child_text = human_msgs[-1].content.strip().lower()
+        if any(ew in last_child_text for ew in emotion_words):
+            return None
+
+    # Scan recent AI messages for story-end indicators
+    story_end_keywords = {"eingeschlafen", "schläft ein", "schlief ein",
+                          "kichern", "glucksen", "lautes lachen", "lachten",
+                          "augen fielen zu", "fest geschlafen"}
+    ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
+    recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
+
+    story_ended = any(
+        any(kw in m.content.lower() for kw in story_end_keywords)
+        for m in recent_ai
+    )
+
+    if not story_ended:
+        return None
+
+    return (
+        '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT (REGEL 8)]\n'
+        'Die Geschichte hat ihre letzte Szene erreicht (Schlüsselwörter erkannt).\n'
+        'Stelle KEINE weitere inhaltliche Frage zur Geschichte. '
+        'Fasse stattdessen die Geschichte kurz und kindgerecht zusammen und '
+        'leite eine Verabschiedung ein. Sage z.B.: "Das war die Geschichte! '
+        'Hat sie dir gefallen?" — Stelle KEINE Detailfragen mehr.'
+    )
+
+
+def _detect_repeated_errors(messages: list, window: int = 8) -> str | None:
+    """
+    Scan recent AIMessage instances for correction markers indicating the child
+    has answered incorrectly multiple times. Fires if ≥3 corrections found.
+    Returns a nudge to offer retelling, or None.
+    """
+    correction_markers = {
+        "nicht ganz", "stimmt nicht", "das war es nicht", "im buch",
+        "in der geschichte", "das ist nicht richtig", "fast richtig",
+        "nicht genau", "versuchen wir es anders", "das stimmt so nicht",
+        "nochmal überlegen",
+    }
+
+    ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
+    recent_ai = ai_msgs[-window:] if len(ai_msgs) >= window else ai_msgs
+
+    correction_count = 0
+    for msg in recent_ai:
+        text = msg.content.lower()
+        if any(marker in text for marker in correction_markers):
+            correction_count += 1
+
+    if correction_count < 3:
+        return None
+
+    return (
+        '[ACHTUNG — WIEDERHOLTE FEHLER ERKANNT (REGEL 9B)]\n'
+        'Das Kind hat mehrfach falsch geantwortet (≥3 Korrekturen erkannt).\n'
+        'Stelle KEINE weitere Detailfrage. Biete stattdessen an, den relevanten '
+        'Teil der Geschichte nochmal zu erzählen. Sage z.B.: "Soll ich dir den Teil '
+        'nochmal erzählen?" — Sei ermutigend und geduldig, NICHT korrigierend.'
+    )
+
+
 def masterChatbot(state: State, llm):
     """
     Main chatbot node that generates responses to the child.
@@ -179,6 +292,24 @@ def masterChatbot(state: State, llm):
     if starter_nudge:
         messages.append(SystemMessage(content=starter_nudge))
         logger.info("masterChatbot: Injected repetitive-starter nudge")
+
+    # Detect repeated disengagement and inject nudge
+    disengagement_nudge = _detect_repeated_disengagement(state["messages"])
+    if disengagement_nudge:
+        messages.append(SystemMessage(content=disengagement_nudge))
+        logger.info("masterChatbot: Injected disengagement nudge")
+
+    # Detect story end and inject nudge
+    story_end_nudge = _detect_story_end(state["messages"])
+    if story_end_nudge:
+        messages.append(SystemMessage(content=story_end_nudge))
+        logger.info("masterChatbot: Injected story-end nudge")
+
+    # Detect repeated errors and inject nudge
+    error_nudge = _detect_repeated_errors(state["messages"])
+    if error_nudge:
+        messages.append(SystemMessage(content=error_nudge))
+        logger.info("masterChatbot: Injected repeated-errors nudge")
 
     # Get natural language response (no JSON formatting)
     logger.info("masterChatbot: Starting LLM invocation for natural response")

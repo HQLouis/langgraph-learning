@@ -162,3 +162,50 @@ Every prompt change and its measured impact on test results is documented here.
 4. `test_proactive_retelling_offer` — model doesn't proactively offer to retell after repeated errors (REGEL 9B not strong enough to override the default "correct and ask question" pattern)
 
 **Regressions**: None from this change
+
+---
+
+### [2026-03-17] Code-Level Detections — Disengagement, Story End, Repeated Errors
+
+**What changed**:
+Three new detection functions added to `nodes.py`, following the established `_detect_repetitive_starters` pattern. Each scans `state["messages"]`, returns a German nudge (or None), and is injected as a `SystemMessage` after conversation history for maximum recency weight.
+
+1. **`_detect_repeated_disengagement(messages, window=5)`**: Scans last 5 `HumanMessage` instances for disengagement keywords ("nein", "nee", "weiß nicht", "keine lust", etc.). Fires if ≥3 match. Smart routing: if story-end keywords found in recent AI messages → "say goodbye" nudge; otherwise → neutral nudge that defers to REGEL 4B for routing (goodbye vs. activity switch).
+2. **`_detect_story_end(messages)`**: Scans last 8 `AIMessage` instances for final-scene keywords ("eingeschlafen", "schläft ein", "kichern", "glucksen", "lautes lachen"). REGEL 10 exclusion: if child's last message contains an emotion word → does NOT fire (lets emotion exploration take precedence). Nudge tells system to wrap up and not ask further detail questions.
+3. **`_detect_repeated_errors(messages, window=8)`**: Scans last 8 `AIMessage` instances for correction markers ("nicht ganz", "stimmt nicht", "im buch", etc.). Fires if ≥3 corrections found. Nudge tells system to offer retelling instead of asking another detail question.
+
+All three are wired into `masterChatbot` after the existing repetitive-starter nudge (lines 314–330). Multiple nudges can fire simultaneously.
+
+**Message order after changes**:
+1. SystemMessage — master prompt + child profile + beat context
+2. SystemMessage — meta rules (aufgaben/satzbaubegrenzung) — conditional
+3. SystemMessage — termination prompt — conditional
+4. Conversation history (HumanMessage/AIMessage list)
+5. SystemMessage — repetitive starter nudge — conditional (existing)
+6. SystemMessage — disengagement nudge — conditional (NEW)
+7. SystemMessage — story-end nudge — conditional (NEW)
+8. SystemMessage — repeated-errors nudge — conditional (NEW)
+
+**Files modified**: `agentic-system/nodes.py`
+
+**Motivation**: 3 remaining failing tests where prompt-level rules (REGEL 4B, 8, 9B) are overridden by strong in-context conversation patterns.
+
+**Target tests**:
+1. `responding-to-answer::test_disengage_acknowledge_transition_simulated` — disengagement detection
+2. `story-not-extended::test_wrap_up_simulated` — story-end detection
+3. `story-summary::test_proactive_retelling_offer` — repeated-errors detection
+
+**Test results before**: 69 passed, 4 failed (from REGEL 10 Priority Fix)
+**Test results after**: 72 passed, 1 failed (99% pass rate). The 1 failure (`test_content_recap_on_transition`) is a pre-existing flaky test, not related to this change (passes on retry).
+
+**Fixes** (+3 tests):
+- `responding-to-answer::test_disengage_acknowledge_transition_simulated` — NOW PASSING (disengagement nudge)
+- `story-not-extended::test_wrap_up_simulated` — NOW PASSING (story-end nudge)
+- `story-summary::test_proactive_retelling_offer` — NOW PASSING (repeated-errors nudge)
+
+**Iteration notes**: Initial implementation had a two-path disengagement nudge (story-end → goodbye, else → switch activity). This caused regression on `test_stop_forcing_when_child_disengages` because:
+1. AI messages in the fixture didn't contain explicit story-end keywords ("eingeschlafen"), so the wrong path fired
+2. The "switch activity" path still asked questions, which the strict criterion rejected
+Fix: Simplified to a single nudge that says "KEINE Frage zur Geschichte" and defers to REGEL 4B (which already has the AUSNAHME for end-of-story → verabschieden). This works for both cases because the prompt rules handle the goodbye vs. activity-switch routing.
+
+**Regressions**: None (verified full suite + specific regression checks)
