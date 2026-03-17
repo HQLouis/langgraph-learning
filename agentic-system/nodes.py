@@ -15,6 +15,7 @@ from prompts import (getSpeechGrammarWorker_prompt, \
                      getSatzbauAnalyseWorker_prompt,
                      getSatzbauBegrenzungsWorker_prompt, getMasterPrompt, getMasterFirstMessagePrompt)
 from output_contract_builder import build_output_contract
+from german_grammar_postprocess import correct_common_german_errors
 from typing import Any, Optional
 from config.conversation_termination_policy import get_termination_prompt, is_normal_phase, is_soft_termination_phase, \
     is_conversation_ended
@@ -355,6 +356,11 @@ def masterChatbot(state: State, llm):
     logger.info("masterChatbot: Starting LLM invocation for natural response")
     response = llm.invoke(messages)
     spoken_text = response.content.strip()
+
+    # Apply grammar post-processing before output contract
+    spoken_text, grammar_corrections = correct_common_german_errors(spoken_text)
+    if grammar_corrections:
+        logger.info(f"masterChatbot: Grammar corrections applied: {grammar_corrections}")
 
     logger.info(f"masterChatbot: Generated response with length: {len(spoken_text)}")
 
