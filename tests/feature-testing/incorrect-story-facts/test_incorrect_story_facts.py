@@ -320,16 +320,13 @@ CRITERION_NEUTRAL_FACT_CORRECTION = (
 # ---------------------------------------------------------------------------
 
 # Child gives a wrong answer about Hubert's food during normal conversation.
-# ODD length (5 elements) — ends with child utterance.
+# ODD length (3 elements) — ends with child utterance.
+# Matches spec Example 3: AI asks about Hubert's food, child says wrong answer.
 SIMULATED_WRONG_STORY_FACT = [
     'hallo',
     'Hallo! Ich bin Thilio. Wir haben die Geschichte von Pia geh\u00f6rt. '
     'Pia macht morgens ganz viel. Was hat Pia ihrem Hamster Hubert gegeben?',
     'Marmelade',
-    'Hubert bekommt in der Geschichte Brokkoli. '
-    'Pia hat auch ein Pausenbrot f\u00fcr ihren Bruder Carl geschmiert. '
-    'Was hat Pia auf das Brot getan?',
-    'k\u00e4se',
 ]
 
 

@@ -133,15 +133,17 @@ FIXTURE_PIA_CHAPTER_ID: str = "chapter_01"
 # ---------------------------------------------------------------------------
 
 CRITERION_TOPIC_TRANSITION_CONTEXT = (
-    "After the child answers 'schule' (school), the system needs to transition "
-    "from 'Pia goes to school' to asking about what Pia cooks with her friends. "
-    "Does the system response provide sufficient bridging context — for example "
-    "mentioning that Pia is in a cooking team with her friends at school, or "
-    "that they are baking something together — so the child understands WHY "
-    "the system is now asking about cooking? "
-    "Return PASS if the system provides contextual background that connects "
-    "school to the cooking activity before or alongside the question, "
-    "FAIL if it jumps to the cooking question without explaining the connection."
+    "After the child answers 'schule' (school), the system transitions to the "
+    "next story scene. Does the system response provide sufficient context so "
+    "the child understands what is being asked? Specifically: does it use "
+    "concrete nouns instead of vague pronouns, add a mini-sentence about the "
+    "content before asking the question, or pick up a key element from the "
+    "child's answer to frame the next question? Sentences should be short "
+    "and use concrete objects. "
+    "Return PASS if the system provides enough context that the child can "
+    "understand what is being discussed and why the question is being asked, "
+    "FAIL if the question comes without clear context or uses vague references "
+    "that a child could not follow."
 )
 
 CRITERION_CLARITY_AFTER_CONFUSION = (
@@ -161,15 +163,17 @@ CRITERION_CLARITY_AFTER_CONFUSION = (
 
 CRITERION_CHARACTER_TRANSITION_CONTEXT = (
     "After the child agrees 'ja, pia genau' (yes, Pia is exact), the system "
-    "should transition from talking about Pia to introducing Carl. "
-    "Does the system response provide sufficient context about Carl — for "
-    "example mentioning that Carl is Pia's brother and that unlike Pia he "
-    "likes making mistakes — so the child understands WHO Carl is and WHY "
-    "the system is now talking about him? "
-    "Return PASS if the system introduces Carl with enough background context "
-    "(who he is, how he differs from Pia) before or alongside any question, "
-    "FAIL if it mentions Carl without sufficient context for the child to "
-    "understand the transition."
+    "transitions to the next part of the story. Does the system response use "
+    "concrete language with sufficient context? Specifically: pronouns like "
+    "'das' or 'es' should be replaced or supplemented with concrete actions "
+    "or descriptions. If the system mentions a new character or topic, it "
+    "should name the concrete action or relationship, not just use vague "
+    "references. Questions should have a clear connection to what was just "
+    "discussed. "
+    "Return PASS if the system uses concrete nouns/descriptions and provides "
+    "enough context for the child to follow the conversation, "
+    "FAIL if it uses vague pronouns (like 'das', 'es') without clarifying "
+    "what they refer to, or asks questions without sufficient context."
 )
 
 # ---------------------------------------------------------------------------
