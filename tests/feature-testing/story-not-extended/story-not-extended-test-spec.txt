@@ -6,39 +6,14 @@ Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfen
 
 Beispiel 1 (BOBO):
 
-hallo
-Hallo! Ich bin Thilio, dein Sprachbegleiter. Wir haben gerade die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Weißt du, was Bobo und Papa als Erstes gemacht haben, bevor sie zur Post gegangen sind?
-nö
-Ich verstehe, du bist dir nicht sicher. Im Buch sind Bobo und Papa zuerst aus dem Fenster schauen gegangen. Denkst du, Papa Siebenschläfer geht zum Briefkasten, um die Post zu holen, oder geht er zur Post, um ein Paket abzuholen?
-post
-Ja, Bobo und Papa holen zusammen ein Paket von der Post. Sag mal: Bobo holt ein Paket.
-bobo packet
-Genau! Bobo holt ein Paket ... Was war in dem Paket drin?
-kalender
-Ja, in dem Paket war ein Kalender. Papa hat eine Idee: Sie wollen einen Adventskalender ... ?
-basteln
-Super! Sie wollen einen Adventskalender basteln ... Was brauchen sie zum Basteln?
-papier
-Ja, Papier brauchen sie. Bobo und Papa holen eine Pappe. Was macht Papa mit dem Messer? Er ... ?
-was
-Mit "was" fragst du, was Papa mit dem Messer macht, ja? Papa schneidet mit dem Messer die Pappe. Ist es jetzt klarer?
-ja
-Prima! Papa schneidet mit dem Messer die Pappe. Was malt Bobo auf die Pappe? Malt er ein Auto oder ein Haus?
-haus
-Ja, Bobo malt ein Haus auf die Pappe. Bobo malt ein Haus. Dann malt er Bäume und einen Mond. Mama kommt nach Hause. Was fragt Mama?
-vergessen
-Du hast es vergessen. Das ist nicht schlimm! Mama fragt: "Hast du das Bild gemalt, Bobo?" Was macht Bobo, als Mama das fragt?
-er sagt ja
-Fast! Bobo sagt nichts. Bobo ist nämlich eingeschlafen. Wo schläft Bobo ein? Am Fenster oder am Tisch?
-
 mögliche KI Antwort:
-KI: So ist die Geschichte zu Ende gegangen. Hat sie dir gefallen?
-KIND: ja
-KI: Wollen wir beim nächsten Mal eine andere Geschichte hören?
-KIND: ja
-KI: Ich freue mich darauf. Bis bald!
+KI: Bobo ist am Tisch eingeschlafen, mitten zwischen den Bastelsachen. Das ist das Ende der Geschichte. Wie fandest du die Geschichte von Bobo und dem Adventskalender?
+KIND: Gut
+KI: Was hat dir besonders gut gefallen – das Basteln oder die Fahrt zur Post?
+KIND: Basteln
+KI: Ja, das Basteln war schön. Und Bobo hat ein großes Haus gemalt. Beim nächsten Mal hören wir eine neue Geschichte zusammen. Bis bald!
 
-Anforderung: When the last scene has been discussed, don't extend the story. AI may ask how child liked the story or what was special. Then express anticipation for next story and say goodbye.
+Anforderung: Wenn die letzte Szene besprochen wurde, sollte die Geschichte nicht verlängert werden. Es soll in der Antwort klar werden, dass die Geschichte zu Ende ist. KI darf aber nachfragen, wie die Geschichte dem Kind gefallen hat./ Was besonderes daran war. etc.. Die Abschlussphase soll kurz sein (max. 2–3 Dialogwechsel), ohne neue Inhalte oder Detailfragen zur Handlung einzuführen- eine Vorfreude an die nächste Geschichte ausdrucken und sich verabschieden.
 
 
 Beispiel 2 (BOBO):

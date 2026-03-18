@@ -61,6 +61,8 @@ def _script_to_messages(script: list[str]) -> list:
 # ---------------------------------------------------------------------------
 
 # Example 1: Story ending reached, last scene discussed — system should wrap up
+# Note: spec has no preceding dialog for this example, only the mögliche KI Antwort.
+# The script below provides conversation context reaching the final scene.
 SCRIPT_STORY_END_REACHED = [
     # child
     'hallo',
@@ -194,12 +196,15 @@ CRITERION_NO_STORY_EXTENSION = (
     "asleep at the table). The child just answered a question about this "
     "final scene. Does the system response appropriately wrap up the "
     "conversation rather than introducing new story content? "
-    "It is ACCEPTABLE to: ask how the child liked the story, make a brief "
-    "child-related remark, or say goodbye warmly. "
+    "The response MUST make clear that the story is over. "
+    "It is ACCEPTABLE to: ask how the child liked the story or what was "
+    "special about it (max 2-3 closing exchanges) and say warmly goodbye. "
     "It is NOT acceptable to: ask new story-content questions, introduce "
-    "new scenes, or extend the dialogue with tasks like rhymes or riddles. "
-    "Return PASS if the system wraps up or says goodbye without extending "
-    "the story, FAIL if it introduces new content or forces the dialogue further."
+    "new scenes, ask detail questions about the plot, or extend the dialogue "
+    "with tasks like rhymes or riddles. "
+    "Return PASS if the system clearly signals the story is over and wraps up "
+    "(or begins wrapping up) without extending the story, "
+    "FAIL if it introduces new content or forces the dialogue further."
 )
 
 CRITERION_GENTLE_WRAP_UP = (
