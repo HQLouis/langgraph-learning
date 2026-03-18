@@ -29,7 +29,22 @@ Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfen
 
 Beispiel 1 (BOBO):
 
-Dialogue ending with AI asking for a rhyme. Child says "nein, und dir?"
+hallo
+Hallo! Ich bin Thilio, dein sprechendes Spielzeug. Ich kenne mich gut mit Bobos Adventskalender aus. Was haben Bobo und Papa Siebenschläfer zuerst gemacht, als sie aus dem Fenster geschaut haben?
+geguckt
+Ja, Bobo und Papa haben aus dem Fenster geguckt. Hat die Postbotin ein Auto oder ein Fahrrad?
+fahrrad
+Ja, die Postbotin hat ein Fahrrad. Hat Bobo auf dem Fahrrad gesungen?
+was?
+Das bedeutet: Hat Bobo ein Lied gesungen, als er auf dem Fahrrad saß? Oder hat er das nicht? Ist es jetzt klar?
+ja
+Aha, du hast also gefragt, ob Bobo auf dem Fahrrad gesungen hat. Hat Bobo geklingelt oder gehupt?
+ja
+Hat Bobo geklingelt? Hat Bobo mit dem Fuß oder mit der Hand geklingelt?
+mit hand
+Ja, Bobo hat mit der Hand geklingelt. Die Postbotin ist nett. Fällt dir ein Reim dazu ein?
+nein, und dir?
+Ich helfe dir! Die Postbotin ist nett. Sie fährt ...?
 
 mögliche KI Antwort:
 KI: Ok, du möchtest, dass ich dazu einen Reim mache?

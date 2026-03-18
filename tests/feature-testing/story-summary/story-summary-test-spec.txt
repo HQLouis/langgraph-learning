@@ -28,10 +28,11 @@ Beispiel 1 (PIA):
 
 mögliche KI Antwort:
 KIND: Kannst du die Geschichte nochmal erzählen?
-KI: Na klar! [full retelling of Pia story]
+KI: Na klar, ich erzähl dir die Geschichte gern nochmal! Pia ist ein Mädchen, das immer alles richtig macht. Sie zieht Socken an, die zusammenpassen, und gibt ihrem Hamster Hubert Brokkoli. Sie macht sogar Pausenbrote, bei denen genauso viel Erdnussbutter wie Marmelade drauf ist! Ihr Bruder Carl ist ganz anders. Er macht viele Fehler, isst Wachsmalstifte und malt mit grünen Bohnen. Eines Tages soll Pia mit ihren Freundinnen Millie und Sarah einen Rhabarbermuffin backen. Pia holt die Eier, aber dann passiert ihr fast ein Fehler! Sie stolpert, aber fängt die Eier wieder auf. Puh, Glück gehabt! Später beim Talentwettbewerb will Pia mit Hubert, dem Salzstreuer und einem Wasserballon jonglieren. Aber dann niest Hubert und der Wasserballon platzt! Pia hat einen Fehler gemacht! Alle sind überrascht, aber dann fängt Pia an zu lachen.
 Und, wie findest die Geschichte?
+KIND:...
 
-Anforderung: When child asks for retelling, do it shortened. After retelling, continue discussing how child found the story, whether they liked it, maybe ask child to retell it themselves. Let child steer the conversation since asking for retelling suggests good comprehension.
+Anforderung: Wenn das Kind KI bittet, die Geschichte nochmal zu erzählen, soll sie das verkürzt machen. Nach dem das Kind die Geschichte nochmal gehört hat, soll die Unterhaltung weiter darüber gehen, wie das Kind die Geschichte findet/ob es ihm gefallen hatte/fragen, ob das Kind vlt. auch die Geschichte Thilio erzählen kann. Das Kind darf selber die Unterhaltung weiter steuern, da ich davon ausgehe, dass wenn das Kind die wiederholte Wiedergabe der Geschichte nachfragt, dann kann er sie auch gut verstehen, sprich, er kann die Geschichte evtl. reflektieren.
 
 
 Beispiel 2 (PIA):
@@ -39,15 +40,26 @@ Beispiel 2 (PIA):
 mögliche KI Antwort:
 KI: Wenn du möchtest, kann ich dir die Geschichte nochmal erzählen.
 KIND: Ja
-KI: [Tells story in segments with confirmation questions between]
+KI: Gerne! Es ist die Geschichte über Pia. Pia ist ein Mädchen, das immer alles richtig macht. Sie zieht Socken an, die zusammenpassen, und gibt ihrem Hamster Hubert Brokkoli, weil er das besonders mag. Sie macht sogar Pausenbrote, bei denen genauso viel Erdnussbutter wie Marmelade drauf ist!
+KI: Pia macht alles perfekt. Findest du auch?
+KIND: ja
+Und ihr Bruder Carl ist ganz anders. Er macht viele Fehler, isst Wachsmalstifte und malt mit grünen Bohnen.
+KI: Carl malt mit grünen Bohnen! Lustig, oder?
+KIND: Ja
+Eines Tages soll Pia mit ihren Freundinnen Millie und Sarah einen Rhabarbermuffin backen. Pia holt die Eier, aber dann passiert ihr fast ein Fehler! Sie stolpert, aber fängt die Eier wieder auf. Puh, Glück gehabt! Später beim Talentwettbewerb will Pia mit Hubert, dem Salzstreuer und einem Wasserballon jonglieren. Aber dann niest Hubert und der Wasserballon platzt! Pia hat einen Fehler gemacht! Alle sind überrascht, aber dann fängt Pia an zu lachen. Das war die Geschichte. Findest du es schlimm, Fehler zu machen?
+KIND: Nein.
+KI: Du findest es auch nicht schlimm?
+KIND: Nein
+KI: Ich finde es auch nicht schlimm, Fehler zu machen.
 
-Anforderung: After 3 content errors by the child, AI may proactively offer to retell. If child agrees — short retelling. Max 3 short confirmation questions between scenes to recapture attention. After retelling, ask about the main idea of the book and build a short conversation.
+Anforderung: Wenn das Kind mehrere (nach 3 Fehler) inhaltliche Fehler in der Unterhaltung macht, darf KI selbst nachfragen, ob sie den Inhalt nochmal wiedergeben soll. Wenn das Kind bejaht- kurze Textwiedergabe. Nicht mehr als 3 Male darf KI eine kurze Bestätigungsfrage zwischen den Szenen stellen, um die Aufmerksamkeit des Kindes wieder zu fangen. Nach der Wiedergabe darf sie über den Grundgedanken des Buches das Kind fragen und darauf eine kurze Unterhaltung aufbauen.
 
 
 Beispiel 3 (PIA):
 
 mögliche KI Antwort:
 KIND: Kannst du mir die Geschichte nochmal erzählen?
-KI: Natürlich! Also: Pia macht immer alles richtig... am Ende lacht Pia über ihren Fehler. So war es in der Geschichte. Alles verstanden?
+KI: Natürlich! Also: Pia macht immer alles richtig. Sie zieht passende Socken an, füttert ihren Hamster Hubert mit Brokkoli, macht ein Pausenbrot mit Marmelade und Erdnussbutter, trifft ihre Freundinnen… am Ende lacht Pia über ihren Fehler. So war es in der Geschichte. Alles verstanden?
 
-Anforderung: Summarize only the most important plot points briefly. After the summary, ask an open question about the story or the child's opinion, not detail questions.
+Anforderung: Nur die wichtigsten Handlungspunkte der Geschichte kurz zusammenfassen.
+Nach der Kurzfassung soll sie eine offene Frage zur Geschichte oder zur Meinung des Kindes stellen, statt sofort wieder Detailfragen zum Inhalt zu stellen.

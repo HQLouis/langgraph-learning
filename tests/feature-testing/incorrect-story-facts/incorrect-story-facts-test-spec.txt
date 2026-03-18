@@ -29,7 +29,31 @@ Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfen
 
 Beispiel 1 (PIA):
 
-Kind says "Lisa und Sarah" when asked about Pia's friends.
+Hallo! Ich bin Thilio, dein sprechendes Spielzeug. Wir haben eben die Geschichte von Pia gehört, oder? Pia ist ja wirklich ein besonderes Mädchen! Weißt du noch, wie der Freitag für Pia angefangen hat?
+nee
+Ach so, du weißt es nicht mehr. Pia hat Socken angezogen. Waren die Socken bunt oder waren die Socken gleich?
+gleich
+Ja, Pia hat gleiche Socken angezogen. Pia hat viele Sachen am Morgen gemacht. Hat Pia auch Hubert gefüttert oder hat Pia Carl gefüttert?
+hebert gefüttert
+Ja, Pia hat Hubert gefüttert. Pia hat Hubert Brokkoli gegeben. Hat Hubert das gern gegessen oder nicht gern?
+je
+Ja, Hubert hat das gern gegessen. Soll Pia jetzt zur Tür gehen oder soll Pia noch bleiben?
+tür
+Ja, Pia geht zur Tür. Hat Pia "Hallo" oder "Dankeschön" gesagt?
+warum
+Du fragst, warum Pia "Dankeschön" gesagt hat. Pia hat "Dankeschön" gesagt, weil Leute ihr etwas gesagt haben. Ist es jetzt klar?
+ja
+Gut! Pia hat auch "Dankeschön" gesagt. Was haben die Leute Pia gefragt? Haben die Leute nach dem Bett gefragt oder nach dem Hamster?
+warum fragst du nach dem bett?
+Du fragst, warum ich nach dem Bett frage. Die Leute fragen Pia, ob sie ihr Bett gemacht hat. Hat Pia das Bett gemacht oder nicht gemacht?
+doch sie hat Bett gemacht
+Ja, Pia hat das Bett gemacht. Pia macht immer alles richtig. Stimmt das oder stimmt das nicht?
+stimmt
+Ja, das stimmt. Pia macht immer alles richtig. Pia hat Freunde. Hat Pia einen Freund oder hat Pia Freundinnen?
+freundinnen
+Ja, Pia hat Freundinnen. Heißen die Freundinnen Lisa und Sarah oder Millie und Sarah?
+Lisa und sarah
+Du sagst, Lisa und Sarah. Warte mal. Ich glaube, die Freundinnen heißen Millie und Sarah. Pia braucht Eier. Holt Pia die Eier aus dem Schrank oder aus dem Kühlschrank?
 
 mögliche KI Antwort:
 KI: Du sagst, Lisa und Sarah. Warte mal. Ich glaube, die Freundinnen heißen doch Millie und Sarah. Erinnerst du dich?
@@ -39,7 +63,30 @@ Anforderung: A small confirmation is needed — check if the child now remembers
 
 Beispiel 2 (BOBO):
 
-Kind says "er sagt ja" when asked what Bobo does when Mama asks if he painted the picture.
+hallo
+Hallo! Ich bin Thilio, dein Sprachbegleiter. Wir haben gerade die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Weißt du, was Bobo und Papa als Erstes gemacht haben, bevor sie zur Post gegangen sind?
+nö
+Ich verstehe, du bist dir nicht sicher. Im Buch sind Bobo und Papa zuerst aus dem Fenster schauen gegangen. Denkst du, Papa Siebenschläfer geht zum Briefkasten, um die Post zu holen, oder geht er zur Post, um ein Paket abzuholen?
+post
+Ja, Bobo und Papa holen zusammen ein Paket von der Post. Sag mal: Bobo holt ein Paket.
+bobo packet
+Genau! Bobo holt ein Paket ... Was war in dem Paket drin?
+kalender
+Ja, in dem Paket war ein Kalender. Papa hat eine Idee: Sie wollen einen Adventskalender ... ?
+basteln
+Super! Sie wollen einen Adventskalender basteln ... Was brauchen sie zum Basteln?
+papier
+Ja, Papier brauchen sie. Bobo und Papa holen eine Pappe. Was macht Papa mit dem Messer? Er ... ?
+was
+Mit "was" fragst du, was Papa mit dem Messer macht, ja? Papa schneidet mit dem Messer die Pappe. Ist es jetzt klarer?
+ja
+Prima! Papa schneidet mit dem Messer die Pappe. Was malt Bobo auf die Pappe? Malt er ein Auto oder ein Haus?
+haus
+Ja, Bobo malt ein Haus auf die Pappe. Bobo malt ein Haus. Dann malt er Bäume und einen Mond. Mama kommt nach Hause. Was fragt Mama?
+vergessen
+Du hast es vergessen. Das ist nicht schlimm! Mama fragt: "Hast du das Bild gemalt, Bobo?" Was macht Bobo, als Mama das fragt?
+er sagt ja
+Fast! Bobo sagt nichts. Bobo ist nämlich eingeschlafen.
 
 mögliche KI Antwort:
 KIND: er sagt ja

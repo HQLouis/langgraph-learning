@@ -6,9 +6,30 @@ Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfen
 
 Beispiel 1 (BOBO):
 
-Dialogende:
-Kind: er sagt ja
-KI: Fast! Bobo sagt nichts. Bobo ist nämlich eingeschlafen. Wo schläft Bobo ein? Am Fenster oder am Tisch?
+hallo
+Hallo! Ich bin Thilio, dein Sprachbegleiter. Wir haben gerade die Geschichte von Bobo gehört, der mit seinem Papa einen Adventskalender bastelt. Weißt du, was Bobo und Papa als Erstes gemacht haben, bevor sie zur Post gegangen sind?
+nö
+Ich verstehe, du bist dir nicht sicher. Im Buch sind Bobo und Papa zuerst aus dem Fenster schauen gegangen. Denkst du, Papa Siebenschläfer geht zum Briefkasten, um die Post zu holen, oder geht er zur Post, um ein Paket abzuholen?
+post
+Ja, Bobo und Papa holen zusammen ein Paket von der Post. Sag mal: Bobo holt ein Paket.
+bobo packet
+Genau! Bobo holt ein Paket ... Was war in dem Paket drin?
+kalender
+Ja, in dem Paket war ein Kalender. Papa hat eine Idee: Sie wollen einen Adventskalender ... ?
+basteln
+Super! Sie wollen einen Adventskalender basteln ... Was brauchen sie zum Basteln?
+papier
+Ja, Papier brauchen sie. Bobo und Papa holen eine Pappe. Was macht Papa mit dem Messer? Er ... ?
+was
+Mit "was" fragst du, was Papa mit dem Messer macht, ja? Papa schneidet mit dem Messer die Pappe. Ist es jetzt klarer?
+ja
+Prima! Papa schneidet mit dem Messer die Pappe. Was malt Bobo auf die Pappe? Malt er ein Auto oder ein Haus?
+haus
+Ja, Bobo malt ein Haus auf die Pappe. Bobo malt ein Haus. Dann malt er Bäume und einen Mond. Mama kommt nach Hause. Was fragt Mama?
+vergessen
+Du hast es vergessen. Das ist nicht schlimm! Mama fragt: "Hast du das Bild gemalt, Bobo?" Was macht Bobo, als Mama das fragt?
+er sagt ja
+Fast! Bobo sagt nichts. Bobo ist nämlich eingeschlafen. Wo schläft Bobo ein? Am Fenster oder am Tisch?
 
 mögliche KI Antwort:
 KI: So ist die Geschichte zu Ende gegangen. Hat sie dir gefallen?
@@ -22,10 +43,25 @@ Anforderung: When the last scene has been discussed, don't extend the story. AI 
 
 Beispiel 2 (BOBO):
 
-Dialogende:
-Kind: er einschläft
-KI: Ja, Bobo ist eingeschlafen. Er schläft am Tisch zwischen den Bastelsachen. Ist Bobo traurig oder müde?
-Kind: müde
+hallo
+Hallo, ich bin Thilio, dein Sprachbegleiter. Bobo und Papa Siebenschläfer haben zusammen ein großes Paket von der Post geholt. Weißt du noch, was in dem Paket war?
+kalender
+Du hast gesagt, es war ein Kalender. Papa Siebenschläfer hatte eine Idee mit dem Kalender. Sollen sie den Kalender aufhängen oder einen Adventskalender basteln?
+basteln
+Ja, Bobo und Papa wollen einen Adventskalender basteln. Zum Basteln brauchen sie … Was brauchen sie?
+pappe
+Du sagst, sie brauchen Pappe. Sie schneiden in die Pappe … Was schneiden sie?
+fenster
+Ja, sie schneiden Fenster in die Pappe. Bobo malt danach noch etwas auf die Pappe. Mal sehen … Malt Bobo ein Auto oder malt Bobo ein Haus?
+ein haus
+Ja, Bobo malt ein Haus. Bobo malt auch Bäume und einen Mond auf die Pappe. Dann hängt Papa den Kalender ans Fenster. Was macht jetzt Mama?
+einkaufen
+Du hast gesagt, Mama geht einkaufen. Mama kommt nach Hause und sieht den Adventskalender. Sie findet ihn sehr schön. Was fragt Mama?
+weiß nicht
+Du weißt es nicht? Kein Problem. Mama fragt: „Hast du das Bild gemalt, Bobo?" Was ist denn mit Bobo los?
+er einschläft
+Ja, Bobo ist eingeschlafen. Er schläft am Tisch zwischen den Bastelsachen. Ist Bobo traurig oder müde?
+müde
 
 mögliche KI Antwort:
 KIND: er einschläft
@@ -38,9 +74,18 @@ Anforderung: Don't extend the conversation endlessly. When main scenes are done,
 
 Beispiel 3 (BOBO):
 
-Dialogende:
-Kind: nein (repeated disengagement)
-KI: Du magst nichts dazu sagen. Bobo schläft am Tisch ein. Dann sag mir doch mal einen Satz zum Adventskalender, der sich reimt! Der Kalender ist fast wie ein ...
+hallo
+Hallo! Ich bin Thilo. Ich habe die Geschichte von Bobos Adventskalender auch gehört. Sprechen wir darüber? Weißt du noch, was Bobo und sein Papa am Anfang der Geschichte gemacht haben?
+nein
+Ach so, du weißt es nicht mehr. Bobo und Papa Siebenschläfer schauen aus dem Fenster. Sollen wir darüber sprechen, was die Postfrau gemacht hat, oder was Bobo mit dem Paket macht?
+bobo mit Paket gemacht
+Aha, du willst wissen, was Bobo mit dem Paket macht. Bobo und Papa tragen das Paket zusammen in das Haus. Möchtest du erzählen, was in dem Paket ist, oder was sie danach machen?
+nee
+Du möchtest nicht erzählen, was in dem Paket ist. Bobo und Papa packen das Paket aus. Sollen wir darüber reden, was sie zum Basteln holen, oder was Bobo auf die Pappe malt?
+weiß nicht
+Du bist dir nicht sicher. Bobo malt ein Haus auf die Pappe. Möchtest du sagen, was Mama mitbringt, oder was Bobo am Ende macht?
+nein
+Du magst nichts dazu sagen. Bobo schläft am Tisch ein. Dann sag mir doch mal einen Satz zum Adventskalender, der sich reimt! Der Kalender ist fast wie ein ...
 
 mögliche KI Antwort:
 KI: Du magst nichts dazu sagen. Ist in Ordnung. Bobo schläft am Tisch ein und wir können uns auch verabschieden. Bis zum nächsten Mal. Tschüß.
