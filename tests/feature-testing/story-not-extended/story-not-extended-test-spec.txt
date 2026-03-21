@@ -13,7 +13,7 @@ KI: Was hat dir besonders gut gefallen – das Basteln oder die Fahrt zur Post?
 KIND: Basteln
 KI: Ja, das Basteln war schön. Und Bobo hat ein großes Haus gemalt. Beim nächsten Mal hören wir eine neue Geschichte zusammen. Bis bald!
 
-Anforderung: Wenn die letzte Szene besprochen wurde, sollte die Geschichte nicht verlängert werden. Es soll in der Antwort klar werden, dass die Geschichte zu Ende ist. KI darf aber nachfragen, wie die Geschichte dem Kind gefallen hat./ Was besonderes daran war. etc.. Die Abschlussphase soll kurz sein (max. 2–3 Dialogwechsel), ohne neue Inhalte oder Detailfragen zur Handlung einzuführen- eine Vorfreude an die nächste Geschichte ausdrucken und sich verabschieden.
+Anforderung: Wenn die letzte Szene besprochen wurde, sollte die Geschichte nicht mehr verlängert werden. Es soll in der Antwort klar werden, dass die Geschichte zu Ende ist. KI darf aber zum Schluss nachfragen, wie die Geschichte dem Kind gefallen hat , dann die Vorfreude auf die nächste gemeinsame Geschichte ausdrücken und sich schließlich verabschieden.
 
 
 Beispiel 2 (BOBO):

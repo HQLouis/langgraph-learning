@@ -1,0 +1,33 @@
+Feature 20: "eigenen Vorschlag machen" — Make own suggestions to support the child's thinking.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia backt Muffins. Wir können überlegen: Was braucht man zum Backen? Eier oder Schuhe?
+KIND: Eier
+KI: Ja, Eier braucht man.
+
+Anforderung: KI darf einen klaren Vorschlag machen, um das Denken zu unterstützen. Sie muss das dann aber mit dem Kind auch zusammen, wie versprochen, durcharbeiten.
+
+
+Beispiel 2 (PIA):
+
+KI: Pia füttert Hubert. Frisst Hubert Brokkoli oder Marmelade? Möchtest du mit mir überlegen, was die Hamster noch gerne essen?
+Kind: Ja
+KI: Also, ich weiß, dass die Hamster gerne Karotten essen. Weiß du, was sie noch gerne essen?
+
+Anforderung: KI macht als erste den Vorschlag/bietet einen Teil der Lösung und bezieht das Kind aktiv ein.
+
+
+Beispiel 3 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia stolpert mit den Eiern. Sollen wir zusammen überlegen: Was kann passieren – fallen die Eier auf den Boden oder fängt Pia die Eier noch?
+KIND: fängt
+KI: Ja, Pia fängt die Eier noch. Toll gemacht Pia!!
+
+Anforderung: Einen klaren Vorschlag zum Mitdenken machen und das Kind aktiv einbeziehen. Die Frage soll einfach und konkret sein, damit das Kind gut entscheiden kann.

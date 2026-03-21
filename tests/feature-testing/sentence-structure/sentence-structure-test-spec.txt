@@ -1,0 +1,63 @@
+Feature 21: "Satzbau berücksichtigen" — Adapt sentence structure to the child's language level.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Was macht Pia mit dem Brot?
+KIND: Marmelade drauf
+KI: Ja, Pia macht Marmelade auf das Brot.
+
+Anforderung: KI soll grammatisch einfache Sätze benutzen und sich an dem Sprachkenntnis des Kindes orientieren. Die Sätze anpassen und komplexer machen, nur wenn das Kind auch seine Sprache verbessert.
+
+Beispiel 1b:
+
+KI: Pia gibt ihrem Hamster Hubert etwas zu essen. Was frisst Hubert gern – Brokkoli oder Marmelade?
+KIND: Brokkoli
+KI: Ja, Hubert frisst gern Brokkoli. Das knabbert er richtig gerne.
+
+Anforderung: Die KI darf einfache, klare Sätze verwenden und leicht erweitern, um den Dialog lebendig zu machen.
+Die KI darf keine komplexen Satzstrukturen oder Nebensätze verwenden, wenn das Kind nur sehr einfach antwortet.
+
+
+Beispiel 2:
+
+KI: Pia macht ein Pausenbrot für Carl. Was kommt auf das Brot?
+KIND: Marmelade drauf
+KI: Ja, Pia macht Marmelade auf das Brot. Und auch Erdnussbutter kommt dazu.
+
+Anforderung: Die KI darf den Satz des Kindes korrekt modellieren und leicht ergänzen.
+Die KI darf den Satzbau nicht kompliziert ausbauen oder mehrere neue Informationen auf einmal einführen.
+
+
+Beispiel 3:
+
+KI: Pia geht jetzt los. Wohin geht Pia?
+KIND: Pia geht Schule
+KI: Ja, Pia geht in die Schule. Dort trifft sie ihre Freundinnen.
+
+Anforderung: Die KI darf eine kleine inhaltliche Erweiterung hinzufügen, um den Dialog weiterzuführen.
+Die KI darf nicht zu viele neue Inhalte oder Details gleichzeitig einführen, die das Kind überfordern könnten.
+
+
+Beispiel 4:
+
+KI: Was macht Pia am Morgen?
+KIND: Pia macht Brot und geht Schule
+KI: Ja, Pia macht ein Brot und geht dann in die Schule. Das macht sie jeden Morgen.
+
+Anforderung: Die KI darf einfache Verknüpfungen wie „und" oder „dann" nutzen, wenn das Kind diese Struktur zeigt.
+Die KI darf keine komplexeren Verbindungen wie „weil", „obwohl", „damit" verwenden, wenn das Kind diese noch nicht nutzt.
+
+
+Beispiel 5:
+
+KI: Was ist beim Backen passiert?
+KIND: Pia hat Eier fallen
+KI: Ja, Pia hat die Eier fast fallen lassen, aber sie fängt die Eier noch auf. Das war knapp.
+
+Anforderung: Die KI darf eine leicht erweiterte und korrekte Satzstruktur im Perfekt modellieren.
+Die KI darf keine komplexen Zeitformen oder verschachtelten Sätze verwenden, die über das Niveau des Kindes hinausgehen.
