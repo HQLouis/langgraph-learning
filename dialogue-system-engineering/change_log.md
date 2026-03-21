@@ -375,3 +375,13 @@ All three are wired into `masterChatbot` after the existing repetitive-starter n
 - `test_topic_transition_context_simulated` — NOW PASSING (Lückentext ban)
 
 **Regressions**: None
+
+---
+
+### [2026-03-21] Lückentext ban strengthened
+
+**What changed**: Broadened the Lückentext ban in REGEL 13 to also catch "..." (ellipsis) patterns, not just "_____". The system was generating "Sie ... für die Aufführung" which bypassed the original ban.
+
+**Files modified**: `local_fallback_prompts.py`
+
+**Test results (full suite A+B, n_runs=1)**: **101 passed, 0 failed** (100%)
