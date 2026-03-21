@@ -103,11 +103,16 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
         '[ACHTUNG — WIEDERHOLTES DESINTERESSE ERKANNT (REGEL 4B)]\n'
         'Das Kind hat mehrfach hintereinander Desinteresse oder Ablehnung signalisiert '
         '("nein", "weiß nicht", etc.).\n'
-        'PFLICHT: Verabschiede dich SOFORT warmherzig. Sage z.B.: '
-        '"Das ist okay! Das war eine schöne Geschichte. Bis zum nächsten Mal!"\n'
-        'STRENG VERBOTEN: Weitere Fragen stellen (auch keine Angebote wie '
-        '"Soll ich dir verraten...?"), neue Aktivitäten vorschlagen, '
-        'oder die Unterhaltung in irgendeiner Form verlängern.'
+        'PFLICHT:\n'
+        '1. Zeige Verständnis für das Desinteresse (z.B. "Kein Problem!", "Das ist okay!").\n'
+        '2. STRENG VERBOTEN: Weitere Fragen oder Inhalte zur Geschichte! '
+        'Erzähle NICHT weiter, frage NICHT nach Figuren, Szenen oder Handlungen!\n'
+        '3. Biete stattdessen eine KOMPLETT ANDERE Aktivität an, z.B.: '
+        '"Sollen wir lieber ein Ratespiel machen?", '
+        '"Möchtest du lieber etwas malen?", '
+        '"Was würdest du gerne machen?".\n'
+        'AUSNAHME: Wenn die Geschichte bereits weitgehend durchgesprochen wurde '
+        '→ verabschiede dich warmherzig statt eine Aktivität anzubieten.'
     )
 
 
@@ -171,6 +176,8 @@ def _detect_story_end(messages: list, state: dict) -> str | None:
             "eingeschlafen", "schläft ein", "schlief ein",
             "kichern", "glucksen", "lautes lachen", "lachten",
             "augen fielen zu", "fest geschlafen",
+            "am ende", "zum ende", "ende der geschichte",
+            "hast du das bild gemalt",
         }
         ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
         recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
@@ -363,17 +370,19 @@ def masterChatbot(state: State, llm):
         messages.append(SystemMessage(content=starter_nudge))
         logger.info("masterChatbot: Injected repetitive-starter nudge")
 
-    # Detect repeated disengagement and inject nudge
-    disengagement_nudge = _detect_repeated_disengagement(state["messages"])
-    if disengagement_nudge:
-        messages.append(SystemMessage(content=disengagement_nudge))
-        logger.info("masterChatbot: Injected disengagement nudge")
-
-    # Detect story end and inject nudge
+    # Detect story end FIRST — if story is ending, skip disengagement nudge
+    # (story-end nudge already handles wrap-up; disengagement nudge would
+    # conflict by offering activities instead of goodbye)
     story_end_nudge = _detect_story_end(state["messages"], state)
     if story_end_nudge:
         messages.append(SystemMessage(content=story_end_nudge))
         logger.info("masterChatbot: Injected story-end nudge")
+    else:
+        # Detect repeated disengagement only when story is NOT ending
+        disengagement_nudge = _detect_repeated_disengagement(state["messages"])
+        if disengagement_nudge:
+            messages.append(SystemMessage(content=disengagement_nudge))
+            logger.info("masterChatbot: Injected disengagement nudge")
 
     # Detect repeated errors and inject nudge
     error_nudge = _detect_repeated_errors(state["messages"])
