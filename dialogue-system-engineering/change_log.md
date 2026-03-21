@@ -291,3 +291,22 @@ All three are wired into `masterChatbot` after the existing repetitive-starter n
 - `test_no_story_extension_after_last_scene` — FIXED (story-end keyword for Mama's question)
 
 **Regressions**: None
+
+---
+
+### [2026-03-21] Strategy B Validation + Disengagement Nudge Refinement
+
+**What changed**:
+1. **Disengagement nudge softened** (`nodes.py`): Nudge now defers to REGEL 4B — says "offer activity OR say goodbye, depending on how far the story has been discussed" instead of forcing one behavior.
+2. **Story-end keywords refined** (`nodes.py`): Removed overly broad "am ende" / "zum ende" which false-positived. Kept "hast du das bild gemalt".
+3. **REGEL 10 personal feelings** (`local_fallback_prompts.py`): When child confirms personal emotional experience, ask specifically about the FEELING.
+
+**Test results**:
+- Strategy A (n_runs=3): **68 passed, 0 failed** (100%)
+- Strategy B (n_runs=1): **31 passed, 1 failed** (97%)
+- Combined: **99 passed, 1 failed** (99%)
+
+**Remaining failure (architectural limit)**:
+`test_disengage_acknowledge_transition_simulated` — In simulation, the system proactively summarizes the story ending when the child disengages, triggering `_detect_story_end` and overriding the disengagement nudge. This is inherent Strategy B non-determinism.
+
+**Regressions**: None

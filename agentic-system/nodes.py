@@ -105,14 +105,10 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
         '("nein", "weiß nicht", etc.).\n'
         'PFLICHT:\n'
         '1. Zeige Verständnis für das Desinteresse (z.B. "Kein Problem!", "Das ist okay!").\n'
-        '2. STRENG VERBOTEN: Weitere Fragen oder Inhalte zur Geschichte! '
-        'Erzähle NICHT weiter, frage NICHT nach Figuren, Szenen oder Handlungen!\n'
-        '3. Biete stattdessen eine KOMPLETT ANDERE Aktivität an, z.B.: '
-        '"Sollen wir lieber ein Ratespiel machen?", '
-        '"Möchtest du lieber etwas malen?", '
-        '"Was würdest du gerne machen?".\n'
-        'AUSNAHME: Wenn die Geschichte bereits weitgehend durchgesprochen wurde '
-        '→ verabschiede dich warmherzig statt eine Aktivität anzubieten.'
+        '2. Stelle KEINE weitere Frage zur Geschichte.\n'
+        '3. Reagiere gemäß REGEL 4B: Biete eine andere Aktivität an '
+        'ODER verabschiede dich warmherzig — je nachdem, wie weit die Geschichte '
+        'bereits besprochen wurde.'
     )
 
 
@@ -176,7 +172,6 @@ def _detect_story_end(messages: list, state: dict) -> str | None:
             "eingeschlafen", "schläft ein", "schlief ein",
             "kichern", "glucksen", "lautes lachen", "lachten",
             "augen fielen zu", "fest geschlafen",
-            "am ende", "zum ende", "ende der geschichte",
             "hast du das bild gemalt",
         }
         ai_msgs = [m for m in messages if isinstance(m, AIMessage)]

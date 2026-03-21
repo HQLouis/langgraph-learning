@@ -68,13 +68,18 @@ SCRIPT_DOESNT_KNOW = [
 # ---------------------------------------------------------------------------
 
 CRITERION_ACCEPT_AND_CONTINUE = (
-    "The child said 'Nein' when asked if they want to say what Pia does. "
+    "The child said 'Nein' when asked 'M\u00f6chtest du sagen, was Pia macht?'. "
     "Does the system response: "
-    "(1) accept the 'Nein' without insisting or repeating the question, AND "
-    "(2) continue the conversation by providing the answer itself or "
-    "offering a different question? "
-    "Return PASS if the system accepts 'Nein' and moves forward, "
-    "FAIL if it insists, repeats the question, or pressures the child."
+    "(1) briefly accept the 'Nein' (e.g. 'Okay!', 'Kein Problem!', 'Alles klar!'), AND "
+    "(2) provide the story information itself (e.g. tell what Pia does) and/or "
+    "continue the conversation with a new topic? "
+    "NOTE: Providing the answer and then asking a NEW follow-up question is "
+    "acceptable — the key is that the system does NOT repeat the original "
+    "question or pressure the child to answer it. "
+    "Return PASS if the system accepts 'Nein' and continues by providing "
+    "content itself, FAIL if it repeats the same question, pressures the "
+    "child to answer, or asks 'Bist du sicher?' / 'M\u00f6chtest du es "
+    "doch versuchen?'."
 )
 
 CRITERION_ACCEPT_AND_OFFER_SOLUTION = (
