@@ -165,17 +165,19 @@ def _detect_story_end(messages: list, state: dict) -> str | None:
             return None
 
     _WRAP_UP_NUDGE = (
-        '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT (REGEL 8 — ÜBERSCHREIBT REGEL 3 und REGEL 7)]\n'
+        '[ACHTUNG — ENDE DER GESCHICHTE ERKANNT — HÖCHSTE PRIORITÄT!]\n'
         'Die Geschichte hat ihre letzte Szene erreicht.\n'
         'PFLICHT: Reagiere KURZ auf die Antwort des Kindes (bestätige oder korrigiere '
-        'in einem Satz), dann verabschiede dich SOFORT warmherzig im SELBEN Atemzug. '
-        'Sage z.B.: "Das war eine tolle Geschichte! '
-        'Bis zum nächsten Mal!"\n'
-        'WICHTIG: Stelle KEINE Rückfrage nach der Korrektur — kein "Erinnerst du dich?", '
-        'kein "Verstehst du?", kein "Alles klar?". '
-        'REGEL 3 und REGEL 7 (Verständnisfrage nach Korrektur) gelten hier NICHT.\n'
-        'STRENG VERBOTEN: Neue Fragen stellen, neue Themen einführen, '
-        '"Soll ich dir verraten...?" anbieten, oder die Unterhaltung verlängern.'
+        'in EINEM Satz), dann sage SOFORT dass die Geschichte zu Ende ist und '
+        'verabschiede dich warmherzig. Alles in EINER Antwort.\n'
+        'Beispiel: "Nicht ganz! Bobo sagt nichts — er ist eingeschlafen. '
+        'Das war eine tolle Geschichte! Bis zum nächsten Mal!"\n'
+        'ÜBERSCHREIBT ALLE ANDEREN REGELN:\n'
+        '- KEIN "Erinnerst du dich?" (REGEL 7 gilt NICHT)\n'
+        '- KEIN "Verstehst du?" (REGEL 3 gilt NICHT)\n'
+        '- KEIN "Alles klar?" — KEINE Fragen jeglicher Art!\n'
+        '- KEINE neuen Themen, KEINE Aktivitäten\n'
+        'Deine Antwort MUSS mit einem Abschied enden (z.B. "Bis zum nächsten Mal!").'
     )
 
     # Beat-based story-end detection (the only supported mechanism)
