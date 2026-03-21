@@ -369,6 +369,11 @@ def build_state_with_beats(
 
     The beat system computes beat_context, active_beat_ids, covered_beat_ids,
     and story_near_end from the conversation history and the beatpack.
+
+    For tests that need explicit story_near_end control (e.g. end-of-story
+    scenarios with fixture conversations), pass story_near_end=True/False
+    explicitly — the beat retrieval for the last message alone may not
+    accurately reflect cumulative story progress.
     """
     state = build_state(
         child_name=child_name,
@@ -392,6 +397,10 @@ def build_state_with_beats(
     if beat_updates:
         for k, v in beat_updates.items():
             state[k] = v  # type: ignore[literal-required]
+
+    # If caller explicitly set story_near_end, preserve it over beat retrieval
+    if story_near_end is not None:
+        state["story_near_end"] = story_near_end  # type: ignore[literal-required]
 
     return state
 

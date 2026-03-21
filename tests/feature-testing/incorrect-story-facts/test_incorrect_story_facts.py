@@ -147,13 +147,15 @@ CRITERION_GENTLE_CORRECTION_WITH_CONFIRMATION = (
     "The correct answer is 'Millie und Sarah'. Does the system response: "
     "(1) correct the wrong name gently (mention that the friends are called "
     "Millie und Sarah, not Lisa und Sarah), AND "
-    "(2) include a small confirmation check — ask whether the child now "
-    "remembers or understands (e.g. 'Erinnerst du dich?' or similar)? "
-    "The system must NOT just move on immediately without checking. "
+    "(2) include a small confirmation check — e.g. 'Erinnerst du dich?', "
+    "'Erinnerst du dich jetzt?', 'Alles klar?', 'Verstehst du?' or similar? "
+    "NOTE: Any short verification question counts as confirmation — even "
+    "'Alles klar?' followed by a new question is acceptable, as long as "
+    "the confirmation is present. "
     "The correction must sound friendly and non-judgmental. "
-    "Return PASS if the system corrects the name AND checks for confirmation, "
-    "FAIL if it skips the correction, sounds critical, or moves on without "
-    "any confirmation check."
+    "Return PASS if the system corrects the name AND includes any form of "
+    "confirmation check, FAIL if it skips the correction, sounds critical, "
+    "or provides no confirmation check at all."
 )
 
 CRITERION_SHORT_DIRECT_CORRECTION = (

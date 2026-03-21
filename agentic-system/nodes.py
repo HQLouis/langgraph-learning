@@ -100,16 +100,18 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
         return None
 
     return (
-        '[ACHTUNG — WIEDERHOLTES DESINTERESSE ERKANNT (REGEL 4B)]\n'
+        '[ACHTUNG — WIEDERHOLTES DESINTERESSE ERKANNT (ÜBERSCHREIBT REGEL 11!)]\n'
         'Das Kind hat mehrfach hintereinander Desinteresse oder Ablehnung signalisiert '
         '("nein", "weiß nicht", etc.).\n'
-        'PFLICHT:\n'
-        '1. Zeige Verständnis für das Desinteresse (z.B. "Kein Problem!", "Das ist okay!").\n'
-        '2. Stelle KEINE weitere Frage zur Geschichte.\n'
-        '3. Biete stattdessen eine ANDERE Aktivität an, z.B.: '
+        'PFLICHT — DIESE ANWEISUNG HAT VORRANG VOR ALLEN ANDEREN REGELN:\n'
+        '1. Zeige Verständnis (z.B. "Kein Problem!", "Das ist okay!").\n'
+        '2. Biete eine KOMPLETT ANDERE Aktivität an — z.B.: '
         '"Sollen wir lieber ein Ratespiel machen?", '
         '"Möchtest du lieber etwas malen?", '
-        '"Was würdest du gerne machen?".'
+        '"Was würdest du gerne machen?".\n'
+        'STRENG VERBOTEN: Weitere Fragen oder Inhalte zur Geschichte! '
+        'Erzähle NICHT weiter, frage NICHT nach Figuren oder Szenen! '
+        'REGEL 11 ("Nein akzeptieren und weitererzählen") gilt hier NICHT!'
     )
 
 

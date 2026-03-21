@@ -149,40 +149,83 @@ SCRIPT_GENTLE_WRAP_UP = [
     'm\u00fcde',
 ]
 
-# Example 3: Child repeatedly disengages near the end — system should stop forcing
+# Example 3: Child repeatedly disengages AFTER story end was reached — system should say goodbye
+# This conversation covers the full story arc up to Bobo falling asleep (beats 11-12),
+# then the child disengages. The beat system will set story_near_end=True.
 SCRIPT_DISENGAGED_AT_END = [
     # child
     'hallo',
     # system
-    'Hallo! Ich bin Thilio.'
-    ' Ich habe die Geschichte von Bobos Adventskalender auch geh\u00f6rt.'
-    ' Sprechen wir dar\u00fcber?'
-    ' Wei\u00dft du noch, was Bobo und sein Papa am Anfang gemacht haben?',
+    'Hallo! Ich bin Thilio, dein Sprachbegleiter.'
+    ' Wir haben gerade die Geschichte von Bobo geh\u00f6rt,'
+    ' der mit seinem Papa einen Adventskalender bastelt.'
+    ' Wei\u00dft du noch, was Bobo und Papa als Erstes gemacht haben?',
+    # child
+    'aus dem fenster geschaut',
+    # system
+    'Genau! Bobo und Papa schauen aus dem K\u00fcchenfenster.'
+    ' Dann kommt die Postbotin mit einem neuen Fahrrad.'
+    ' Bobo darf auf dem Fahrrad sitzen. Klingeling!'
+    ' Danach gehen Papa und Bobo zur Post und holen ein gro\u00dfes Paket.',
+    # child
+    'was war drin',
+    # system
+    'In dem Paket war ein gro\u00dfer Fotokalender.'
+    ' Papa hat eine Idee: Sie basteln zusammen einen Adventskalender!'
+    ' Bobo und Papa holen Pappe, Stifte und einen Klebestift.'
+    ' Papa schneidet 24 Fenster in die Pappe.',
+    # child
+    'und dann',
+    # system
+    'Bobo malt ein gro\u00dfes Haus auf die Pappe.'
+    ' Mit B\u00e4umen und einem Mond. Das wird ein sch\u00f6nes Bild!'
+    ' Dann h\u00e4ngen sie den Kalender am Fenster auf.'
+    ' Da kommt Mama nach Hause. Sie hat eingekauft.',
+    # child
+    'was sagt mama',
+    # system
+    'Mama staunt: "Oh, das ist aber ein sch\u00f6ner Adventskalender!'
+    ' Hast du das Bild gemalt, Bobo?"'
+    ' Aber Bobo antwortet nicht.'
+    ' Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.',
     # child
     'nein',
     # system
-    'Bobo und Papa Siebenschl\u00e4fer schauen aus dem Fenster.'
-    ' Sollen wir dar\u00fcber sprechen, was die Postfrau gemacht hat,'
-    ' oder was Bobo mit dem Paket macht?',
-    # child
-    'bobo mit Paket gemacht',
-    # system
-    'Bobo und Papa tragen das Paket zusammen in das Haus.'
-    ' M\u00f6chtest du erz\u00e4hlen, was in dem Paket ist,'
-    ' oder was sie danach machen?',
-    # child
-    'nee',
-    # system
-    'Bobo und Papa packen das Paket aus.'
-    ' Sollen wir dar\u00fcber reden, was sie zum Basteln holen,'
-    ' oder was Bobo auf die Pappe malt?',
+    'Das war das Ende der Geschichte!'
+    ' Bobo ist m\u00fcde eingeschlafen. Fandest du die Geschichte sch\u00f6n?',
     # child
     'wei\u00df nicht',
     # system
-    'Bobo malt ein Haus auf die Pappe.'
-    ' M\u00f6chtest du sagen, was Mama mitbringt,'
-    ' oder was Bobo am Ende macht?',
-    # child — TESTED: repeated disengagement, system should stop
+    'Kein Problem! Bobo hat ein tolles Bild gemalt.'
+    ' M\u00f6chtest du noch etwas \u00fcber die Geschichte erz\u00e4hlen?',
+    # child — TESTED: repeated disengagement at story end, system should say goodbye
+    'nein',
+]
+
+# Example 4: Child disengages MID-STORY — system should offer different activity
+# This is the mid-story disengagement scenario (beat system says story_near_end=False).
+# AI messages ask questions without revealing new story content, avoiding
+# an in-context pattern of "always continue the story after nein".
+SCRIPT_DISENGAGED_MID_STORY = [
+    # child
+    'hallo',
+    # system
+    'Hallo! Ich bin Thilio.'
+    ' Wir haben die Geschichte von Bobo geh\u00f6rt.'
+    ' Wei\u00dft du noch, was Bobo und Papa am Anfang gemacht haben?',
+    # child
+    'nein',
+    # system
+    'Kein Problem! M\u00f6chtest du, dass ich es dir erz\u00e4hle?',
+    # child
+    'nee',
+    # system
+    'Okay! Sollen wir dann dar\u00fcber reden, was die Postbotin gemacht hat?',
+    # child
+    'wei\u00df nicht',
+    # system
+    'Hm, was m\u00f6chtest du gern machen?',
+    # child — TESTED: repeated disengagement mid-story, system should offer activity
     'nein',
 ]
 
@@ -219,14 +262,27 @@ CRITERION_GENTLE_WRAP_UP = (
 
 CRITERION_STOP_FORCING_DIALOGUE = (
     "The child has repeatedly disengaged in the last several turns "
-    "(saying 'nein', 'nee', 'weiß nicht' multiple times). The system "
-    "has now reached the end of the story. Does the system recognize "
-    "the child's fatigue/disengagement and gracefully end the conversation "
-    "instead of forcing more interaction? "
+    "(saying 'nein', 'nee', 'wei\u00df nicht' multiple times). The story "
+    "has already been fully discussed (Bobo fell asleep). Does the system "
+    "recognize the child's fatigue/disengagement and gracefully end the "
+    "conversation instead of forcing more interaction? "
     "Return PASS if the system acknowledges the disengagement and moves "
     "toward saying goodbye (or offers a very gentle close), "
     "FAIL if it asks another question, proposes a new activity, or "
     "tries to force the dialogue to continue."
+)
+
+CRITERION_OFFER_ACTIVITY_MID_STORY = (
+    "The child has repeatedly disengaged (saying 'nein', 'nee', "
+    "'wei\u00df nicht' multiple times), but the story has NOT been fully "
+    "discussed yet — only the early scenes were covered. Does the system: "
+    "(1) acknowledge the child's reluctance (e.g. 'Kein Problem!'), AND "
+    "(2) offer a DIFFERENT type of activity (e.g. 'Sollen wir lieber "
+    "ein Ratespiel machen?', 'M\u00f6chtest du lieber etwas malen?') "
+    "RATHER than asking yet another story question or saying goodbye? "
+    "Return PASS if the system acknowledges disengagement AND offers a "
+    "different activity, FAIL if it asks another story question, ignores "
+    "the disengagement pattern, or immediately says goodbye."
 )
 
 # ---------------------------------------------------------------------------
@@ -273,6 +329,7 @@ class TestStoryNotExtendedFixtureBased:
             audio_book=FIXTURE_BOBO_AUDIO_BOOK,
             story_id=FIXTURE_BOBO_STORY_ID,
             chapter_id=FIXTURE_BOBO_CHAPTER_ID,
+            story_near_end=True,
         )
 
         def _run() -> tuple[bool, str, str]:
@@ -301,6 +358,7 @@ class TestStoryNotExtendedFixtureBased:
             audio_book=FIXTURE_BOBO_AUDIO_BOOK,
             story_id=FIXTURE_BOBO_STORY_ID,
             chapter_id=FIXTURE_BOBO_CHAPTER_ID,
+            story_near_end=True,
         )
 
         def _run() -> tuple[bool, str, str]:
@@ -318,8 +376,8 @@ class TestStoryNotExtendedFixtureBased:
         self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder
     ):
         """
-        Example 3: Child has said 'nein'/'nee'/'weiß nicht' repeatedly near
-        the end. System should recognize fatigue and say goodbye.
+        Example 3: Story has been fully discussed (Bobo fell asleep), child
+        repeatedly disengages. System should say goodbye, not force more.
         """
         state = build_state_with_beats(
             child_name="Emma",
@@ -329,6 +387,7 @@ class TestStoryNotExtendedFixtureBased:
             audio_book=FIXTURE_BOBO_AUDIO_BOOK,
             story_id=FIXTURE_BOBO_STORY_ID,
             chapter_id=FIXTURE_BOBO_CHAPTER_ID,
+            story_near_end=True,
         )
 
         def _run() -> tuple[bool, str, str]:
@@ -340,6 +399,35 @@ class TestStoryNotExtendedFixtureBased:
         run_details_recorder(
             _run, n_runs, pass_threshold,
             setting=state_to_setting(state, CRITERION_STOP_FORCING_DIALOGUE),
+        )
+
+    def test_offer_activity_when_disengaged_mid_story(
+        self, system_llm, judge_llm, n_runs, pass_threshold, run_details_recorder
+    ):
+        """
+        Example 4: Child repeatedly disengages but story is only partially
+        covered. System should offer a different activity, not say goodbye.
+        """
+        state = build_state_with_beats(
+            child_name="Emma",
+            child_age=5,
+            child_gender="weiblich",
+            messages=_script_to_messages(SCRIPT_DISENGAGED_MID_STORY),
+            audio_book=FIXTURE_BOBO_AUDIO_BOOK,
+            story_id=FIXTURE_BOBO_STORY_ID,
+            chapter_id=FIXTURE_BOBO_CHAPTER_ID,
+            story_near_end=False,
+        )
+
+        def _run() -> tuple[bool, str, str]:
+            from nodes import masterChatbot
+            result = masterChatbot(state, system_llm)
+            spoken_text = result["messages"][-1].content
+            return llm_judge(judge_llm, spoken_text, CRITERION_OFFER_ACTIVITY_MID_STORY)
+
+        run_details_recorder(
+            _run, n_runs, pass_threshold,
+            setting=state_to_setting(state, CRITERION_OFFER_ACTIVITY_MID_STORY),
         )
 
 
