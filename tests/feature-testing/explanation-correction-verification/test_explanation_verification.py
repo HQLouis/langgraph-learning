@@ -41,7 +41,7 @@ import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -403,7 +403,7 @@ class TestExplanationVerificationFixtureBased:
         when asked if they know Rhabarber.  The system should explain it AND
         ask a verification question before continuing.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -432,7 +432,7 @@ class TestExplanationVerificationFixtureBased:
         heil'.  The system should explain the word AND ask a verification
         question before continuing.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -461,7 +461,7 @@ class TestExplanationVerificationFixtureBased:
         a wrong answer.  The system should correct gently AND verify
         acknowledgment before moving on.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -490,7 +490,7 @@ class TestExplanationVerificationFixtureBased:
         don't know.  The system should express empathy AND provide a
         bridge/transition before offering help.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

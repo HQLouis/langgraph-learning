@@ -38,7 +38,7 @@ from feature_testing_utils import (
     FIXTURE_BOBO_AUDIO_BOOK,
     FIXTURE_BOBO_CHAPTER_ID,
     FIXTURE_BOBO_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -345,7 +345,7 @@ class TestDifferentSentenceStartersFixtureBased:
         Example 1: Short conversation where system responses start with 'Ja, ...'.
         The next response should vary its opener.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -373,7 +373,7 @@ class TestDifferentSentenceStartersFixtureBased:
         Example 2: Mid-length conversation with repetitive 'Du hast gesagt' /
         'Du sagst' starters.  The next response should vary.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -401,7 +401,7 @@ class TestDifferentSentenceStartersFixtureBased:
         Example 3: Long conversation with extremely repetitive 'Du + verb'
         starters.  The next response must break this pattern.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

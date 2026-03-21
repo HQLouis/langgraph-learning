@@ -106,9 +106,10 @@ def _detect_repeated_disengagement(messages: list, window: int = 5) -> str | Non
         'PFLICHT:\n'
         '1. Zeige Verständnis für das Desinteresse (z.B. "Kein Problem!", "Das ist okay!").\n'
         '2. Stelle KEINE weitere Frage zur Geschichte.\n'
-        '3. Reagiere gemäß REGEL 4B: Biete eine andere Aktivität an '
-        'ODER verabschiede dich warmherzig — je nachdem, wie weit die Geschichte '
-        'bereits besprochen wurde.'
+        '3. Biete stattdessen eine ANDERE Aktivität an, z.B.: '
+        '"Sollen wir lieber ein Ratespiel machen?", '
+        '"Möchtest du lieber etwas malen?", '
+        '"Was würdest du gerne machen?".'
     )
 
 
@@ -159,31 +160,18 @@ def _detect_story_end(messages: list, state: dict) -> str | None:
         '"Soll ich dir verraten...?" anbieten, oder die Unterhaltung verlängern.'
     )
 
-    # Primary: beat-based story-end detection
+    # Beat-based story-end detection (the only supported mechanism)
     story_near_end = state.get('story_near_end')
     if story_near_end is True:
         logger.info("_detect_story_end: Beat-based detection triggered (story_near_end=True)")
         return _WRAP_UP_NUDGE
 
-    # Fallback: keyword-based detection (when beat system is not active)
     if story_near_end is None:
-        logger.debug("_detect_story_end: No beat system active, using keyword fallback")
-        story_end_keywords = {
-            "eingeschlafen", "schläft ein", "schlief ein",
-            "kichern", "glucksen", "lautes lachen", "lachten",
-            "augen fielen zu", "fest geschlafen",
-            "hast du das bild gemalt",
-        }
-        ai_msgs = [m for m in messages if isinstance(m, AIMessage)]
-        recent_ai = ai_msgs[-8:] if len(ai_msgs) >= 8 else ai_msgs
-
-        story_ended = any(
-            any(kw in m.content.lower() for kw in story_end_keywords)
-            for m in recent_ai
+        logger.warning(
+            "_detect_story_end: story_near_end is None — beat system is not active! "
+            "Story-end detection requires the beat system. Ensure load_beat_context() "
+            "is called before masterChatbot()."
         )
-
-        if story_ended:
-            return _WRAP_UP_NUDGE
 
     return None
 

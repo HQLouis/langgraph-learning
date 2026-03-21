@@ -46,7 +46,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -674,7 +674,7 @@ class TestEnsureClarityFixtureBased:
         Example 1 (Carl?): Child answers either/or question with a single
         ambiguous word.  The system should ask a clarifying question.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -702,7 +702,7 @@ class TestEnsureClarityFixtureBased:
         Example 2 (famos?): Child repeats an unknown word from the system's
         message.  The system should address the word's meaning.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -730,7 +730,7 @@ class TestEnsureClarityFixtureBased:
         Example 5 (vergessen): Child says 'vergessen' which could mean
         the story answer or 'I forgot'.  The system should disambiguate.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -758,7 +758,7 @@ class TestEnsureClarityFixtureBased:
         Example 7 (weiß nicht): Child says 'weiß nicht' to a factual
         question.  The system should resolve rather than push harder.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -788,7 +788,7 @@ class TestEnsureClarityFixtureBased:
         Example 3 (ja): Child answers 'ja' to an either/or question.
         The system should clarify which option the child means.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -816,7 +816,7 @@ class TestEnsureClarityFixtureBased:
         Example 4 (nein, und dir?): Child deflects a task back to the
         system.  The system should acknowledge the deflection.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -844,7 +844,7 @@ class TestEnsureClarityFixtureBased:
         Example 6 (weiß nicht): Child says 'weiß nicht' to a factual
         question.  The system should not misinterpret it as curiosity.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

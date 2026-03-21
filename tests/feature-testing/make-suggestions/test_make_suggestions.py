@@ -18,7 +18,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -123,7 +123,7 @@ class TestMakeSuggestionsFixtureBased:
         Example 1: Child says 'weiß nicht' about baking. System should
         make a clear, concrete suggestion to support thinking.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -151,7 +151,7 @@ class TestMakeSuggestionsFixtureBased:
         Example 2: Child agrees to think together. System should share
         part of the answer and ask child to contribute.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -179,7 +179,7 @@ class TestMakeSuggestionsFixtureBased:
         Example 3: Child answers the collaborative question. System should
         confirm positively and stay encouraging.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

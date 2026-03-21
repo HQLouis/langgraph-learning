@@ -345,6 +345,57 @@ def build_state(
     )
 
 
+def build_state_with_beats(
+        child_name: str,
+        child_age: int,
+        child_gender: str,
+        messages: list,
+        audio_book: str = FIXTURE_AUDIO_BOOK,
+        aufgaben: str = "",
+        satzbaubegrenzung: str = "",
+        story_id: str = FIXTURE_STORY_ID,
+        chapter_id: str = FIXTURE_CHAPTER_ID,
+        active_beat_ids: list | None = None,
+        covered_beat_ids: list | None = None,
+        story_near_end: bool | None = None,
+        background_state: dict | None = None,
+        num_planned_tasks: int = 5,
+) -> State:
+    """
+    Build a State AND run load_beat_context() to populate beat fields.
+
+    This is the preferred way to build state for Strategy A tests. It mirrors
+    the immediate graph pipeline: build_state → load_beat_context → masterChatbot.
+
+    The beat system computes beat_context, active_beat_ids, covered_beat_ids,
+    and story_near_end from the conversation history and the beatpack.
+    """
+    state = build_state(
+        child_name=child_name,
+        child_age=child_age,
+        child_gender=child_gender,
+        messages=messages,
+        audio_book=audio_book,
+        aufgaben=aufgaben,
+        satzbaubegrenzung=satzbaubegrenzung,
+        story_id=story_id,
+        chapter_id=chapter_id,
+        active_beat_ids=active_beat_ids,
+        covered_beat_ids=covered_beat_ids,
+        story_near_end=story_near_end,
+        background_state=background_state,
+        num_planned_tasks=num_planned_tasks,
+    )
+
+    from nodes import load_beat_context as _load_beat_context
+    beat_updates = _load_beat_context(state)
+    if beat_updates:
+        for k, v in beat_updates.items():
+            state[k] = v  # type: ignore[literal-required]
+
+    return state
+
+
 # ---------------------------------------------------------------------------
 # Setting extractors — derive report metadata from test inputs, not strings
 # ---------------------------------------------------------------------------

@@ -24,7 +24,7 @@ from feature_testing_utils import (
     FIXTURE_BOBO_AUDIO_BOOK,
     FIXTURE_BOBO_CHAPTER_ID,
     FIXTURE_BOBO_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -265,7 +265,7 @@ class TestStoryNotExtendedFixtureBased:
         Example 1: The final scene (Bobo falls asleep) has been discussed.
         Child answers 'er sagt ja'. System should correct gently and wrap up.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -293,7 +293,7 @@ class TestStoryNotExtendedFixtureBased:
         Example 2: After child says 'müde' to the final question, system
         should gently wrap up. A child-related question is OK.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -321,7 +321,7 @@ class TestStoryNotExtendedFixtureBased:
         Example 3: Child has said 'nein'/'nee'/'weiß nicht' repeatedly near
         the end. System should recognize fatigue and say goodbye.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

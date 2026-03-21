@@ -30,7 +30,7 @@ import pytest
 from langchain_core.messages import HumanMessage, AIMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -242,7 +242,7 @@ class TestStorySummaryFixtureBased:
         erz\u00e4hlen?' System should give a shortened retelling and then ask
         an open question (how did you find the story, did you like it).
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -271,7 +271,7 @@ class TestStorySummaryFixtureBased:
         should proactively offer to retell or provide a helpful summary.
         After retelling, ask about the main idea.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -300,7 +300,7 @@ class TestStorySummaryFixtureBased:
         most important plot points and follow up with an open question about
         the story or child's opinion.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

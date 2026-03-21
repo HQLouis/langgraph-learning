@@ -310,3 +310,28 @@ All three are wired into `masterChatbot` after the existing repetitive-starter n
 `test_disengage_acknowledge_transition_simulated` — In simulation, the system proactively summarizes the story ending when the child disengages, triggering `_detect_story_end` and overriding the disengagement nudge. This is inherent Strategy B non-determinism.
 
 **Regressions**: None
+
+---
+
+### [2026-03-21] Beat System as Single Source of Truth — Remove Keyword Fallback
+
+**What changed**:
+1. **All Strategy A tests now use `build_state_with_beats()`** instead of `build_state()`. This calls `load_beat_context()` before `masterChatbot()`, mirroring the immediate graph pipeline. All 22 test files updated.
+2. **New helper `build_state_with_beats()`** added to `feature_testing_utils.py` — wraps `build_state()` + `load_beat_context()` in a single call.
+3. **Keyword-based story-end fallback removed** from `_detect_story_end()` in `nodes.py`. Story-end detection now ONLY fires when `story_near_end=True` (set by the beat system).
+4. **Warning log added** when `story_near_end` is `None` (beat system not active).
+5. **Disengagement nudge** now always offers activity (REGEL 4B). Story-end wrap-up is handled exclusively by the beat-based `_detect_story_end` nudge.
+
+**Files modified**: `feature_testing_utils.py`, `nodes.py`, all 22 test files
+
+**Test results (full suite, n_runs=1)**:
+- **97 passed, 3 failed** (97%)
+
+**Remaining failures (3)**:
+1. `test_gentle_correction_with_confirmation` — Flaky judge: system says "Alles klar?" (valid confirmation) but judge doesn't always recognize it. Passes 1/3.
+2. `test_disengage_acknowledge_transition_simulated` — Strategy B: system races through story, mentions ending keywords, triggering story-end in simulated conversation.
+3. `test_stop_forcing_when_child_disengages` — **Contradictory test expectation**: The beat system correctly identifies this conversation as mid-story (only 5 of ~20 beats covered), so the system correctly offers activities per REGEL 4B. But the test expects goodbye because the spec conversation mentions late-story content in the AI summaries. The beat system is now the authority, and it says the story is not done.
+
+**Architectural note**: `test_stop_forcing_when_child_disengages` and `test_disengage_acknowledge_transition` use identical child inputs but expect opposite behaviors (goodbye vs activity). With the beat system as authority, mid-story disengagement correctly triggers activity offers. The test expectation needs review.
+
+**Regressions**: `test_stop_forcing_when_child_disengages` now fails consistently (was passing with keyword fallback). This is intentional — the keyword fallback was removed in favor of beat-based detection.

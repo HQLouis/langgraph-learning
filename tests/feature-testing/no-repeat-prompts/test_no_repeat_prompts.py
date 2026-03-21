@@ -18,7 +18,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -101,7 +101,7 @@ class TestNoRepeatPromptsFixtureBased:
         Example 1: Child says 'Brokkoli'. System should confirm and
         continue, not ask child to repeat.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -129,7 +129,7 @@ class TestNoRepeatPromptsFixtureBased:
         Example 2: Child says 'Marmelade'. System should confirm and
         continue, not create a repetition exercise.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -157,7 +157,7 @@ class TestNoRepeatPromptsFixtureBased:
         Example 3: Child says 'Schule'. System should confirm and
         continue, no mechanical repetition.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",

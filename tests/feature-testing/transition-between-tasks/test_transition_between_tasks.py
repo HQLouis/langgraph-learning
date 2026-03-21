@@ -36,7 +36,7 @@ import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -522,7 +522,7 @@ class TestTransitionBetweenTasksFixtureBased:
         Example 1: Long conversation ending with 'sie lacht auch'.
         System should acknowledge the child's answer before moving on.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -550,7 +550,7 @@ class TestTransitionBetweenTasksFixtureBased:
         Example 2: Mid-length conversation ending with 'richtig machen?'.
         System should link scenes smoothly, not jump too fast.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Luca",
             child_age=5,
             child_gender="m\u00e4nnlich",
@@ -578,7 +578,7 @@ class TestTransitionBetweenTasksFixtureBased:
         Example 3: Mid-length conversation ending with 'das war knapp'.
         System should provide a short content recap when transitioning.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Mia",
             child_age=7,
             child_gender="weiblich",

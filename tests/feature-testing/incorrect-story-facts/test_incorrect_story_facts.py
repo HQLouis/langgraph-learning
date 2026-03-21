@@ -39,7 +39,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -216,7 +216,7 @@ class TestIncorrectStoryFactsFixtureBased:
         System should correct ('Millie und Sarah') AND check if child
         now remembers (small confirmation). Should NOT just move on.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -246,7 +246,7 @@ class TestIncorrectStoryFactsFixtureBased:
         ('Bobo sagt nichts, er ist eingeschlafen') without lengthy
         commentary. Must not sound critical.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -275,7 +275,7 @@ class TestIncorrectStoryFactsFixtureBased:
         System should incorporate correct information neutrally,
         not react correctively or judgmentally.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

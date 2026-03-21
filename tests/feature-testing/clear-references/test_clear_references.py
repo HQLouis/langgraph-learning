@@ -18,7 +18,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -108,7 +108,7 @@ class TestClearReferencesFixtureBased:
         Example 1: Child says 'Brokkoli'. System should use 'Hubert' and
         'Brokkoli' explicitly, not vague pronouns.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -136,7 +136,7 @@ class TestClearReferencesFixtureBased:
         Example 2: Child says 'Marmelade'. System should repeat
         'Marmelade' and 'Brot' clearly.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -164,7 +164,7 @@ class TestClearReferencesFixtureBased:
         Example 3: Child says 'die Eier'. System should repeat 'Eier'
         so the sentence is self-contained.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

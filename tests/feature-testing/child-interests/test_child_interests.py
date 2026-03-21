@@ -19,7 +19,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -115,7 +115,7 @@ class TestChildInterestsFixtureBased:
         Example 1: Child says 'Käse' for bread topping. System should
         acknowledge briefly and return to story.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -143,7 +143,7 @@ class TestChildInterestsFixtureBased:
         Example 2: Child says 'Ja' to baking. System should show interest
         then return to story.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -171,7 +171,7 @@ class TestChildInterestsFixtureBased:
         Example 3: Child says 'Nein' to school. System should take it
         seriously, briefly exchange, and return to story.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

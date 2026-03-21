@@ -16,7 +16,7 @@ import pytest
 from langchain_core.messages import HumanMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -87,7 +87,7 @@ class TestGenderUsageFixtureBased:
         Response for 'Emma' (female, 6y) at first turn should use
         gender-appropriate language for a girl.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -108,7 +108,7 @@ class TestGenderUsageFixtureBased:
         Response for 'Jonas' (male, 7y) at first turn should use
         gender-appropriate language for a boy.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Jonas",
             child_age=7,
             child_gender="männlich",
@@ -129,7 +129,7 @@ class TestGenderUsageFixtureBased:
         Response for 'Emma' (female, 6y) mid-story (after 3 prior exchanges)
         should maintain consistent gender-appropriate language.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

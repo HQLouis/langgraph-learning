@@ -19,7 +19,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -113,7 +113,7 @@ class TestNoRoleTransferFixtureBased:
         Example 1: Child talks about Hubert the hamster. System must not
         suggest child pretend to be the hamster.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Jonas",
             child_age=5,
             child_gender="m\u00e4nnlich",
@@ -141,7 +141,7 @@ class TestNoRoleTransferFixtureBased:
         Example 2: Boy (Jonas) discusses Carl. System must not suggest
         being Pia (female character).
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Jonas",
             child_age=6,
             child_gender="m\u00e4nnlich",
@@ -169,7 +169,7 @@ class TestNoRoleTransferFixtureBased:
         Example 3: Child talks about baking. System should ask open
         questions, not force a character role.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

@@ -39,7 +39,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_STORY_ID,
     FIXTURE_PIA_CHAPTER_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -215,7 +215,7 @@ class TestChildPromptsAIFixtureBased:
         AI should recognize the child is asking AI to do the task and offer
         to do it together or help.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -244,7 +244,7 @@ class TestChildPromptsAIFixtureBased:
         AI should respond helpfully and ask what specifically the child
         does not know.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -273,7 +273,7 @@ class TestChildPromptsAIFixtureBased:
         AI should recognize word-finding difficulty and offer to help
         explain the word.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import pytest
 from langchain_core.messages import HumanMessage
 
-from feature_testing_utils import build_state, MESSAGES_TURN_0
+from feature_testing_utils import build_state_with_beats, MESSAGES_TURN_0
 from backend.models.output_contract import AnswerType, ResponseContract
 
 # ---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ def contract_response(system_llm):
     """
     from nodes import masterChatbot
 
-    state = build_state(
+    state = build_state_with_beats(
         child_name=CHILD_NAME,
         child_age=CHILD_AGE,
         child_gender=CHILD_GENDER,

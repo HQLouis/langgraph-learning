@@ -40,7 +40,7 @@ import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -289,7 +289,7 @@ class TestSufficientContextFixtureBased:
         should provide context connecting school to the cooking team before
         asking what they want to cook.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -318,7 +318,7 @@ class TestSufficientContextFixtureBased:
         completely confused.  The system should re-establish context clearly
         and ask a well-framed question.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -347,7 +347,7 @@ class TestSufficientContextFixtureBased:
         should introduce Carl with sufficient context (who he is, how he
         differs from Pia) before asking about him.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

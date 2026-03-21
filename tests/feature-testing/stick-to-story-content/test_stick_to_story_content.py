@@ -22,7 +22,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -119,7 +119,7 @@ class TestStickToStoryContentFixtureBased:
         Child said 'Ja'. System should ask about feelings then return to story.
         Must not invent new story content.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -147,7 +147,7 @@ class TestStickToStoryContentFixtureBased:
         Example 2: System asked personal bread question, child said 'Nutella'.
         System should acknowledge and return to story. Must not invent new content.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

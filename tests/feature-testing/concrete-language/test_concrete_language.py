@@ -18,7 +18,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -115,7 +115,7 @@ class TestConcreteLanguageFixtureBased:
         Example 1: Child doesn't know 'Das war knapp!'. System should
         explain in concrete, simple terms connected to the story action.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -143,7 +143,7 @@ class TestConcreteLanguageFixtureBased:
         Example 2: Child says 'beides'. System should name Marmelade and
         Erdnussbutter explicitly, not use vague references.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -171,7 +171,7 @@ class TestConcreteLanguageFixtureBased:
         Example 3: Child says 'gleich viel'. System should confirm
         using concrete, simple language.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

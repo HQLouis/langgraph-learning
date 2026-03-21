@@ -25,7 +25,7 @@ import pytest
 from langchain_core.messages import HumanMessage
 
 from feature_testing_utils import (
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -75,7 +75,7 @@ class TestNameUsageFixtureBased:
         The system should greet the child 'Emma' (female, 6y) by name
         in its first response.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -96,7 +96,7 @@ class TestNameUsageFixtureBased:
         The system should greet the child 'Luca' (male, 7y) by name
         in its first response.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Luca",
             child_age=7,
             child_gender="männlich",

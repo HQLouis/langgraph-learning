@@ -47,7 +47,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     simulate_conversation,
     state_to_setting,
@@ -442,7 +442,7 @@ class TestRespondingToAnswerFixtureBased:
         The system should explore the emotion (ask WHY, relate to the child's
         own experience) rather than immediately moving on.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -471,7 +471,7 @@ class TestRespondingToAnswerFixtureBased:
         The system should give a memory prompt/hint about the scene rather
         than just telling the answer.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -500,7 +500,7 @@ class TestRespondingToAnswerFixtureBased:
         asked what is more fun.  The system should reflect the child's thought,
         ask about personal experience, and gently return to the story scene.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",
@@ -529,7 +529,7 @@ class TestRespondingToAnswerFixtureBased:
         'nee', 'weiß nicht'.  The system should acknowledge the reluctance
         and gently transition to a new activity.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=6,
             child_gender="weiblich",

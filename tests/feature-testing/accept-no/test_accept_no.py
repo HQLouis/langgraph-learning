@@ -18,7 +18,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -116,7 +116,7 @@ class TestAcceptNoFixtureBased:
         Example 1: Child declines to answer. System should accept and
         provide the answer itself.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -144,7 +144,7 @@ class TestAcceptNoFixtureBased:
         Example 2: Child declines to elaborate. System should accept
         and offer its own continuation.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",
@@ -172,7 +172,7 @@ class TestAcceptNoFixtureBased:
         Example 3: Child doesn't remember. System should accept and
         offer a short help.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=5,
             child_gender="weiblich",

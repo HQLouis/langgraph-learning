@@ -19,7 +19,7 @@ from feature_testing_utils import (
     FIXTURE_PIA_AUDIO_BOOK,
     FIXTURE_PIA_CHAPTER_ID,
     FIXTURE_PIA_STORY_ID,
-    build_state,
+    build_state_with_beats,
     llm_judge,
     state_to_setting,
 )
@@ -139,7 +139,7 @@ class TestSentenceStructureFixtureBased:
         Example 1: Child says 'Marmelade drauf'. System should model
         correct grammar in simple sentences.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -167,7 +167,7 @@ class TestSentenceStructureFixtureBased:
         Example 2: Child says 'Pia geht Schule'. System should model
         correct form with preposition and add small extension.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -195,7 +195,7 @@ class TestSentenceStructureFixtureBased:
         Example 3: Child uses 'und' connector. System should match
         connective level, not use 'weil'/'obwohl'.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
@@ -223,7 +223,7 @@ class TestSentenceStructureFixtureBased:
         Example 4: Child uses broken Perfekt ('Pia hat Eier fallen').
         System should model correct Perfekt simply.
         """
-        state = build_state(
+        state = build_state_with_beats(
             child_name="Emma",
             child_age=4,
             child_gender="weiblich",
