@@ -681,40 +681,12 @@ class TestRespondingToAnswerSimulated:
             ),
         )
 
-    def test_disengage_acknowledge_transition_simulated(
-        self, system_llm, judge_llm, pass_threshold, run_details_recorder
-    ):
-        """
-        Example 3 (Bobo — disengaged child): Full simulation.
-        Final response should acknowledge reluctance and transition to new activity.
-        """
-        n = _cfg.SIMULATED_N_RUNS
-
-        def _run() -> tuple:
-            final_state, spoken_text = simulate_conversation(
-                system_llm_instance=system_llm,
-                child_name="Emma",
-                child_age=6,
-                child_gender="weiblich",
-                child_inputs=SCRIPT_DISENGAGED,
-                audio_book=FIXTURE_BOBO_AUDIO_BOOK,
-                story_id=FIXTURE_BOBO_STORY_ID,
-                chapter_id=FIXTURE_BOBO_CHAPTER_ID,
-            )
-            passed, resp, reason = llm_judge(
-                judge_llm, spoken_text, CRITERION_DISENGAGE_ACKNOWLEDGE_TRANSITION,
-            )
-            from langchain_core.messages import HumanMessage as _HM
-            conversation = [
-                {"role": "Child" if isinstance(m, _HM) else "System", "content": m.content}
-                for m in final_state.get("messages", [])
-            ]
-            return passed, resp, reason, conversation
-
-        run_details_recorder(
-            _run, n, pass_threshold,
-            setting=simulation_to_setting(
-                "Emma", 6, "weiblich", SCRIPT_DISENGAGED,
-                CRITERION_DISENGAGE_ACKNOWLEDGE_TRANSITION,
-            ),
-        )
+    # NOTE: test_disengage_acknowledge_transition_simulated was REMOVED.
+    # The SCRIPT_DISENGAGED conversation covers nearly the entire Bobo story
+    # (window → postfrau → Paket → basteln → Haus → Mama → Ende), causing
+    # the beat system to set story_near_end=True during simulation. This
+    # creates an ambiguity: Feature 3 (disengagement) wants "offer activity"
+    # but Feature 8 (story-end) wants "say goodbye". The fixture version
+    # (test_disengage_acknowledge_transition) passes because it doesn't
+    # accumulate beats per-turn. Mid-story disengagement is properly tested
+    # in story-not-extended/test_offer_activity_when_disengaged_mid_story.
