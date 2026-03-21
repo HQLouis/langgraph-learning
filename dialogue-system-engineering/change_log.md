@@ -354,3 +354,24 @@ All three are wired into `masterChatbot` after the existing repetitive-starter n
 **Test results (Strategy A, n_runs=1)**: **69 passed, 0 failed** (100%)
 
 **Regressions**: None
+
+---
+
+### [2026-03-21] Fix final 2 Strategy B failures — disengagement priority + Lückentext ban
+
+**What changed**:
+1. **Disengagement nudge now receives `story_near_end`** (`nodes.py`): The nudge generates different text depending on whether the story is done (goodbye) or mid-way (offer activity). This replaces the previous approach where story-end nudge always overrode disengagement.
+2. **Disengagement takes priority over story-end** (`nodes.py`): When both nudges would fire, disengagement wins because the child's engagement state is the most important signal. The disengagement nudge internally handles both cases (goodbye at story-end, activity mid-story).
+3. **Anti-story-racing rule** (`local_fallback_prompts.py`): REGEL 11 AUSNAHME now explicitly forbids jumping to the story ending when the child is disengaged ("Sage NICHT 'Am Ende passiert...' — biete stattdessen eine andere Aktivität an"). This prevents the system from proactively summarizing the ending in simulated conversations, which was causing `story_near_end=True` to be set prematurely.
+4. **Lückentext ban** (`local_fallback_prompts.py`): REGEL 13 now explicitly forbids fill-in-the-blank patterns ("Pia _____ die Eier aus") and requires complete, clear questions instead.
+
+**Files modified**: `nodes.py`, `local_fallback_prompts.py`
+
+**Test results (full suite A+B, n_runs=1)**:
+- **100/101 passed** (99%) — 1 flaky failure (`test_simple_confirmation`, passes at n_runs=3)
+
+**Fixes**:
+- `test_disengage_acknowledge_transition_simulated` — NOW PASSING (disengagement priority + anti-story-racing)
+- `test_topic_transition_context_simulated` — NOW PASSING (Lückentext ban)
+
+**Regressions**: None
