@@ -36,7 +36,6 @@ def start_chat():
     # Get child and game IDs
     print("👋 Welcome to Lingolino!\n")
     child_id = input("Enter Child ID (1-3, default=1): ").strip() or "1"
-    game_id = input("Enter Game ID (0, default=0): ").strip() or "0"
 
     # Create unique thread ID for this session
     import uuid
@@ -114,7 +113,7 @@ def start_chat():
                 try:
                     # Invoke the background graph (don't need to consume stream)
                     background_graph.invoke(
-                        {"child_id": child_id, "game_id": game_id},
+                        {"child_id": child_id},
                         bg_config
                     )
                 except Exception:

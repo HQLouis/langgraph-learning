@@ -34,7 +34,7 @@ async def create_conversation(
     Create a new conversation session.
 
     Args:
-        request: ConversationCreate with child_id and game_id
+        request: ConversationCreate with child_id
         service: Injected conversation service
 
     Returns:
@@ -42,7 +42,6 @@ async def create_conversation(
     """
     metadata = service.create_conversation(
         child_id=request.child_id,
-        game_id=request.game_id,
         story_id=request.story_id,
         chapter_id=request.chapter_id,
         num_planned_tasks=request.num_planned_tasks
@@ -51,7 +50,6 @@ async def create_conversation(
     return ConversationResponse(
         thread_id=metadata.thread_id,
         child_id=metadata.child_id,
-        game_id=metadata.game_id,
         created_at=metadata.created_at
     )
 

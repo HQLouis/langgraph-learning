@@ -1,7 +1,7 @@
 {
   "story_id": "mia_und_leo",
   "chapter_id": "chapter_01",
-  "content_version": "2026-03-23T15:41:53.554269",
+  "content_version": "2026-03-23T16:25:36.764871",
   "beatpack_version": "v1",
   "chapter_hash": "sha256:ea8f14248daa5606199c412246cdaab11e1c3b25f205faa3bd7e379366ec358a",
   "beats": [
@@ -14,41 +14,41 @@
       },
       "text": "Es war einmal ein kleines Mädchen namens Mia. Mia lebte in einem kleinen Dorf am Waldrand. Jeden Tag schaute sie aus ihrem Fenster und träumte davon, den Wald zu erkunden.",
       "entities": [
-        "Tag",
-        "Waldrand",
-        "Jeden",
         "Fenster",
-        "Mia",
+        "Waldrand",
         "Dorf",
-        "Wald",
         "Es",
-        "Mädchen"
+        "Mädchen",
+        "Wald",
+        "Jeden",
+        "Mia",
+        "Tag"
       ],
       "facts": [
-        {
-          "s": "Tag",
-          "p": "schaute",
-          "o": "sie"
-        },
-        {
-          "s": "Jeden",
-          "p": "Tag",
-          "o": "schaute"
-        },
         {
           "s": "Fenster",
           "p": "und",
           "o": "träumte"
         },
         {
-          "s": "Mia",
-          "p": "lebte",
-          "o": "in"
-        },
-        {
           "s": "Dorf",
           "p": "am",
           "o": "Waldrand"
+        },
+        {
+          "s": "Es",
+          "p": "war",
+          "o": "einmal"
+        },
+        {
+          "s": "Es",
+          "p": "Mädchen",
+          "o": "namens"
+        },
+        {
+          "s": "Mädchen",
+          "p": "namens",
+          "o": "Mia"
         }
       ],
       "tags": [],
@@ -63,22 +63,27 @@
       },
       "text": "Eines Morgens beschloss Mia, in den Wald zu gehen, um Beeren zu sammeln. Sie nahm einen kleinen Korb mit. Der Wald war dunkel und geheimnisvoll. Hohe Bäume ragten in den Himmel.",
       "entities": [
-        "Eines",
-        "Hohe",
-        "Korb",
-        "Himmel",
-        "Mia",
-        "Beeren",
-        "Wald",
         "Sie",
+        "Korb",
         "Bäume",
-        "Morgens"
+        "Hohe",
+        "Beeren",
+        "Himmel",
+        "Morgens",
+        "Eines",
+        "Mia",
+        "Wald"
       ],
       "facts": [
         {
-          "s": "Eines",
-          "p": "Morgens",
-          "o": "beschloss"
+          "s": "Sie",
+          "p": "nahm",
+          "o": "einen"
+        },
+        {
+          "s": "Bäume",
+          "p": "ragten",
+          "o": "in"
         },
         {
           "s": "Hohe",
@@ -91,14 +96,9 @@
           "o": "sammeln"
         },
         {
-          "s": "Wald",
-          "p": "zu",
-          "o": "gehen"
-        },
-        {
-          "s": "Wald",
-          "p": "war",
-          "o": "dunkel"
+          "s": "Morgens",
+          "p": "beschloss",
+          "o": "Mia"
         }
       ],
       "tags": [],
@@ -141,19 +141,19 @@
       },
       "text": "Mia blieb stehen und lauschte aufmerksam. \"Wer ist da?\", fragte Mia mutig. Ihre Stimme klang fest, aber ihr Herz klopfte schnell. Ein kleiner Fuchs sprang aus dem Gebüsch hervor.",
       "entities": [
-        "Fuchs",
-        "Herz",
-        "Wer",
         "Stimme",
+        "Herz",
+        "Gebüsch",
+        "Wer",
+        "Fuchs",
         "Ihre",
-        "Mia",
-        "Gebüsch"
+        "Mia"
       ],
       "facts": [
         {
-          "s": "Fuchs",
-          "p": "sprang",
-          "o": "aus"
+          "s": "Stimme",
+          "p": "klang",
+          "o": "fest"
         },
         {
           "s": "Herz",
@@ -166,9 +166,9 @@
           "o": "da"
         },
         {
-          "s": "Stimme",
-          "p": "klang",
-          "o": "fest"
+          "s": "Fuchs",
+          "p": "sprang",
+          "o": "aus"
         },
         {
           "s": "Ihre",
@@ -190,42 +190,42 @@
       },
       "text": "Seine Augen funkelten neugierig. \"Keine Angst\", sagte der Fuchs freundlich. \"Ich bin Leo und ich bin nur auf der Suche nach meinem Abendessen.\" Mia lächelte erleichtert.",
       "entities": [
-        "Abendessen",
-        "Fuchs",
-        "Suche",
         "Mia",
         "Keine",
-        "Angst",
-        "Seine",
-        "Leo",
+        "Abendessen",
         "Augen",
-        "Ich"
+        "Ich",
+        "Fuchs",
+        "Leo",
+        "Angst",
+        "Suche",
+        "Seine"
       ],
       "facts": [
-        {
-          "s": "Suche",
-          "p": "nach",
-          "o": "meinem"
-        },
         {
           "s": "Mia",
           "p": "lächelte",
           "o": "erleichtert"
         },
         {
-          "s": "Seine",
-          "p": "Augen",
-          "o": "funkelten"
+          "s": "Augen",
+          "p": "funkelten",
+          "o": "neugierig"
+        },
+        {
+          "s": "Ich",
+          "p": "bin",
+          "o": "Leo"
+        },
+        {
+          "s": "Ich",
+          "p": "bin",
+          "o": "nur"
         },
         {
           "s": "Leo",
           "p": "und",
           "o": "ich"
-        },
-        {
-          "s": "Augen",
-          "p": "funkelten",
-          "o": "neugierig"
         }
       ],
       "tags": [
@@ -242,19 +242,14 @@
       },
       "text": "\"Ich heiße Mia\", antwortete sie. \"Ich sammle Beeren. Möchtest du mir helfen?\" Der Fuchs nickte eifrig. \"Gerne!",
       "entities": [
+        "Gerne",
+        "Beeren",
+        "Ich",
         "Fuchs",
         "Mia",
-        "Beeren",
-        "Gerne",
-        "Ich",
         "Möchtest"
       ],
       "facts": [
-        {
-          "s": "Fuchs",
-          "p": "nickte",
-          "o": "eifrig"
-        },
         {
           "s": "Ich",
           "p": "heiße",
@@ -264,6 +259,11 @@
           "s": "Ich",
           "p": "sammle",
           "o": "Beeren"
+        },
+        {
+          "s": "Fuchs",
+          "p": "nickte",
+          "o": "eifrig"
         },
         {
           "s": "Möchtest",
@@ -285,31 +285,21 @@
       },
       "text": "Ich kenne die besten Stellen im Wald.\" Gemeinsam gingen Mia und Leo tiefer in den Wald hinein. Leo zeigte ihr einen versteckten Platz voller Himbeeren. Die Beeren waren rot und saftig.",
       "entities": [
-        "Gemeinsam",
-        "Stellen",
-        "Mia",
-        "Beeren",
-        "Platz",
-        "Leo",
         "Himbeeren",
-        "Wald",
-        "Ich"
+        "Stellen",
+        "Beeren",
+        "Ich",
+        "Gemeinsam",
+        "Leo",
+        "Platz",
+        "Mia",
+        "Wald"
       ],
       "facts": [
-        {
-          "s": "Gemeinsam",
-          "p": "gingen",
-          "o": "Mia"
-        },
         {
           "s": "Stellen",
           "p": "im",
           "o": "Wald"
-        },
-        {
-          "s": "Mia",
-          "p": "und",
-          "o": "Leo"
         },
         {
           "s": "Beeren",
@@ -317,9 +307,19 @@
           "o": "rot"
         },
         {
-          "s": "Platz",
-          "p": "voller",
-          "o": "Himbeeren"
+          "s": "Ich",
+          "p": "kenne",
+          "o": "die"
+        },
+        {
+          "s": "Gemeinsam",
+          "p": "gingen",
+          "o": "Mia"
+        },
+        {
+          "s": "Leo",
+          "p": "tiefer",
+          "o": "in"
         }
       ],
       "tags": [
@@ -336,22 +336,32 @@
       },
       "text": "Mia füllte ihren Korb bis zum Rand. \"Danke für deine Hilfe, Leo\", sagte Mia glücklich. Sie gab dem Fuchs ein paar Beeren. \"Gern geschehen\", antwortete Leo und knabberte genüsslich an den Beeren.",
       "entities": [
-        "Sie",
-        "Fuchs",
-        "Gern",
-        "Mia",
-        "Beeren",
         "Korb",
+        "Sie",
+        "Gern",
         "Danke",
+        "Beeren",
+        "Hilfe",
+        "Fuchs",
         "Rand",
         "Leo",
-        "Hilfe"
+        "Mia"
       ],
       "facts": [
+        {
+          "s": "Korb",
+          "p": "bis",
+          "o": "zum"
+        },
         {
           "s": "Sie",
           "p": "gab",
           "o": "dem"
+        },
+        {
+          "s": "Danke",
+          "p": "für",
+          "o": "deine"
         },
         {
           "s": "Fuchs",
@@ -359,19 +369,9 @@
           "o": "paar"
         },
         {
-          "s": "Mia",
-          "p": "füllte",
-          "o": "ihren"
-        },
-        {
-          "s": "Korb",
-          "p": "bis",
-          "o": "zum"
-        },
-        {
-          "s": "Danke",
-          "p": "für",
-          "o": "deine"
+          "s": "Leo",
+          "p": "und",
+          "o": "knabberte"
         }
       ],
       "tags": [
@@ -388,23 +388,28 @@
       },
       "text": "Als die Sonne langsam unterging, färbte sich der Himmel orange und rosa. Es wurde Zeit, nach Hause zu gehen. \"Wir sehen uns morgen wieder?\", fragte Leo hoffnungsvoll. \"Auf jeden Fall!\", versprach Mia.",
       "entities": [
-        "Als",
+        "Zeit",
+        "Hause",
+        "Auf",
         "Himmel",
-        "Mia",
+        "Es",
+        "Als",
         "Fall",
         "Wir",
-        "Sonne",
-        "Hause",
-        "Es",
-        "Zeit",
         "Leo",
-        "Auf"
+        "Mia",
+        "Sonne"
       ],
       "facts": [
         {
-          "s": "Als",
-          "p": "die",
-          "o": "Sonne"
+          "s": "Hause",
+          "p": "zu",
+          "o": "gehen"
+        },
+        {
+          "s": "Auf",
+          "p": "jeden",
+          "o": "Fall"
         },
         {
           "s": "Himmel",
@@ -412,19 +417,14 @@
           "o": "und"
         },
         {
-          "s": "Wir",
-          "p": "sehen",
-          "o": "uns"
+          "s": "Es",
+          "p": "wurde",
+          "o": "Zeit"
         },
         {
-          "s": "Sonne",
-          "p": "langsam",
-          "o": "unterging"
-        },
-        {
-          "s": "Hause",
-          "p": "zu",
-          "o": "gehen"
+          "s": "Als",
+          "p": "die",
+          "o": "Sonne"
         }
       ],
       "tags": [
@@ -442,41 +442,41 @@
       },
       "text": "Sie winkte zum Abschied und machte sich auf den Heimweg. Mit ihrem vollen Korb und einem neuen Freund im Herzen ging Mia fröhlich nach Hause zurück.",
       "entities": [
-        "Heimweg",
-        "Abschied",
-        "Mia",
-        "Mit",
-        "Korb",
-        "Hause",
         "Sie",
+        "Korb",
         "Herzen",
-        "Freund"
+        "Hause",
+        "Heimweg",
+        "Freund",
+        "Mit",
+        "Mia",
+        "Abschied"
       ],
       "facts": [
         {
-          "s": "Abschied",
-          "p": "und",
-          "o": "machte"
-        },
-        {
-          "s": "Mia",
-          "p": "fröhlich",
-          "o": "Hause"
-        },
-        {
-          "s": "Mia",
-          "p": "fröhlich",
-          "o": "nach"
-        },
-        {
-          "s": "Mit",
-          "p": "ihrem",
-          "o": "vollen"
+          "s": "Sie",
+          "p": "winkte",
+          "o": "zum"
         },
         {
           "s": "Korb",
           "p": "und",
           "o": "einem"
+        },
+        {
+          "s": "Herzen",
+          "p": "ging",
+          "o": "Mia"
+        },
+        {
+          "s": "Freund",
+          "p": "im",
+          "o": "Herzen"
+        },
+        {
+          "s": "Mit",
+          "p": "ihrem",
+          "o": "vollen"
         }
       ],
       "tags": [

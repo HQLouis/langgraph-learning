@@ -126,7 +126,6 @@
                         <option value="3" title="Das Kind ist 10 Jahre alt, mag Programmieren und Robotik. Es liest gerne Science-Fiction-Bücher.">3 — 10 Jahre, Programmieren & Robotik</option>
                     </select>
                 </label>
-                <label>Game ID: <input type="text" id="gameId" value="0"></label>
                 <label>Story ID:
                     <select id="storyId" disabled>
                         <option value="">-- Loading... --</option>
@@ -152,12 +151,11 @@
     </div>
 
     <script>
-        const API_BASE = 'https://conversational-api.lingolino.io'; // 'https://conversational-api.lingolino.io', 'http://localhost:8000'
+        const API_BASE = 'http://localhost:8000'; // 'https://conversational-api.lingolino.io', 'http://localhost:8000'
         let threadId = null;
         let storiesData = {};
 
         const childIdInput = document.getElementById('childId');
-        const gameIdInput = document.getElementById('gameId');
         const storyIdInput = document.getElementById('storyId');
         const chapterIdInput = document.getElementById('chapterId');
         const numPlannedTasksInput = document.getElementById('numPlannedTasks');
@@ -216,9 +214,6 @@
             if (urlParams.has('child_id')) {
                 childIdInput.value = urlParams.get('child_id');
             }
-            if (urlParams.has('game_id')) {
-                gameIdInput.value = urlParams.get('game_id');
-            }
             if (urlParams.has('story_id') && storiesData[urlParams.get('story_id')]) {
                 storyIdInput.value = urlParams.get('story_id');
                 populateChapters(urlParams.get('story_id'));
@@ -254,13 +249,20 @@
 
         async function startConversation() {
             try {
+                // Reset if there's an existing conversation
+                if (threadId) {
+                    chatDiv.innerHTML = '';
+                    threadId = null;
+                    messageInput.disabled = true;
+                    sendBtn.disabled = true;
+                }
+
                 startBtn.disabled = true;
                 showStatus('⏳ Starting conversation...');
 
                 // Build request body with all parameters
                 const requestBody = {
-                    child_id: childIdInput.value,
-                    game_id: gameIdInput.value
+                    child_id: childIdInput.value
                 };
 
                 // Add optional parameters if they have values
@@ -285,14 +287,16 @@
                 const data = await response.json();
                 threadId = data.thread_id;
 
-                // Only enable UI after threadId is set
+                // Enable UI and update button for reuse
                 showStatus(`✅ Conversation started! ID: ${threadId}`);
+                startBtn.textContent = 'Start a new conversation';
+                startBtn.disabled = false;
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
                 messageInput.focus();
             } catch (error) {
                 showStatus(`❌ Error: ${error.message}`, true);
-                startBtn.disabled = false; // Re-enable start button on error
+                startBtn.disabled = false;
             }
         }
 

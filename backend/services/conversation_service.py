@@ -30,14 +30,12 @@ class ConversationMetadata:
         self,
         thread_id: str,
         child_id: str,
-        game_id: str,
         story_id: Optional[str] = None,
         chapter_id: Optional[str] = None,
         num_planned_tasks: Optional[int] = 5
     ):
         self.thread_id = thread_id
         self.child_id = child_id
-        self.game_id = game_id
         self.story_id = story_id
         self.chapter_id = chapter_id
         self.num_planned_tasks = num_planned_tasks
@@ -76,7 +74,6 @@ class ConversationService:
     def create_conversation(
         self,
         child_id: str,
-        game_id: str,
         story_id: Optional[str] = None,
         chapter_id: Optional[str] = None,
         num_planned_tasks: Optional[int] = 5
@@ -86,7 +83,6 @@ class ConversationService:
 
         Args:
             child_id: ID of the child
-            game_id: ID of the game
             story_id: Optional story ID for beat-based content
             chapter_id: Optional chapter ID for beat-based content
             num_planned_tasks: Number of planned tasks for beat distribution (default: 5)
@@ -102,7 +98,6 @@ class ConversationService:
         metadata = ConversationMetadata(
             thread_id,
             child_id,
-            game_id,
             story_id,
             chapter_id,
             num_planned_tasks
@@ -232,7 +227,7 @@ class ConversationService:
                             seen_message_ids.add(msg_id)
 
         # Trigger background analysis asynchronously
-        self._run_background_analysis(thread_id, conversation.child_id, conversation.game_id)
+        self._run_background_analysis(thread_id, conversation.child_id)
 
     @staticmethod
     def _format_chunk(chunk: str) -> str:
@@ -295,7 +290,7 @@ class ConversationService:
 
         return formatted
 
-    def _run_background_analysis(self, thread_id: str, child_id: str, game_id: str):
+    def _run_background_analysis(self, thread_id: str, child_id: str):
         """Run background analysis in a separate thread."""
         def run_analysis():
             bg_thread_id = thread_id + "_analysis"
@@ -306,7 +301,7 @@ class ConversationService:
 
             # Get conversation metadata for beat system fields
             conversation = self.get_conversation(thread_id)
-            bg_state = {"child_id": child_id, "game_id": game_id}
+            bg_state = {"child_id": child_id}
 
             # Include beat system fields if available
             if conversation and conversation.story_id and conversation.chapter_id:
@@ -358,7 +353,6 @@ class ConversationService:
             return {
                 "thread_id": thread_id,
                 "child_id": conversation.child_id,
-                "game_id": conversation.game_id,
                 "messages": messages,
                 "created_at": conversation.created_at
             }
