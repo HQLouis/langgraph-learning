@@ -119,7 +119,13 @@
 
         <div class="setup">
             <div>
-                <label>Child ID: <input type="text" id="childId" value="1"></label>
+                <label>Child ID:
+                    <select id="childId">
+                        <option value="1" title="Das Kind ist 5 Jahre alt, mag Dinosaurier und Raketen. Es lernt gerade lesen und schreiben.">1 — 5 Jahre, Dino-Fan</option>
+                        <option value="2" title="Das Kind ist 8 Jahre alt, mag Fussball und Videospiele. Es liest gerne Abenteuerbücher.">2 — 8 Jahre, Fussball & Videospiele</option>
+                        <option value="3" title="Das Kind ist 10 Jahre alt, mag Programmieren und Robotik. Es liest gerne Science-Fiction-Bücher.">3 — 10 Jahre, Programmieren & Robotik</option>
+                    </select>
+                </label>
                 <label>Game ID: <input type="text" id="gameId" value="0"></label>
                 <label>Story ID:
                     <select id="storyId" disabled>

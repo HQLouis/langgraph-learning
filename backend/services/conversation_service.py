@@ -180,7 +180,10 @@ class ConversationService:
         user_message = HumanMessage(content=message)
 
         # Build initial state with beat system fields
-        initial_state = {"messages": [user_message]}
+        initial_state = {
+            "messages": [user_message],
+            "child_id": conversation.child_id,
+        }
 
         # Add beat system parameters if available
         if conversation.story_id and conversation.chapter_id:
