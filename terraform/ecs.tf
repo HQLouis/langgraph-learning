@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "api" {
         },
         {
           name  = "USE_S3_PROMPTS"
-          value = "true"
+          value = "false"
         },
         {
           name  = "DEBUG"
