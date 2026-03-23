@@ -49,6 +49,10 @@
         .setup button:hover {
             background: #0056b3;
         }
+        .setup button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
         #chat {
             height: 400px;
             overflow-y: auto;
@@ -137,7 +141,7 @@
                     </select>
                 </label>
                 <label>Num Planned Tasks: <input type="text" id="numPlannedTasks" value=""></label>
-                <button id="startBtn">Start Conversation</button>
+                <button id="startBtn" disabled>Start Conversation</button>
             </div>
             <div id="status"></div>
         </div>
@@ -151,7 +155,7 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000'; // 'https://conversational-api.lingolino.io', 'http://localhost:8000'
+        const API_BASE = 'https://conversational-api.lingolino.io'; // 'https://conversational-api.lingolino.io', 'http://localhost:8000'
         let threadId = null;
         let storiesData = {};
 
@@ -173,7 +177,7 @@
                 const data = await response.json();
                 storiesData = data.stories;
 
-                storyIdInput.innerHTML = '<option value="">-- No story (free mode) --</option>';
+                storyIdInput.innerHTML = '<option value="">-- Select story --</option>';
                 for (const storyId of Object.keys(storiesData).sort()) {
                     const opt = document.createElement('option');
                     opt.value = storyId;
@@ -184,9 +188,11 @@
 
                 // Apply URL params after stories are loaded
                 applyUrlParams();
+                validateForm();
             } catch (error) {
                 storyIdInput.innerHTML = '<option value="">-- Failed to load --</option>';
                 console.error('Failed to load stories:', error);
+                validateForm();
             }
         }
 
@@ -226,10 +232,18 @@
             }
         }
 
-        // Story change resets chapter
+        // Validate form: enable start button when both story and chapter are selected
+        function validateForm() {
+            const valid = storyIdInput.value && chapterIdInput.value;
+            startBtn.disabled = !valid;
+        }
+
+        // Story change resets chapter and revalidates
         storyIdInput.addEventListener('change', () => {
             populateChapters(storyIdInput.value);
+            validateForm();
         });
+        chapterIdInput.addEventListener('change', validateForm);
 
         // Load stories on page load
         loadStories();
