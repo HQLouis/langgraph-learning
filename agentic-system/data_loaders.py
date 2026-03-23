@@ -222,10 +222,9 @@ def get_child_profile(state: Annotated[State, InjectedState]) -> str:
     """
     child_id = state.get("child_id", "1")
     fallback_profile = {
-        "1": "Das Kind ist 5 Jahre alt, mag Dinosaurier und Raketen. Es lernt gerade lesen und schreiben.",
-        "2": "Das Kind ist 8 Jahre alt, mag Fussball und Videospiele. Es liest gerne Abenteuerbücher.",
-        "3": "Das Kind ist 10 Jahre alt, mag Programmieren und Robotik. Es liest gerne Science-Fiction-Bücher.",
-        "child-123": "Das Kind ist 7 Jahre alt, liebt Tiere und Natur. Es interessiert sich für Umweltschutz und liest gerne Sachbücher über Tiere.",
+        "1": "Das Kind heißt Lena und ist ein Mädchen. Sie ist 5 Jahre alt, mag Dinosaurier und Raketen. Sie lernt gerade lesen und schreiben.",
+        "2": "Das Kind heißt Finn und ist ein Junge. Er ist 8 Jahre alt, mag Fussball und Videospiele. Er liest gerne Abenteuerbücher.",
+        "3": "Das Kind heißt Mila und ist ein Mädchen. Sie ist 10 Jahre alt, mag Programmieren und Robotik. Sie liest gerne Science-Fiction-Bücher.",
     }.get(child_id, "This is a child with no specific profile.")
     repository = get_data_repository()
     return repository.get_data('child_profile', child_id, fallback_profile)
