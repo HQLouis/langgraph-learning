@@ -396,12 +396,23 @@ class BeatPackManager:
         self._cache.clear()
         logger.info("Cleared BeatPack cache")
 
+    def get_chapter_text(self, story_id: str, chapter_id: str) -> Optional[str]:
+        """Get the full chapter text from a loaded beatpack.
+
+        Returns the chapter_text field from the beatpack, or None if
+        the beatpack doesn't exist or has no chapter_text.
+        """
+        beatpack = self.get_beatpack(story_id, chapter_id)
+        if beatpack and beatpack.chapter_text:
+            return beatpack.chapter_text
+        return None
+
     def list_available_stories(self) -> Dict[str, List[str]]:
         """Scan the content directory for available stories and chapters.
 
         Returns:
             Dict mapping story_id to sorted list of chapter_ids.
-            Only includes chapters that have a beatpack.v1.json file.
+            Only includes chapters that have a beatpack with chapter_text.
         """
         stories_dir = self.content_dir / "stories"
         result: Dict[str, List[str]] = {}
@@ -418,7 +429,11 @@ class BeatPackManager:
                 if not chapter_dir.is_dir():
                     continue
                 if (chapter_dir / "beatpack.v1.json").exists():
-                    chapters.append(chapter_dir.name)
+                    beatpack = self.get_beatpack(story_dir.name, chapter_dir.name)
+                    if beatpack and beatpack.chapter_text:
+                        chapters.append(chapter_dir.name)
+                    else:
+                        logger.warning(f"Beatpack at {chapter_dir / 'beatpack.v1.json'} missing chapter_text")
             if chapters:
                 result[story_dir.name] = chapters
 

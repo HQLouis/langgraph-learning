@@ -223,16 +223,48 @@ if __name__ == "__main__":
         print(f"\n✗ Test failed: {e}")
 
 
+import json
+
+
+def _minimal_beatpack_json(story_id, chapter_id, chapter_text="Es war einmal."):
+    """Create a minimal valid beatpack JSON string for testing."""
+    return json.dumps({
+        "story_id": story_id,
+        "chapter_id": chapter_id,
+        "content_version": "1.0",
+        "beatpack_version": "v1",
+        "chapter_hash": "test",
+        "beats": [],
+        "entity_registry": {},
+        "chapter_text": chapter_text,
+    })
+
+
+def _beatpack_json_without_chapter_text(story_id, chapter_id):
+    """Create a beatpack JSON without chapter_text."""
+    return json.dumps({
+        "story_id": story_id,
+        "chapter_id": chapter_id,
+        "content_version": "1.0",
+        "beatpack_version": "v1",
+        "chapter_hash": "test",
+        "beats": [],
+        "entity_registry": {},
+    })
+
+
 def test_list_available_stories(tmp_path):
     """Test that list_available_stories scans filesystem correctly."""
     stories_dir = tmp_path / "stories"
-    # story_a has two chapter dirs, but only ch_01 has a beatpack
+    # story_a: ch_01 has beatpack with chapter_text, ch_02 has no beatpack
     (stories_dir / "story_a" / "ch_01").mkdir(parents=True)
-    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text("{}")
+    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text(
+        _minimal_beatpack_json("story_a", "ch_01"))
     (stories_dir / "story_a" / "ch_02").mkdir(parents=True)
-    # story_b has one chapter with a beatpack
+    # story_b: ch_01 has beatpack with chapter_text
     (stories_dir / "story_b" / "ch_01").mkdir(parents=True)
-    (stories_dir / "story_b" / "ch_01" / "beatpack.v1.json").write_text("{}")
+    (stories_dir / "story_b" / "ch_01" / "beatpack.v1.json").write_text(
+        _minimal_beatpack_json("story_b", "ch_01"))
 
     manager = BeatPackManager(tmp_path)
     result = manager.list_available_stories()
@@ -243,8 +275,52 @@ def test_list_available_stories(tmp_path):
     }
 
 
+def test_list_available_stories_excludes_missing_chapter_text(tmp_path):
+    """Test that stories without chapter_text in beatpack are excluded."""
+    stories_dir = tmp_path / "stories"
+    (stories_dir / "story_a" / "ch_01").mkdir(parents=True)
+    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text(
+        _beatpack_json_without_chapter_text("story_a", "ch_01"))
+
+    manager = BeatPackManager(tmp_path)
+    result = manager.list_available_stories()
+
+    assert result == {}
+
+
 def test_list_available_stories_empty(tmp_path):
     """Test with no stories directory."""
     manager = BeatPackManager(tmp_path)
     assert manager.list_available_stories() == {}
+
+
+def test_get_chapter_text(tmp_path):
+    """Test that get_chapter_text returns the story text from a beatpack."""
+    stories_dir = tmp_path / "stories"
+    (stories_dir / "story_a" / "ch_01").mkdir(parents=True)
+    story_text = "Mia und Leo gingen in den Wald."
+    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text(
+        _minimal_beatpack_json("story_a", "ch_01", chapter_text=story_text))
+
+    manager = BeatPackManager(tmp_path)
+    result = manager.get_chapter_text("story_a", "ch_01")
+
+    assert result == story_text
+
+
+def test_get_chapter_text_missing_story(tmp_path):
+    """Test that get_chapter_text returns None for nonexistent story."""
+    manager = BeatPackManager(tmp_path)
+    assert manager.get_chapter_text("nonexistent", "ch_01") is None
+
+
+def test_get_chapter_text_missing_chapter_text(tmp_path):
+    """Test that get_chapter_text returns None when beatpack has no chapter_text."""
+    stories_dir = tmp_path / "stories"
+    (stories_dir / "story_a" / "ch_01").mkdir(parents=True)
+    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text(
+        _beatpack_json_without_chapter_text("story_a", "ch_01"))
+
+    manager = BeatPackManager(tmp_path)
+    assert manager.get_chapter_text("story_a", "ch_01") is None
 

@@ -815,10 +815,26 @@ def initialStateLoader(state: State) -> dict:
     """
     Load initial state values such as audio book and child profile based on IDs in the state.
 
+    When story_id/chapter_id are set, loads story text from the beatpack's chapter_text
+    (single source of truth). Falls back to legacy audio_book_id loading otherwise.
+
     :param state: current state
     :return: updated state with audio_book and child_profile
     """
-    audio_book = get_audio_book_by_id(state)
+    story_id = state.get("story_id")
+    chapter_id = state.get("chapter_id")
+
+    audio_book = None
+    if story_id and chapter_id and beat_manager:
+        audio_book = beat_manager.get_chapter_text(story_id, chapter_id)
+        if audio_book:
+            logger.info(f"initialStateLoader: Loaded audio_book from beatpack ({story_id}/{chapter_id}), {len(audio_book)} chars")
+        else:
+            logger.warning(f"initialStateLoader: No chapter_text in beatpack for {story_id}/{chapter_id}, falling back to audio_book_id")
+
+    if not audio_book: # TODO LNG: Remove fallback and let it crash, we must have data consistency at all time!
+        audio_book = get_audio_book_by_id(state)
+
     child_profile = get_child_profile(state)
     return Command(update={
         "audio_book": audio_book,
