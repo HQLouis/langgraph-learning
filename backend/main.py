@@ -13,7 +13,7 @@ import logging
 
 from backend.core.config import get_settings
 from backend.core.logging_config import setup_logging
-from backend.api.routes import conversations, health
+from backend.api.routes import conversations, health, stories
 
 # Setup logging before creating the app
 setup_logging()
@@ -67,6 +67,7 @@ async def add_process_time_header(request: Request, call_next):
 # Include routers
 app.include_router(health.router)
 app.include_router(conversations.router)
+app.include_router(stories.router)
 
 
 @app.get("/", tags=["Root"])

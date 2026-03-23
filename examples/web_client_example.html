@@ -33,6 +33,11 @@
             padding: 8px;
             width: 100px;
         }
+        .setup select {
+            margin: 5px 0;
+            padding: 8px;
+            min-width: 150px;
+        }
         .setup button {
             padding: 8px 16px;
             background: #007bff;
@@ -116,8 +121,16 @@
             <div>
                 <label>Child ID: <input type="text" id="childId" value="1"></label>
                 <label>Game ID: <input type="text" id="gameId" value="0"></label>
-                <label>Story ID: <input type="text" id="storyId" value=""></label>
-                <label>Chapter ID: <input type="text" id="chapterId" value=""></label>
+                <label>Story ID:
+                    <select id="storyId" disabled>
+                        <option value="">-- Loading... --</option>
+                    </select>
+                </label>
+                <label>Chapter ID:
+                    <select id="chapterId" disabled>
+                        <option value="">-- Select story first --</option>
+                    </select>
+                </label>
                 <label>Num Planned Tasks: <input type="text" id="numPlannedTasks" value=""></label>
                 <button id="startBtn">Start Conversation</button>
             </div>
@@ -135,7 +148,7 @@
     <script>
         const API_BASE = 'http://localhost:8000'; // 'https://conversational-api.lingolino.io'
         let threadId = null;
-        let currentEventSource = null;
+        let storiesData = {};
 
         const childIdInput = document.getElementById('childId');
         const gameIdInput = document.getElementById('gameId');
@@ -148,8 +161,50 @@
         const sendBtn = document.getElementById('sendBtn');
         const statusDiv = document.getElementById('status');
 
-        // Parse URL parameters and populate inputs
-        function loadUrlParams() {
+        // Load available stories from API and populate dropdowns
+        async function loadStories() {
+            try {
+                const response = await fetch(`${API_BASE}/stories`);
+                if (!response.ok) throw new Error('Failed to load stories');
+                const data = await response.json();
+                storiesData = data.stories;
+
+                storyIdInput.innerHTML = '<option value="">-- No story (free mode) --</option>';
+                for (const storyId of Object.keys(storiesData).sort()) {
+                    const opt = document.createElement('option');
+                    opt.value = storyId;
+                    opt.textContent = storyId;
+                    storyIdInput.appendChild(opt);
+                }
+                storyIdInput.disabled = false;
+
+                // Apply URL params after stories are loaded
+                applyUrlParams();
+            } catch (error) {
+                storyIdInput.innerHTML = '<option value="">-- Failed to load --</option>';
+                console.error('Failed to load stories:', error);
+            }
+        }
+
+        function populateChapters(storyId) {
+            chapterIdInput.innerHTML = '';
+            if (!storyId || !storiesData[storyId]) {
+                chapterIdInput.innerHTML = '<option value="">-- Select story first --</option>';
+                chapterIdInput.disabled = true;
+                return;
+            }
+            chapterIdInput.innerHTML = '<option value="">-- Select chapter --</option>';
+            for (const chapId of storiesData[storyId]) {
+                const opt = document.createElement('option');
+                opt.value = chapId;
+                opt.textContent = chapId;
+                chapterIdInput.appendChild(opt);
+            }
+            chapterIdInput.disabled = false;
+        }
+
+        // Apply URL params to dropdowns (called after stories load)
+        function applyUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
 
             if (urlParams.has('child_id')) {
@@ -158,19 +213,25 @@
             if (urlParams.has('game_id')) {
                 gameIdInput.value = urlParams.get('game_id');
             }
-            if (urlParams.has('story_id')) {
+            if (urlParams.has('story_id') && storiesData[urlParams.get('story_id')]) {
                 storyIdInput.value = urlParams.get('story_id');
-            }
-            if (urlParams.has('chapter_id')) {
-                chapterIdInput.value = urlParams.get('chapter_id');
+                populateChapters(urlParams.get('story_id'));
+                if (urlParams.has('chapter_id')) {
+                    chapterIdInput.value = urlParams.get('chapter_id');
+                }
             }
             if (urlParams.has('num_planned_tasks')) {
                 numPlannedTasksInput.value = urlParams.get('num_planned_tasks');
             }
         }
 
-        // Load URL params on page load
-        loadUrlParams();
+        // Story change resets chapter
+        storyIdInput.addEventListener('change', () => {
+            populateChapters(storyIdInput.value);
+        });
+
+        // Load stories on page load
+        loadStories();
 
         function showStatus(message, isError = false) {
             statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;

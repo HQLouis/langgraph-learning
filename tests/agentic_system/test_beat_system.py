@@ -222,3 +222,29 @@ if __name__ == "__main__":
         logger.error(f"Test failed: {e}", exc_info=True)
         print(f"\n✗ Test failed: {e}")
 
+
+def test_list_available_stories(tmp_path):
+    """Test that list_available_stories scans filesystem correctly."""
+    stories_dir = tmp_path / "stories"
+    # story_a has two chapter dirs, but only ch_01 has a beatpack
+    (stories_dir / "story_a" / "ch_01").mkdir(parents=True)
+    (stories_dir / "story_a" / "ch_01" / "beatpack.v1.json").write_text("{}")
+    (stories_dir / "story_a" / "ch_02").mkdir(parents=True)
+    # story_b has one chapter with a beatpack
+    (stories_dir / "story_b" / "ch_01").mkdir(parents=True)
+    (stories_dir / "story_b" / "ch_01" / "beatpack.v1.json").write_text("{}")
+
+    manager = BeatPackManager(tmp_path)
+    result = manager.list_available_stories()
+
+    assert result == {
+        "story_a": ["ch_01"],  # ch_02 excluded (no beatpack)
+        "story_b": ["ch_01"],
+    }
+
+
+def test_list_available_stories_empty(tmp_path):
+    """Test with no stories directory."""
+    manager = BeatPackManager(tmp_path)
+    assert manager.list_available_stories() == {}
+

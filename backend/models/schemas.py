@@ -109,3 +109,10 @@ class HealthResponse(BaseModel):
     version: str
     timestamp: datetime
 
+
+class StoryListResponse(BaseModel):
+    """Schema for available stories endpoint."""
+    stories: dict[str, list[str]] = Field(
+        ..., description="Mapping of story_id to list of chapter_ids"
+    )
+

@@ -6,6 +6,12 @@ from backend.services.conversation_service import ConversationService
 from backend.core.config import get_settings
 
 
+def get_beat_manager():
+    """Get the global BeatPackManager instance from nodes."""
+    from nodes import beat_manager
+    return beat_manager
+
+
 @lru_cache()
 def get_conversation_service() -> ConversationService:
     """

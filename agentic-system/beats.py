@@ -396,3 +396,31 @@ class BeatPackManager:
         self._cache.clear()
         logger.info("Cleared BeatPack cache")
 
+    def list_available_stories(self) -> Dict[str, List[str]]:
+        """Scan the content directory for available stories and chapters.
+
+        Returns:
+            Dict mapping story_id to sorted list of chapter_ids.
+            Only includes chapters that have a beatpack.v1.json file.
+        """
+        stories_dir = self.content_dir / "stories"
+        result: Dict[str, List[str]] = {}
+
+        if not stories_dir.exists():
+            logger.warning(f"Stories directory not found: {stories_dir}")
+            return result
+
+        for story_dir in sorted(stories_dir.iterdir()):
+            if not story_dir.is_dir():
+                continue
+            chapters = []
+            for chapter_dir in sorted(story_dir.iterdir()):
+                if not chapter_dir.is_dir():
+                    continue
+                if (chapter_dir / "beatpack.v1.json").exists():
+                    chapters.append(chapter_dir.name)
+            if chapters:
+                result[story_dir.name] = chapters
+
+        return result
+
