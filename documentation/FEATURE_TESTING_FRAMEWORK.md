@@ -63,7 +63,7 @@ PASS_THRESHOLD: float = 0.80
 # Fraction of N_RUNS that must pass for the test to be considered passing.
 # Example: N_RUNS=5, PASS_THRESHOLD=0.80 → at least 4/5 runs must pass.
 
-JUDGE_MODEL: str = "google_genai:gemini-2.0-flash"
+JUDGE_MODEL: str = "google_genai:gemini-2.5-flash"
 # The LLM used as a judge for content-based assertions.
 # Should be a capable but cost-efficient model.
 
@@ -71,7 +71,7 @@ JUDGE_TEMPERATURE: float = 0.0
 # Keep as low as possible for consistent judging.
 # 0.0 = deterministic sampling (if supported by the provider).
 
-SYSTEM_MODEL: str = "google_genai:gemini-2.0-flash"
+SYSTEM_MODEL: str = "google_genai:gemini-2.5-flash"
 # The LLM used to run the dialog system under test.
 # All feature tests always use the real LLM — no mocking.
 
@@ -450,7 +450,7 @@ The report is designed to be readable by non-technical stakeholders.
 
 ```
 Feature Test Report — Child Name & Gender Consideration
-Run date: 2026-02-23   Model: gemini-2.0-flash   N_RUNS: 5   Pass threshold: 80%
+Run date: 2026-02-23   Model: gemini-2.5-flash   N_RUNS: 5   Pass threshold: 80%
 
 ┌─────────────────────────────────────────────────────────────┐
 │ Overall Result:  ✅ PASSED  (12/14 tests passed)            │

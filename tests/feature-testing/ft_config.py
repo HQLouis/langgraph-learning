@@ -24,14 +24,26 @@ Example: N_RUNS=5, PASS_THRESHOLD=0.80 → at least 4 out of 5 runs must pass.""
 # ---------------------------------------------------------------------------
 # LLM configuration
 # ---------------------------------------------------------------------------
+# Model id is centralised in ``agentic_system.model_config`` so the
+# whole repo bumps together. Override per-environment via the
+# ``LINGOLINO_LLM_MODEL`` env var; see that module's docstring.
 
-JUDGE_MODEL: str = "google_genai:gemini-2.0-flash"
+import sys as _sys
+from pathlib import Path as _Path
+
+_AGENTIC_SYSTEM = _Path(__file__).resolve().parent.parent.parent / "agentic-system"
+if str(_AGENTIC_SYSTEM) not in _sys.path:
+    _sys.path.insert(0, str(_AGENTIC_SYSTEM))
+
+from model_config import resolve_model as _resolve_model  # type: ignore[import-not-found]
+
+JUDGE_MODEL: str = _resolve_model()
 """Model used as judge for content-based (LLM-as-judge) assertions."""
 
 JUDGE_TEMPERATURE: float = 0.0
 """Temperature for the judge LLM. Keep at 0.0 for maximum consistency."""
 
-SYSTEM_MODEL: str = "google_genai:gemini-2.0-flash"
+SYSTEM_MODEL: str = _resolve_model()
 """Model used to run the dialog system under test.
 Feature tests always call the real LLM — there is no mocking."""
 

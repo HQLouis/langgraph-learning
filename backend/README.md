@@ -159,7 +159,7 @@ RATE_LIMIT_PER_MINUTE=60
 RATE_LIMIT_BURST=10
 
 # LLM Settings
-LLM_MODEL=google_genai:gemini-2.0-flash
+LLM_MODEL=google_genai:gemini-2.5-flash
 ```
 
 ## Rate Limiting

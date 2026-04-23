@@ -97,8 +97,8 @@ All 9 background worker prompts: grammar, comprehension, speech acts, vocabulary
 - **Strategy B (simulated)**: `simulate_conversation()` -> `llm_judge()` — realistic, ~10-30s per run
 
 ### Configuration (`ft_config.py`):
-- System model: `google_genai:gemini-2.0-flash`
-- Judge model: `google_genai:gemini-2.0-flash` at temperature 0.0
+- System model: `google_genai:gemini-2.5-flash`
+- Judge model: `google_genai:gemini-2.5-flash` at temperature 0.0
 - System temperature: configurable via `SYSTEM_TEMPERATURE` (default 0.0 for deterministic testing)
 - Default: 1 run per test, 80% pass threshold
 

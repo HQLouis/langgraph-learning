@@ -595,7 +595,7 @@ def main() -> None:
     parser.add_argument("--output", default="reporting/output/report.html", help="Output HTML file path")
     parser.add_argument("--n-runs", type=int, default=5, help="N_RUNS used in the test run")
     parser.add_argument("--pass-threshold", type=float, default=0.80, help="Pass threshold used (0.0–1.0)")
-    parser.add_argument("--model", default="gemini-2.0-flash", help="Model name used")
+    parser.add_argument("--model", default="gemini-2.5-flash", help="Model name used")
     parser.add_argument("--run-details", default=None,
                         help="Path to sidecar run-details JSON (default: <input>.run_details.json)")
     args = parser.parse_args()

@@ -12,6 +12,7 @@ from immediate_graph import create_immediate_response_graph
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph
 from immediate_graph import set_config
+from model_config import resolve_model
 
 import threading
 
@@ -23,7 +24,7 @@ def start_chat():
 
     # Initialize LLM and memory
     print("🚀 Initializing Lingolino chat system...", flush=True)
-    llm = init_chat_model("google_genai:gemini-2.0-flash")
+    llm = init_chat_model(resolve_model())
     memory = MemorySaver()
 
     # Create the graphs

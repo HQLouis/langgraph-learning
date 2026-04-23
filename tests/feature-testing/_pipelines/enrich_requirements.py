@@ -339,7 +339,13 @@ def main() -> None:
         default=None,
         help="Comma-separated requirement IDs to enrich (default: all DRAFT entries).",
     )
-    parser.add_argument("--model", default="google_genai:gemini-2.0-flash")
+    # Model default is centralised in ``agentic_system.model_config``
+    # (``agentic-system`` is already on pythonpath via pyproject.toml).
+    # Override with ``--model`` on the CLI or the ``LINGOLINO_LLM_MODEL``
+    # env var.
+    from model_config import resolve_model as _resolve_model  # type: ignore[import-not-found]
+
+    parser.add_argument("--model", default=_resolve_model())
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()

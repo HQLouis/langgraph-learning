@@ -46,8 +46,9 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 60
     rate_limit_burst: int = 10
 
-    # LLM Settings
-    llm_model: str = "google_genai:gemini-2.0-flash"
+    # LLM Settings — default mirrors ``agentic_system.model_config.DEFAULT_LLM_MODEL``.
+    # Override via LLM_MODEL in .env to point at a different Gemini version.
+    llm_model: str = "google_genai:gemini-2.5-flash"
 
     # AWS S3 Settings for Dynamic Prompts (Public Bucket)
     aws_s3_bucket_name: str = "conversational-ai-prompts-bucket/"

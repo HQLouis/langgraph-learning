@@ -8,13 +8,14 @@ from immediate_graph import create_immediate_response_graph
 from background_graph import create_background_analysis_graph
 from nodes import set_background_graph
 from immediate_graph import set_config
+from model_config import resolve_model
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
 from dotenv import load_dotenv
 
 load_dotenv()
-llm = init_chat_model('google_genai:gemini-2.0-flash')
+llm = init_chat_model(resolve_model())
 memory = MemorySaver()
 bg_graph = create_background_analysis_graph(llm, memory)
 set_background_graph(bg_graph)
