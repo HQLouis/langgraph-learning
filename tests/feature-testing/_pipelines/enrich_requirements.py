@@ -152,7 +152,10 @@ def parse_enrichment(raw: str) -> EnrichmentResult:
         text = fence.group(1)
 
     try:
-        obj = json.loads(text)
+        # ``strict=False`` permits unescaped control characters (raw
+        # newlines, tabs) inside string values — Gemini routinely emits
+        # those despite our instructions.
+        obj = json.loads(text, strict=False)
     except json.JSONDecodeError as exc:
         raise EnrichmentError(f"LLM did not return valid JSON: {exc}") from exc
 
@@ -325,6 +328,23 @@ def _default_llm_call(model_name: str, temperature: float) -> Callable[[str], st
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
+    # Make ``agentic-system`` importable when this module runs outside pytest
+    # (pyproject's pythonpath config only fires under pytest).
+    import sys as _sys
+    _agentic = Path(__file__).resolve().parents[3] / "agentic-system"
+    if str(_agentic) not in _sys.path:
+        _sys.path.insert(0, str(_agentic))
+
+    # Load .env so GOOGLE_API_KEY reaches langchain_google_genai. Without
+    # this the google auth path falls back to ADC (application default
+    # credentials) and fails outside GCP.
+    try:
+        from dotenv import load_dotenv  # type: ignore
+        _project_root = Path(__file__).resolve().parents[3]
+        load_dotenv(_project_root / ".env")
+    except ImportError:
+        pass
+
     parser = argparse.ArgumentParser(description="Enrich draft requirements via LLM.")
     parser.add_argument(
         "--md",
@@ -339,8 +359,7 @@ def main() -> None:
         default=None,
         help="Comma-separated requirement IDs to enrich (default: all DRAFT entries).",
     )
-    # Model default is centralised in ``agentic_system.model_config``
-    # (``agentic-system`` is already on pythonpath via pyproject.toml).
+    # Model default is centralised in ``agentic_system.model_config``.
     # Override with ``--model`` on the CLI or the ``LINGOLINO_LLM_MODEL``
     # env var.
     from model_config import resolve_model as _resolve_model  # type: ignore[import-not-found]
