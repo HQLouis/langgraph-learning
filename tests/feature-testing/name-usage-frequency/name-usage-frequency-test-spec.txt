@@ -1,0 +1,96 @@
+Feature 21: "Das Kind mit dem Namen nicht zu oft ansprechen" —
+Don't overuse the child's name.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+Source: tests/feature-testing/Dialogbeispiele für die Eigenschaften.md,
+section "21. Das Kind mit dem Namen nicht zu oft ansprechen" (from line
+1509).
+
+
+Anforderung für eine bessere KI Antwort:
+Nicht in jeder Antwort / in jedem Satz den Kindnamen einsetzen. Den
+Kindnamen nur verwenden:
+- beim Begrüßen,
+- beim Verabschieden,
+- wenn das Kind nicht reagiert,
+- gelegentlich beim Loben, wenn das Kind etwas besonders geleistet hat
+  (guter Ideenbeitrag, komplizierter Satz).
+
+
+Beispiel 1 (Begrüßung mit Namen):
+KI: „Hallo Mia, lass uns anfangen. Weißt du noch, wie das Mädchen aus
+der Geschichte heißt?"
+
+Beispiel 2 (Verabschiedung mit Namen):
+KI: „Das hat heute richtig Spaß mit dir gemacht. Tschüss Mia, bis zum
+nächsten Mal!"
+
+Beispiel 3 (Kein Name mitten im Dialog):
+Kind: „sie ist gefallen"
+KI: „Ja, genau. Pia ist hingefallen. Was passiert danach?"
+
+Beispiel 4 (Loben ohne Namen):
+Kind: „sie geht nach hause"
+KI: „Ja, das stimmt. Du hast gut aufgepasst."
+
+Beispiel 5 (Loben ohne Namen):
+Kind: „sie ist traurig"
+KI: „Genau. Das hast du richtig erkannt."
+
+Beispiel 6 (Loben ohne Namen):
+Kind: „sie weint"
+KI: „Ja. Und warum weint sie?"
+
+Beispiel 7 (Kind reagiert nicht):
+KI: „Was macht Pia?" (keine Antwort)
+KI: „Mia? Weißt du, was Pia danach macht?"
+
+Beispiel 8 (Kind reagiert nicht):
+KI: „Mia? Bist du da?"
+
+Beispiel 9 (Kind reagiert nicht – beenden):
+KI: „Ich merke, Mia, du magst gerade nicht sprechen. Wir machen später
+weiter. Tschüss."
+
+Beispiele 10–36: Weitere Variationen der folgenden drei Prinzipien:
+- Name nur bei Begrüßung/Verabschiedung.
+- Mitten im Dialog: Bestätigungen ohne Namen („Ja, genau", „Stimmt",
+  „Genau").
+- Namen verwenden, wenn das Kind nicht reagiert oder besonders gelobt
+  werden soll.
+
+
+Related entries in the MD file:
+
+- Section "Test- Auffälligkeiten", item 1 (line 1699):
+  „Kindname nicht in jeder Antwort erwähnen" — already crossed out but
+  still acts as the guiding requirement.
+- Section "Test- Auffälligkeiten", item 13 (lines 1717–1728):
+  Bei der Verabschiedung sollte der Name nicht mehrfach in einer
+  endlosen Verabschiedungs-Schleife auftauchen.
+
+
+Test suite mapping:
+
+- Strategy A, test_name_used_in_greeting:            Beispiel 1, 10, 11
+- Strategy A, test_name_used_in_farewell:            Beispiel 2, 12
+- Strategy A, test_no_name_mid_dialog_confirmation:  Beispiele 3, 13, 15,
+                                                     26, 27, 29–36
+- Strategy A, test_no_name_simple_story_answer:      Beispiele 4, 5, 6,
+                                                     14, 16
+- Strategy B, test_name_frequency_full_conversation: overall principle
+  ("nicht in jeder Antwort den Namen verwenden") across a multi-turn
+  conversation.
+
+
+Coverage gaps (not directly testable with the current dialog framework):
+
+- Beispiele 7, 8, 9, 17–25 — "Kind reagiert nicht" (child does not
+  respond). These examples require the system to re-prompt spontaneously
+  after a silence. In Lingolino the system only reacts to an incoming
+  child message, so a true "no response" state is not observable from a
+  test harness perspective. Documented here so that the missing coverage
+  is known and can be revisited if a silence/timeout trigger is added
+  to the system.

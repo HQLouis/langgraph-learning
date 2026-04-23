@@ -1,0 +1,65 @@
+Feature 13: "sich an Szenen, Orte oder Figuren im Buch halten" — Stick to scenes, locations and characters from the book.
+
+Story: "Pia muss nicht perfekt sein"
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten.Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen" und „Dankeschön".Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie.Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?", wollten sie wissen.„Von mir aus kann's losgehen!", antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß.Sie nannten sie nur „das Mädchen, das immer alles richtig macht",denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler.Er aß seine Wachsmalkreide und malte mit grünen Bohnen.Er tanzte mit den Händen und spielte mit den Füßen Klavier.Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam.Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus.Die Eier flogen in hohem Bogen durch die Luft.Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht!„Das war knapp!", dachte Pia. „Tut mir leid, Pia … Ich habe ein Stück Rhabarber fallen lassen."„Öfft doch nöcht slömm, Möllö."
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.„Komm doch zu uns!", rief Millie.„Es macht Spaß!", sagte Sarah.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten.Millie und Sarah lachten, während sie übers Eis stolperten.„Nein, danke", sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an.„Ist alles in Ordnung, Spätzchen?", fragte ihr Vater.„Ich habe Angst, dass ich es heute verpatze", gestand Pia.„Und alle werden es sehen."„Angst? Aber du machst doch nie etwas falsch!", sagte ihr Vater mit einem Lächeln.
+Pia versuchte, auch zu lächeln.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit.Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte.Dann holte sie den Salzstreuer vom Küchentisch.Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!In Pias Bauch ging es drunter und drüber.
+Pia wartete darauf, dass ihre Jonglier-Musik einsetzte.
+„Da ist sie! Das ist das Mädchen, das immer alles richtig macht!", sagte eine Frau.„Oh! Bei ihr läuft immer alles perfekt, immer!", rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft.
+SUPER PIA! Als Nächstes kam der Salzstreuer.Und zum Schluss der Wasserballon.Pia war ganz bei der Sache!Die Zuschauer klatschten begeistert.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf …Die Körner, die herausrieselten, waren nicht weiß!
+HATSCHI!
+Hubert war von seinem eigenen Niesen so überrascht,dass er sich mit seinen kleinen Krallen am Luftballon festklammerte.
+PENG! Hubert, kleine Ballonfetzen und Pfeffer:Alles regnete auf Pias Kopf.
+Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht.Und was für einen …
+Die Musik verstummte.Pia wusste nicht, was sie machen sollte.
+Weinen?Von der Bühne rennen?
+Die Zuschauer hockten wie versteinert da.Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war!
+Pia schaute zu Hubert.Der schaute zurück.Sein Hamsterfell war pitschnass und voller kleiner Ballonreste.Pia musste kichern.Ihr Kichern wurde zu einem Glucksen.Und aus dem Glucksen wurde ein richtig lautes Lachen.
+
+
+Beispiel 1 (PIA):
+
+mögliche KI Antwort:
+KI: Pia stolpert fast mit den Eiern, aber sie fängt sie wieder auf. Das war knapp!
+Hattest du auch schon mal so einen Moment, wo etwas fast schiefgegangen ist?
+KIND: Ja
+KI: Wie hast du dich da gefühlt?
+
+Anforderung: Die KI darf die Handlung kurz verlassen, um nach Gefühlen des Kindes zu fragen. Die Gefühle des Kindes müssen ernst genommen werden. Sie muss danach wieder zur Geschichte zurückführen und darf keine neue Handlung erfinden.
+
+
+Beispiel 2 (PIA):
+
+mögliche KI Antwort:
+KI: Pia schmiert ein Brot mit Marmelade und Erdnussbutter.
+Was isst du am liebsten auf deinem Brot?
+KIND: Nutella
+KI: Lecker! Pia nimmt Marmelade und Erdnussbutter.
+Nimmt sie von beiden gleich viel oder von einem mehr?
+
+Anforderung: Die KI darf eine persönliche Frage zur Erfahrung des Kindes einbauen, um Motivation zu steigern. Danach muss sie klar zur Buchhandlung zurückkehren und die nächste Frage wieder auf den Inhalt beziehen.
+
+mögliche KI Antwort:
+KI: Pia macht ihrem Bruder Carl ein Pausenbrot mit Marmelade und Erdnussbutter.
+Was schmiert Pia auf das Brot?
+KIND: Marmelade
+KI: Ja, Marmelade – und auch Erdnussbutter. Pia nimmt von beiden gleich viel. Weiß du noch, was Pia danach macht?
+KIND: Zur Schule gehen
+KI: Genau, Pia geht zur Schule.
+
+Anforderung: Die KI darf keine neuen Szenen, Orte oder Figuren erfinden, sondern muss sich an die Inhalte der Geschichte halten. Sie darf nur abweichen, wenn man sich auf Gefühle oder auf eigene Erfahrungen des Kindes bezieht.

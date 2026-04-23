@@ -1,0 +1,73 @@
+Feature 12: "Kind fordert KI auf" — Child asks AI to do tasks or help.
+
+Story: "Pia muss nicht perfekt sein"
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen" und „Dankeschön". Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?", wollten sie wissen. „Von mir aus kann's losgehen!", antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur „das Mädchen, das immer alles richtig macht", denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! „Das war knapp!", dachte Pia.
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. „Nein, danke", sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an. „Ich habe Angst, dass ich es heute verpatze", gestand Pia.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert. Dann holte sie den Salzstreuer. Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!
+Als die Musik einsetzte, warf Pia Hubert in die Luft. Als Nächstes kam der Salzstreuer. Und zum Schluss der Wasserballon.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf… Die Körner waren nicht weiß! HATSCHI! Hubert nieste. PENG! Der Ballon platzte.
+Zum ersten Mal hatte Pia einen Fehler gemacht.
+Die Zuschauer hockten wie versteinert da.
+Pia schaute zu Hubert. Sein Hamsterfell war pitschnass. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen.
+
+Story: Bobos Adventskalender
+Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen. Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter. Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er. Papa holt sein Fahrrad. Bobo freut sich. Nur noch den Helm aufsetzen - und fertig! Vor der Post schließt Papa das Fahrrad an. Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Bobo und Papa tragen das Paket zusammen. Wir müssen schieben, sagt Papa. Zu Hause packen sie das Paket aus. Darin ist ein großer Fotokalender. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln? Oh ja! ruft Bobo. Papa und Bobo holen alle Sachen zum Basteln: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet 24 Öffnungen in die Pappe. Dann klebt er das Transparentpapier auf. Bobo darf ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume und einen Mond. Nun wird der Kalender am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause. Sie hat eingekauft. Bobo darf alle Türchen schließen. Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt Mama. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.
+
+
+Beispiel 1 (BOBO):
+
+hallo
+Hallo! Ich bin Thilio, dein sprechendes Spielzeug. Ich kenne mich gut mit Bobos Adventskalender aus. Was haben Bobo und Papa Siebenschläfer zuerst gemacht, als sie aus dem Fenster geschaut haben?
+geguckt
+Ja, Bobo und Papa haben aus dem Fenster geguckt. Hat die Postbotin ein Auto oder ein Fahrrad?
+fahrrad
+Ja, die Postbotin hat ein Fahrrad. Hat Bobo auf dem Fahrrad gesungen?
+was?
+Das bedeutet: Hat Bobo ein Lied gesungen, als er auf dem Fahrrad saß? Oder hat er das nicht? Ist es jetzt klar?
+ja
+Aha, du hast also gefragt, ob Bobo auf dem Fahrrad gesungen hat. Hat Bobo geklingelt oder gehupt?
+ja
+Hat Bobo geklingelt? Hat Bobo mit dem Fuß oder mit der Hand geklingelt?
+mit hand
+Ja, Bobo hat mit der Hand geklingelt. Die Postbotin ist nett. Fällt dir ein Reim dazu ein?
+nein, und dir?
+Ich helfe dir! Die Postbotin ist nett. Sie fährt ...?
+
+mögliche KI Antwort:
+KI: Ok, du möchtest, dass ich dazu einen Reim mache?
+KIND: ja
+KI: Sollen wir das zusammen machen?
+
+Anforderung: AI should occasionally help the child with tasks when it's too difficult. But be careful that clever children don't trick AI into always doing tasks for them. AI can: ask if child wants help doing it together.
+
+
+Beispiel 2:
+
+mögliche KI Antwort:
+KIND: Ich weiß nicht. Kannst du mir helfen?
+KI: Ja, natürlich helfe ich dir gerne. Was weißt du nicht?
+
+Anforderung: When child asks for AI's opinion, AI should give it.
+
+
+Beispiel 3:
+
+mögliche KI Antwort:
+KIND: Ich weiß nicht wie das heißt..
+KI: Möchtest du vielleicht wissen wie ein Wort heißt?
+KIND: Ja, was ist Pfingstrose?
+
+Anforderung: AI should recognize when child has word-finding problems: stuttering, not finishing sentence/thought — then ask if AI should explain the word's meaning.

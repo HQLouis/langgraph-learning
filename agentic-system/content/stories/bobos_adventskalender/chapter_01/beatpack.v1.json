@@ -1,0 +1,649 @@
+{
+  "story_id": "bobos_adventskalender",
+  "chapter_id": "chapter_01",
+  "content_version": "2026-03-23T15:41:44.774211",
+  "beatpack_version": "v1",
+  "chapter_hash": "sha256:7792d1ee6503cf62ef27f488de21ce2bb55a4e0c33487678f87568b3ccaa5bbb",
+  "beats": [
+    {
+      "beat_id": 1,
+      "order": 1,
+      "span": {
+        "start_char": 0,
+        "end_char": 225
+      },
+      "text": "Bobos Adventskalender. Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen.",
+      "entities": [
+        "ihr",
+        "Papa",
+        "Ende",
+        "Siebenschläfer",
+        "Was",
+        "Bäume",
+        "Küchenfenster",
+        "Es",
+        "Postbotin",
+        "Bobo",
+        "sie",
+        "Papa Siebenschläfer",
+        "Sie",
+        "Adventskalender",
+        "er",
+        "Da",
+        "die Postbotin",
+        "Bobos",
+        "November"
+      ],
+      "facts": [
+        {
+          "s": "ihr",
+          "p": "nach",
+          "o": "draußen"
+        },
+        {
+          "s": "Papa",
+          "p": "Siebenschläfer",
+          "o": "denn"
+        },
+        {
+          "s": "Papa",
+          "p": "gehen",
+          "o": "zu"
+        },
+        {
+          "s": "Siebenschläfer",
+          "p": "denn",
+          "o": "da"
+        },
+        {
+          "s": "Was",
+          "p": "machen",
+          "o": "Bobo"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 2,
+      "order": 2,
+      "span": {
+        "start_char": 226,
+        "end_char": 449
+      },
+      "text": "Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter.",
+      "entities": [
+        "Fahrrad",
+        "Papa",
+        "Sattel",
+        "Klingeling",
+        "Postbotin",
+        "er",
+        "die Postbotin",
+        "Bobo",
+        "Jetzt",
+        "Möchtest",
+        "Fahrradklingel",
+        "ihm"
+      ],
+      "facts": [
+        {
+          "s": "Papa",
+          "p": "hilft",
+          "o": "ihm"
+        },
+        {
+          "s": "Postbotin",
+          "p": "hat",
+          "o": "ein"
+        },
+        {
+          "s": "Postbotin",
+          "p": "aber",
+          "o": "weiter"
+        },
+        {
+          "s": "die Postbotin",
+          "p": "hat",
+          "o": "ein"
+        },
+        {
+          "s": "die Postbotin",
+          "p": "aber",
+          "o": "weiter"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 3,
+      "order": 3,
+      "span": {
+        "start_char": 450,
+        "end_char": 679
+      },
+      "text": "Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er.",
+      "entities": [
+        "Werbeprospekte",
+        "Papa Siebenschläfer",
+        "Zwischen",
+        "Stirn",
+        "Da",
+        "Paket",
+        "Papa",
+        "Haus",
+        "Bobo",
+        "Zettel",
+        "Vorher",
+        "Post",
+        "Wir",
+        "Briefen",
+        "Siebenschläfer",
+        "sie",
+        "er"
+      ],
+      "facts": [
+        {
+          "s": "Werbeprospekte",
+          "p": "ins",
+          "o": "Haus"
+        },
+        {
+          "s": "Papa Siebenschläfer",
+          "p": "noch",
+          "o": "die"
+        },
+        {
+          "s": "Zwischen",
+          "p": "den",
+          "o": "Briefen"
+        },
+        {
+          "s": "Da",
+          "p": "liegt",
+          "o": "ein"
+        },
+        {
+          "s": "Paket",
+          "p": "für",
+          "o": "uns"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 4,
+      "order": 4,
+      "span": {
+        "start_char": 680,
+        "end_char": 925
+      },
+      "text": "Papa holt sein Fahrrad. Bobo freut sich: Er liebt es hinten auf dem Kindersitz mitzufahren. Nur noch den Helm aufsetzen - und fertig! Hui! Papa und Bobo sausen den Hügel hinunter! Vor der Post schließt Papa das Fahrrad an. Dann gehen sie hinein.",
+      "entities": [
+        "Dann",
+        "Fahrrad",
+        "Papa",
+        "Bobo",
+        "Nur",
+        "Post",
+        "Kindersitz",
+        "Er",
+        "sie",
+        "Helm",
+        "Hügel",
+        "Hui",
+        "er",
+        "Vor"
+      ],
+      "facts": [
+        {
+          "s": "Dann",
+          "p": "gehen",
+          "o": "sie"
+        },
+        {
+          "s": "Papa",
+          "p": "holt",
+          "o": "sein"
+        },
+        {
+          "s": "Papa",
+          "p": "und",
+          "o": "Bobo"
+        },
+        {
+          "s": "Papa",
+          "p": "das",
+          "o": "Fahrrad"
+        },
+        {
+          "s": "Bobo",
+          "p": "freut",
+          "o": "sich"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 5,
+      "order": 5,
+      "span": {
+        "start_char": 926,
+        "end_char": 1122
+      },
+      "text": "Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Sie muss um den Schalter herumgehen, damit Papa und Bobo es nehmen können. Bobo und Papa tragen das Paket zusammen.",
+      "entities": [
+        "Paket",
+        "Papa",
+        "Am",
+        "Bobo",
+        "Postschalter",
+        "Zettel",
+        "Sie",
+        "Schalter",
+        "sie",
+        "Beamtin",
+        "er"
+      ],
+      "facts": [
+        {
+          "s": "Papa",
+          "p": "und",
+          "o": "Bobo"
+        },
+        {
+          "s": "Papa",
+          "p": "tragen",
+          "o": "das"
+        },
+        {
+          "s": "Am",
+          "p": "Postschalter",
+          "o": "darf"
+        },
+        {
+          "s": "Bobo",
+          "p": "den",
+          "o": "Zettel"
+        },
+        {
+          "s": "Bobo",
+          "p": "es",
+          "o": "nehmen"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 6,
+      "order": 6,
+      "span": {
+        "start_char": 1123,
+        "end_char": 1342
+      },
+      "text": "Aber wie sollen sie mit dem großen Paket Fahrrad fahren? Wir müssen schieben, sagt Papa. Papa und Bobo gehen zu Fuß nach Hause. Das Paket darf auf Bobos Kindersitz mitfahren. Zu Hause packen Bobo und Papa das Paket aus.",
+      "entities": [
+        "Fahrrad",
+        "Paket",
+        "Papa",
+        "Fuß",
+        "Bobo",
+        "Wir",
+        "Bobos",
+        "Kindersitz",
+        "sie",
+        "Hause",
+        "er",
+        "Zu"
+      ],
+      "facts": [
+        {
+          "s": "Paket",
+          "p": "Fahrrad",
+          "o": "fahren"
+        },
+        {
+          "s": "Paket",
+          "p": "darf",
+          "o": "auf"
+        },
+        {
+          "s": "Papa",
+          "p": "und",
+          "o": "Bobo"
+        },
+        {
+          "s": "Papa",
+          "p": "das",
+          "o": "Paket"
+        },
+        {
+          "s": "Fuß",
+          "p": "nach",
+          "o": "Hause"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 7,
+      "order": 7,
+      "span": {
+        "start_char": 1343,
+        "end_char": 1521
+      },
+      "text": "Darin ist ein großer Fotokalender für das nächste Jahr. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln.",
+      "entities": [
+        "Fotokalender",
+        "Darin",
+        "Papa",
+        "Idee",
+        "Bobo",
+        "Wollen",
+        "Er",
+        "Oh",
+        "Adventskalender",
+        "er",
+        "Jahr"
+      ],
+      "facts": [
+        {
+          "s": "Fotokalender",
+          "p": "für",
+          "o": "das"
+        },
+        {
+          "s": "Darin",
+          "p": "ist",
+          "o": "ein"
+        },
+        {
+          "s": "Papa",
+          "p": "hat",
+          "o": "eine"
+        },
+        {
+          "s": "Wollen",
+          "p": "wir",
+          "o": "zusammen"
+        },
+        {
+          "s": "Er",
+          "p": "Fotokalender",
+          "o": "für"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 8,
+      "order": 8,
+      "span": {
+        "start_char": 1522,
+        "end_char": 1741
+      },
+      "text": "Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet mit dem scharfen Messer 24 Öffnungen in die Pappe.",
+      "entities": [
+        "Basteln",
+        "Sachen",
+        "Papa",
+        "Öffnungen",
+        "Filzstifte",
+        "Bobo",
+        "Transparentpapier",
+        "sie",
+        "Pappe",
+        "Messer",
+        "er",
+        "Klebestift"
+      ],
+      "facts": [
+        {
+          "s": "Papa",
+          "p": "und",
+          "o": "Bobo"
+        },
+        {
+          "s": "Papa",
+          "p": "schneidet",
+          "o": "mit"
+        },
+        {
+          "s": "Öffnungen",
+          "p": "in",
+          "o": "die"
+        },
+        {
+          "s": "Filzstifte",
+          "p": "und",
+          "o": "einen"
+        },
+        {
+          "s": "Bobo",
+          "p": "holen",
+          "o": "alle"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 9,
+      "order": 9,
+      "span": {
+        "start_char": 1742,
+        "end_char": 1792
+      },
+      "text": "Dann klebt er das Transparentpapier auf die Pappe.",
+      "entities": [
+        "Dann",
+        "Transparentpapier",
+        "Pappe",
+        "er"
+      ],
+      "facts": [
+        {
+          "s": "Dann",
+          "p": "klebt",
+          "o": "er"
+        },
+        {
+          "s": "Transparentpapier",
+          "p": "auf",
+          "o": "die"
+        },
+        {
+          "s": "er",
+          "p": "das",
+          "o": "Transparentpapier"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 10,
+      "order": 10,
+      "span": {
+        "start_char": 1793,
+        "end_char": 2026
+      },
+      "text": "Jetzt darf Bobo ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume. Und einen Mond. Das wird ein schönes Bild! Nun wird der Kalender noch am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause.",
+      "entities": [
+        "Hause",
+        "Mond",
+        "Nun",
+        "Kalender",
+        "Da",
+        "Öffnungen",
+        "Haus",
+        "Bobo",
+        "Jetzt",
+        "Fertig",
+        "Mama",
+        "Pappe",
+        "Bild",
+        "er",
+        "Fenster",
+        "Bäume"
+      ],
+      "facts": [
+        {
+          "s": "Nun",
+          "p": "wird",
+          "o": "der"
+        },
+        {
+          "s": "Kalender",
+          "p": "noch",
+          "o": "am"
+        },
+        {
+          "s": "Da",
+          "p": "kommt",
+          "o": "Mama"
+        },
+        {
+          "s": "Öffnungen",
+          "p": "sind",
+          "o": "die"
+        },
+        {
+          "s": "Haus",
+          "p": "auf",
+          "o": "die"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 11,
+      "order": 11,
+      "span": {
+        "start_char": 2027,
+        "end_char": 2085
+      },
+      "text": "Sie hat eingekauft. Dann darf Bobo alle Türchen schließen.",
+      "entities": [
+        "Dann",
+        "Bobo",
+        "Sie",
+        "sie",
+        "Türchen"
+      ],
+      "facts": [
+        {
+          "s": "Dann",
+          "p": "darf",
+          "o": "Bobo"
+        },
+        {
+          "s": "Bobo",
+          "p": "alle",
+          "o": "Türchen"
+        },
+        {
+          "s": "Sie",
+          "p": "hat",
+          "o": "eingekauft"
+        },
+        {
+          "s": "sie",
+          "p": "hat",
+          "o": "eingekauft"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 12,
+      "order": 12,
+      "span": {
+        "start_char": 2086,
+        "end_char": 2291
+      },
+      "text": "Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt sie. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen.",
+      "entities": [
+        "Zahlen",
+        "Bastelsachen",
+        "Papa",
+        "Tisch",
+        "Bobo",
+        "Bild",
+        "Hast",
+        "Er",
+        "Oh",
+        "sie",
+        "Adventskalender",
+        "er"
+      ],
+      "facts": [
+        {
+          "s": "Bastelsachen",
+          "p": "am",
+          "o": "Tisch"
+        },
+        {
+          "s": "Papa",
+          "p": "malt",
+          "o": "24"
+        },
+        {
+          "s": "Bobo",
+          "p": "antwortet",
+          "o": "nicht"
+        },
+        {
+          "s": "Hast",
+          "p": "du",
+          "o": "das"
+        },
+        {
+          "s": "Er",
+          "p": "ein",
+          "o": "schöner"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    }
+  ],
+  "entity_registry": {
+    "Bobo": {
+      "aliases": [
+        "er",
+        "ihm"
+      ],
+      "type": "character"
+    },
+    "Papa Siebenschläfer": {
+      "aliases": [
+        "Papa",
+        "sein Papa"
+      ],
+      "type": "character"
+    },
+    "Mama": {
+      "aliases": [
+        "sie"
+      ],
+      "type": "character"
+    },
+    "Postbotin": {
+      "aliases": [
+        "die Postbotin",
+        "ihr"
+      ],
+      "type": "character"
+    }
+  },
+  "chapter_text": "Bobos Adventskalender. Was machen Bobo und Papa Siebenschläfer denn da? Sie schauen aus dem Küchenfenster. Die Bäume sind kahl. Es ist Ende November. Da kommt die Postbotin angefahren. Bobo und Papa gehen zu ihr nach draußen. Die Postbotin hat ein neues Fahrrad. Möchtest du mal darauf sitzen? fragt die Postbotin Bobo. Das möchte Bobo gern! Papa hilft ihm auf den Sattel. Klingeling!, macht die Fahrradklingel. Jetzt muss die Postbotin aber weiter. Vorher gibt sie Papa Siebenschläfer noch die Post. Bobo darf die Werbeprospekte ins Haus tragen. Zwischen den Briefen liegt ein Zettel. Papa runzelt die Stirn. Wir müssen zur Post gehen, Bobo. Da liegt ein Paket für uns, sagt er. Papa holt sein Fahrrad. Bobo freut sich: Er liebt es hinten auf dem Kindersitz mitzufahren. Nur noch den Helm aufsetzen - und fertig! Hui! Papa und Bobo sausen den Hügel hinunter! Vor der Post schließt Papa das Fahrrad an. Dann gehen sie hinein. Am Postschalter darf Bobo den Zettel abgeben. Die Beamtin holt ein großes Paket. Sie muss um den Schalter herumgehen, damit Papa und Bobo es nehmen können. Bobo und Papa tragen das Paket zusammen. Aber wie sollen sie mit dem großen Paket Fahrrad fahren? Wir müssen schieben, sagt Papa. Papa und Bobo gehen zu Fuß nach Hause. Das Paket darf auf Bobos Kindersitz mitfahren. Zu Hause packen Bobo und Papa das Paket aus. Darin ist ein großer Fotokalender für das nächste Jahr. Papa hat eine Idee: Wollen wir zusammen einen Adventskalender basteln?, fragt er Bobo. Oh ja! ruft Bobo. Er liebt basteln. Papa und Bobo holen alle Sachen, die sie zum Basteln brauchen: eine große Pappe, Transparentpapier, ein scharfes Messer, Filzstifte und einen Klebestift. Papa schneidet mit dem scharfen Messer 24 Öffnungen in die Pappe. Dann klebt er das Transparentpapier auf die Pappe. Jetzt darf Bobo ein großes Haus auf die Pappe malen. Die Öffnungen sind die Fenster. Bobo malt auch Bäume. Und einen Mond. Das wird ein schönes Bild! Nun wird der Kalender noch am Fenster aufgehängt. Fertig! Da kommt Mama nach Hause. Sie hat eingekauft. Dann darf Bobo alle Türchen schließen. Papa malt 24 Zahlen darauf. Oh, das ist aber ein schöner Adventskalender!, staunt sie. Hast du das Bild gemalt, Bobo? Aber Bobo antwortet nicht. Er ist zwischen all den Bastelsachen am Tisch eingeschlafen."
+}

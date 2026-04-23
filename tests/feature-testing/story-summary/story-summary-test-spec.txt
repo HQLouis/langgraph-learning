@@ -1,0 +1,65 @@
+Feature 9: "Kurzfassung des Textes wiedergeben" — Provide a short summary when asked.
+
+Story: "Pia muss nicht perfekt sein"
+Für Pia Piretti begann der Freitag wie jeder andere Tag.
+Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß.
+Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli.
+Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.
+Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie „Guten Morgen" und „Dankeschön". Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö.
+„Was ist mit dem Talentwettbewerb heute Abend?", wollten sie wissen. „Von mir aus kann's losgehen!", antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.
+Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur „das Mädchen, das immer alles richtig macht", denn solange man denken konnte, war ihr noch nie ein Fehler passiert.
+Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen!
+In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier.
+Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.
+Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! „Das war knapp!", dachte Pia.
+Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen.
+Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. „Nein, danke", sagte Pia.
+Beim Abendessen rührte Pia ihr Essen kaum an. „Ich habe Angst, dass ich es heute verpatze", gestand Pia.
+Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert. Dann holte sie den Salzstreuer. Am Ende befüllte sie einen Luftballon mit Wasser.
+Die Aula der Schule war gerammelt voll!
+Als die Musik einsetzte, warf Pia Hubert in die Luft. Als Nächstes kam der Salzstreuer. Und zum Schluss der Wasserballon.
+Doch dann fiel Pia am Salzstreuer etwas Komisches auf… Die Körner waren nicht weiß! HATSCHI! Hubert nieste. PENG! Der Ballon platzte.
+Zum ersten Mal hatte Pia einen Fehler gemacht.
+Die Zuschauer hockten wie versteinert da.
+Pia schaute zu Hubert. Sein Hamsterfell war pitschnass. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen.
+
+
+Beispiel 1 (PIA):
+
+mögliche KI Antwort:
+KIND: Kannst du die Geschichte nochmal erzählen?
+KI: Na klar, ich erzähl dir die Geschichte gern nochmal! Pia ist ein Mädchen, das immer alles richtig macht. Sie zieht Socken an, die zusammenpassen, und gibt ihrem Hamster Hubert Brokkoli. Sie macht sogar Pausenbrote, bei denen genauso viel Erdnussbutter wie Marmelade drauf ist! Ihr Bruder Carl ist ganz anders. Er macht viele Fehler, isst Wachsmalstifte und malt mit grünen Bohnen. Eines Tages soll Pia mit ihren Freundinnen Millie und Sarah einen Rhabarbermuffin backen. Pia holt die Eier, aber dann passiert ihr fast ein Fehler! Sie stolpert, aber fängt die Eier wieder auf. Puh, Glück gehabt! Später beim Talentwettbewerb will Pia mit Hubert, dem Salzstreuer und einem Wasserballon jonglieren. Aber dann niest Hubert und der Wasserballon platzt! Pia hat einen Fehler gemacht! Alle sind überrascht, aber dann fängt Pia an zu lachen.
+Und, wie findest die Geschichte?
+KIND:...
+
+Anforderung: Wenn das Kind KI bittet, die Geschichte nochmal zu erzählen, soll sie das verkürzt machen. Nach dem das Kind die Geschichte nochmal gehört hat, soll die Unterhaltung weiter darüber gehen, wie das Kind die Geschichte findet/ob es ihm gefallen hatte/fragen, ob das Kind vlt. auch die Geschichte Thilio erzählen kann. Das Kind darf selber die Unterhaltung weiter steuern, da ich davon ausgehe, dass wenn das Kind die wiederholte Wiedergabe der Geschichte nachfragt, dann kann er sie auch gut verstehen, sprich, er kann die Geschichte evtl. reflektieren.
+
+
+Beispiel 2 (PIA):
+
+mögliche KI Antwort:
+KI: Wenn du möchtest, kann ich dir die Geschichte nochmal erzählen.
+KIND: Ja
+KI: Gerne! Es ist die Geschichte über Pia. Pia ist ein Mädchen, das immer alles richtig macht. Sie zieht Socken an, die zusammenpassen, und gibt ihrem Hamster Hubert Brokkoli, weil er das besonders mag. Sie macht sogar Pausenbrote, bei denen genauso viel Erdnussbutter wie Marmelade drauf ist!
+KI: Pia macht alles perfekt. Findest du auch?
+KIND: ja
+Und ihr Bruder Carl ist ganz anders. Er macht viele Fehler, isst Wachsmalstifte und malt mit grünen Bohnen.
+KI: Carl malt mit grünen Bohnen! Lustig, oder?
+KIND: Ja
+Eines Tages soll Pia mit ihren Freundinnen Millie und Sarah einen Rhabarbermuffin backen. Pia holt die Eier, aber dann passiert ihr fast ein Fehler! Sie stolpert, aber fängt die Eier wieder auf. Puh, Glück gehabt! Später beim Talentwettbewerb will Pia mit Hubert, dem Salzstreuer und einem Wasserballon jonglieren. Aber dann niest Hubert und der Wasserballon platzt! Pia hat einen Fehler gemacht! Alle sind überrascht, aber dann fängt Pia an zu lachen. Das war die Geschichte. Findest du es schlimm, Fehler zu machen?
+KIND: Nein.
+KI: Du findest es auch nicht schlimm?
+KIND: Nein
+KI: Ich finde es auch nicht schlimm, Fehler zu machen.
+
+Anforderung: Wenn das Kind mehrere (nach 3 Fehler) inhaltliche Fehler in der Unterhaltung macht, darf KI selbst nachfragen, ob sie den Inhalt nochmal wiedergeben soll. Wenn das Kind bejaht- kurze Textwiedergabe. Nicht mehr als 3 Male darf KI eine kurze Bestätigungsfrage zwischen den Szenen stellen, um die Aufmerksamkeit des Kindes wieder zu fangen. Nach der Wiedergabe darf sie über den Grundgedanken des Buches das Kind fragen und darauf eine kurze Unterhaltung aufbauen.
+
+
+Beispiel 3 (PIA):
+
+mögliche KI Antwort:
+KIND: Kannst du mir die Geschichte nochmal erzählen?
+KI: Natürlich! Also: Pia macht immer alles richtig. Sie zieht passende Socken an, füttert ihren Hamster Hubert mit Brokkoli, macht ein Pausenbrot mit Marmelade und Erdnussbutter, trifft ihre Freundinnen… am Ende lacht Pia über ihren Fehler. So war es in der Geschichte. Alles verstanden?
+
+Anforderung: Nur die wichtigsten Handlungspunkte der Geschichte kurz zusammenfassen.
+Nach der Kurzfassung soll sie eine offene Frage zur Geschichte oder zur Meinung des Kindes stellen, statt sofort wieder Detailfragen zum Inhalt zu stellen.

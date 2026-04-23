@@ -33,6 +33,11 @@
             padding: 8px;
             width: 100px;
         }
+        .setup select {
+            margin: 5px 0;
+            padding: 8px;
+            min-width: 150px;
+        }
         .setup button {
             padding: 8px 16px;
             background: #007bff;
@@ -43,6 +48,10 @@
         }
         .setup button:hover {
             background: #0056b3;
+        }
+        .setup button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
         #chat {
             height: 400px;
@@ -114,9 +123,25 @@
 
         <div class="setup">
             <div>
-                <label>Child ID: <input type="text" id="childId" value="1"></label>
-                <label>Game ID: <input type="text" id="gameId" value="0"></label>
-                <button id="startBtn">Start Conversation</button>
+                <label>Child ID:
+                    <select id="childId">
+                        <option value="1" title="Lena ist ein Mädchen, 5 Jahre alt, mag Dinosaurier und Raketen. Lernt gerade lesen und schreiben.">Lena (Mädchen, 5) — Dino-Fan</option>
+                        <option value="2" title="Finn ist ein Junge, 8 Jahre alt, mag Fussball und Videospiele. Liest gerne Abenteuerbücher.">Finn (Junge, 8) — Fussball & Videospiele</option>
+                        <option value="3" title="Mila ist ein Mädchen, 7 Jahre alt, mag Programmieren und Robotik. Liest gerne Science-Fiction-Bücher.">Mila (Mädchen, 7) — Programmieren & Robotik</option>
+                    </select>
+                </label>
+                <label>Story ID:
+                    <select id="storyId" disabled>
+                        <option value="">-- Loading... --</option>
+                    </select>
+                </label>
+                <label>Chapter ID:
+                    <select id="chapterId" disabled>
+                        <option value="">-- Select story first --</option>
+                    </select>
+                </label>
+                <label>Num Planned Tasks: <input type="text" id="numPlannedTasks" value=""></label>
+                <button id="startBtn" disabled>Start Conversation</button>
             </div>
             <div id="status"></div>
         </div>
@@ -130,17 +155,98 @@
     </div>
 
     <script>
-        const API_BASE = 'https://conversational-api.lingolino.io';
+        const API_BASE = 'https://conversational-api.lingolino.io'; // 'https://conversational-api.lingolino.io', 'http://localhost:8000'
         let threadId = null;
-        let currentEventSource = null;
+        let storiesData = {};
 
         const childIdInput = document.getElementById('childId');
-        const gameIdInput = document.getElementById('gameId');
+        const storyIdInput = document.getElementById('storyId');
+        const chapterIdInput = document.getElementById('chapterId');
+        const numPlannedTasksInput = document.getElementById('numPlannedTasks');
         const startBtn = document.getElementById('startBtn');
         const chatDiv = document.getElementById('chat');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         const statusDiv = document.getElementById('status');
+
+        // Load available stories from API and populate dropdowns
+        async function loadStories() {
+            try {
+                const response = await fetch(`${API_BASE}/stories`);
+                if (!response.ok) throw new Error('Failed to load stories');
+                const data = await response.json();
+                storiesData = data.stories;
+
+                storyIdInput.innerHTML = '<option value="">-- Select story --</option>';
+                for (const storyId of Object.keys(storiesData).sort()) {
+                    const opt = document.createElement('option');
+                    opt.value = storyId;
+                    opt.textContent = storyId;
+                    storyIdInput.appendChild(opt);
+                }
+                storyIdInput.disabled = false;
+
+                // Apply URL params after stories are loaded
+                applyUrlParams();
+                validateForm();
+            } catch (error) {
+                storyIdInput.innerHTML = '<option value="">-- Failed to load --</option>';
+                console.error('Failed to load stories:', error);
+                validateForm();
+            }
+        }
+
+        function populateChapters(storyId) {
+            chapterIdInput.innerHTML = '';
+            if (!storyId || !storiesData[storyId]) {
+                chapterIdInput.innerHTML = '<option value="">-- Select story first --</option>';
+                chapterIdInput.disabled = true;
+                return;
+            }
+            chapterIdInput.innerHTML = '<option value="">-- Select chapter --</option>';
+            for (const chapId of storiesData[storyId]) {
+                const opt = document.createElement('option');
+                opt.value = chapId;
+                opt.textContent = chapId;
+                chapterIdInput.appendChild(opt);
+            }
+            chapterIdInput.disabled = false;
+        }
+
+        // Apply URL params to dropdowns (called after stories load)
+        function applyUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('child_id')) {
+                childIdInput.value = urlParams.get('child_id');
+            }
+            if (urlParams.has('story_id') && storiesData[urlParams.get('story_id')]) {
+                storyIdInput.value = urlParams.get('story_id');
+                populateChapters(urlParams.get('story_id'));
+                if (urlParams.has('chapter_id')) {
+                    chapterIdInput.value = urlParams.get('chapter_id');
+                }
+            }
+            if (urlParams.has('num_planned_tasks')) {
+                numPlannedTasksInput.value = urlParams.get('num_planned_tasks');
+            }
+        }
+
+        // Validate form: enable start button when both story and chapter are selected
+        function validateForm() {
+            const valid = storyIdInput.value && chapterIdInput.value;
+            startBtn.disabled = !valid;
+        }
+
+        // Story change resets chapter and revalidates
+        storyIdInput.addEventListener('change', () => {
+            populateChapters(storyIdInput.value);
+            validateForm();
+        });
+        chapterIdInput.addEventListener('change', validateForm);
+
+        // Load stories on page load
+        loadStories();
 
         function showStatus(message, isError = false) {
             statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
@@ -157,16 +263,37 @@
 
         async function startConversation() {
             try {
+                // Reset if there's an existing conversation
+                if (threadId) {
+                    chatDiv.innerHTML = '';
+                    threadId = null;
+                    messageInput.disabled = true;
+                    sendBtn.disabled = true;
+                }
+
                 startBtn.disabled = true;
                 showStatus('⏳ Starting conversation...');
+
+                // Build request body with all parameters
+                const requestBody = {
+                    child_id: childIdInput.value
+                };
+
+                // Add optional parameters if they have values
+                if (storyIdInput.value) {
+                    requestBody.story_id = storyIdInput.value;
+                }
+                if (chapterIdInput.value) {
+                    requestBody.chapter_id = chapterIdInput.value;
+                }
+                if (numPlannedTasksInput.value) {
+                    requestBody.num_planned_tasks = parseInt(numPlannedTasksInput.value, 10);
+                }
 
                 const response = await fetch(`${API_BASE}/conversations`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        child_id: childIdInput.value,
-                        game_id: gameIdInput.value
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) throw new Error('Failed to create conversation');
@@ -174,14 +301,16 @@
                 const data = await response.json();
                 threadId = data.thread_id;
 
-                // Only enable UI after threadId is set
-                showStatus(`✅ Conversation started! ID: ${threadId.substring(0, 12)}...`);
+                // Enable UI and update button for reuse
+                showStatus(`✅ Conversation started! ID: ${threadId}`);
+                startBtn.textContent = 'Start a new conversation';
+                startBtn.disabled = false;
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
                 messageInput.focus();
             } catch (error) {
                 showStatus(`❌ Error: ${error.message}`, true);
-                startBtn.disabled = false; // Re-enable start button on error
+                startBtn.disabled = false;
             }
         }
 

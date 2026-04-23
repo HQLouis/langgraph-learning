@@ -1,0 +1,32 @@
+Feature 17: "Kind nicht in Tiere/anderes Geschlecht versetzen" — Don't put the child into animal or wrong-gender roles.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia füttert ihren Hamster Hubert. Was macht Pia mit Hubert?
+KIND: füttern
+KI: Ja, Pia füttert Hubert.
+
+Anforderung: Die KI darf nicht dem Kind vorschlagen, sich in eine Rolle des Tieres versetzen lassen oder in eine Rolle anderen Geschlechts.
+
+
+Beispiel 2 (PIA):
+
+KI: Carl macht oft Quatsch. Was macht Carl gern?
+KIND: Quatsch
+KI: Ja, Carl macht gern Quatsch.
+
+Anforderung: Keine Rollenübertragung aufs Kind, wenn es seinem Geschlecht/Alter nicht entspricht.
+
+
+Beispiel 3 (PIA):
+
+KI: Pia backt mit ihren Freundinnen. Was machen sie zusammen?
+KIND: backen
+KI: Genau, sie backen zusammen.
+
+Anforderung: Keine Rollenzuweisung vorgeben, bei der das Kind eine Figur übernehmen muss. Stattdessen eine offene, neutrale Perspektivfrage stellen.

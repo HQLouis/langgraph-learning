@@ -1,0 +1,32 @@
+Feature 16: "keine Aufforderung zum Wiederholen geben" — Don't prompt the child to repeat words/sentences.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia gibt ihrem Hamster Hubert Brokkoli. Was frisst Hubert gern?
+KIND: Brokkoli
+KI: Ja, Hubert frisst gern Brokkoli.
+
+Anforderung: Die KI soll keine Aufforderung wie „Sag das nochmal" oder Ähnliches geben.
+
+
+Beispiel 2 (PIA):
+
+KI: Pia schmiert ein Brot mit Marmelade und Erdnussbutter. Was kommt auf das Brot?
+KIND: Marmelade
+KI: Ja, Marmelade ist drauf.
+
+Anforderung: Die KI soll Antworten bestätigen und weiterführen, nicht nachsprechen lassen.
+
+
+Beispiel 3 (PIA):
+
+KI: Pia geht zur Schule. Wohin geht Pia?
+KIND: Schule
+KI: Genau, Pia geht zur Schule.
+
+Anforderung: Keine mechanische Wiederholübungen einbauen.

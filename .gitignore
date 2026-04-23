@@ -84,3 +84,5 @@ terraform/.terraform.tfstate.lock.info
 
 # Docker
 .dockerignore.swp
+
+tests/feature-testing/reporting/output/*

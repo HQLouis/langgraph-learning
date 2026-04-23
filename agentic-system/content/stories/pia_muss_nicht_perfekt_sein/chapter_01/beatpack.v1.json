@@ -1,0 +1,1063 @@
+{
+  "story_id": "pia_muss_nicht_perfekt_sein",
+  "chapter_id": "chapter_01",
+  "content_version": "2026-03-23T15:41:44.751939",
+  "beatpack_version": "v1",
+  "chapter_hash": "sha256:9e78a3873395becb708f336c8f33454ce7983fe400872ea41b6af85ef657ae77",
+  "beats": [
+    {
+      "beat_id": 1,
+      "order": 1,
+      "span": {
+        "start_char": 0,
+        "end_char": 185
+      },
+      "text": "Pia muss nicht perfekt sein. Für Pia Piretti begann der Freitag wie jeder andere Tag. Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß.",
+      "entities": [
+        "Socken",
+        "Pia Piretti",
+        "Pia",
+        "Tag",
+        "Fuß",
+        "Schuh",
+        "Piretti",
+        "Sie",
+        "sie",
+        "Freitag",
+        "Für"
+      ],
+      "facts": [
+        {
+          "s": "Pia Piretti",
+          "p": "begann",
+          "o": "der"
+        },
+        {
+          "s": "Pia",
+          "p": "muss",
+          "o": "nicht"
+        },
+        {
+          "s": "Pia",
+          "p": "Piretti",
+          "o": "begann"
+        },
+        {
+          "s": "Tag",
+          "p": "wie",
+          "o": "jeder"
+        },
+        {
+          "s": "Schuh",
+          "p": "an",
+          "o": "den"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 2,
+      "order": 2,
+      "span": {
+        "start_char": 186,
+        "end_char": 388
+      },
+      "text": "Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli. Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade.",
+      "entities": [
+        "ihren Bruder",
+        "ihr",
+        "Lieblingsessen",
+        "Hamster",
+        "Brokkoli",
+        "Pausenbrot",
+        "Sie",
+        "Carl",
+        "Erdnussbutter",
+        "sie",
+        "Bruder",
+        "Hubert",
+        "Marmelade",
+        "ihrem Hamster"
+      ],
+      "facts": [
+        {
+          "s": "ihren Bruder",
+          "p": "Carl",
+          "o": "schmierte"
+        },
+        {
+          "s": "Lieblingsessen",
+          "p": "zu",
+          "o": "füttern"
+        },
+        {
+          "s": "Hamster",
+          "p": "Hubert",
+          "o": "sein"
+        },
+        {
+          "s": "Pausenbrot",
+          "p": "für",
+          "o": "ihren"
+        },
+        {
+          "s": "Sie",
+          "p": "vergaß",
+          "o": "nicht"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 3,
+      "order": 3,
+      "span": {
+        "start_char": 389,
+        "end_char": 622
+      },
+      "text": "Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie 'Guten Morgen' und 'Dankeschön'. Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte.",
+      "entities": [
+        "Bett",
+        "Leute",
+        "ihr",
+        "Hatte",
+        "Dankeschön",
+        "Sie",
+        "Als",
+        "sie",
+        "Guten",
+        "Mathehausaufgaben",
+        "Fans",
+        "Morgen",
+        "Tür"
+      ],
+      "facts": [
+        {
+          "s": "Bett",
+          "p": "gemacht",
+          "o": "hatte"
+        },
+        {
+          "s": "ihr",
+          "p": "Bett",
+          "o": "gemacht"
+        },
+        {
+          "s": "Sie",
+          "p": "vor",
+          "o": "die"
+        },
+        {
+          "s": "Sie",
+          "p": "ihr",
+          "o": "Bett"
+        },
+        {
+          "s": "Sie",
+          "p": "wollten",
+          "o": "wissen"
+        }
+      ],
+      "tags": [
+        "dialogue",
+        "action"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 4,
+      "order": 4,
+      "span": {
+        "start_char": 623,
+        "end_char": 842
+      },
+      "text": "Nö. 'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. 'Von mir aus kann's losgehen!', antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen.",
+      "entities": [
+        "Schließlich",
+        "Abend",
+        "Nö",
+        "Von",
+        "ihr",
+        "Pia",
+        "Jahren",
+        "Jongliernummer",
+        "Talentwettbewerb",
+        "sie",
+        "Was"
+      ],
+      "facts": [
+        {
+          "s": "Schließlich",
+          "p": "hatte",
+          "o": "sie"
+        },
+        {
+          "s": "Von",
+          "p": "mir",
+          "o": "aus"
+        },
+        {
+          "s": "Jahren",
+          "p": "immer",
+          "o": "gewonnen"
+        },
+        {
+          "s": "Jongliernummer",
+          "p": "in",
+          "o": "den"
+        },
+        {
+          "s": "Talentwettbewerb",
+          "p": "heute",
+          "o": "Abend"
+        }
+      ],
+      "tags": [
+        "dialogue"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 5,
+      "order": 5,
+      "span": {
+        "start_char": 843,
+        "end_char": 1057
+      },
+      "text": "Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur 'das Mädchen, das immer alles richtig macht', denn solange man denken konnte, war ihr noch nie ein Fehler passiert.",
+      "entities": [
+        "Fehler",
+        "ihr",
+        "Mädchen",
+        "Pia",
+        "Menschen",
+        "Sie",
+        "Stadt",
+        "das Mädchen, das immer alles richtig macht",
+        "sie"
+      ],
+      "facts": [
+        {
+          "s": "ihr",
+          "p": "noch",
+          "o": "nie"
+        },
+        {
+          "s": "Pia",
+          "p": "wirklich",
+          "o": "hieß"
+        },
+        {
+          "s": "Menschen",
+          "p": "in",
+          "o": "der"
+        },
+        {
+          "s": "Sie",
+          "p": "nannten",
+          "o": "sie"
+        },
+        {
+          "s": "Stadt",
+          "p": "wussten",
+          "o": "nicht"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 6,
+      "order": 6,
+      "span": {
+        "start_char": 1058,
+        "end_char": 1271
+      },
+      "text": "Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen!",
+      "entities": [
+        "Wachsmalkreide",
+        "Fehler",
+        "Anders",
+        "Pia",
+        "Größte",
+        "Füßen",
+        "Bohnen",
+        "Er",
+        "Carl",
+        "Dinge",
+        "Menge",
+        "Für",
+        "Händen",
+        "Klavier"
+      ],
+      "facts": [
+        {
+          "s": "Wachsmalkreide",
+          "p": "und",
+          "o": "malte"
+        },
+        {
+          "s": "Anders",
+          "p": "als",
+          "o": "Pia"
+        },
+        {
+          "s": "Pia",
+          "p": "machte",
+          "o": "Carl"
+        },
+        {
+          "s": "Er",
+          "p": "aß",
+          "o": "seine"
+        },
+        {
+          "s": "Er",
+          "p": "tanzte",
+          "o": "mit"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 7,
+      "order": 7,
+      "span": {
+        "start_char": 1272,
+        "end_char": 1523
+      },
+      "text": "In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier. Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte.",
+      "entities": [
+        "Riesenrhabarbermuffin",
+        "Eier",
+        "ihr",
+        "Sarah",
+        "Pia",
+        "Schule",
+        "Kochteam",
+        "Kühlschrank",
+        "In",
+        "Freundinnen",
+        "Millie",
+        "sie",
+        "Für"
+      ],
+      "facts": [
+        {
+          "s": "Riesenrhabarbermuffin",
+          "p": "brauchten",
+          "o": "sie"
+        },
+        {
+          "s": "Pia",
+          "p": "mit",
+          "o": "ihren"
+        },
+        {
+          "s": "Pia",
+          "p": "ging",
+          "o": "zum"
+        },
+        {
+          "s": "Schule",
+          "p": "war",
+          "o": "Pia"
+        },
+        {
+          "s": "Kühlschrank",
+          "p": "und",
+          "o": "wählte"
+        }
+      ],
+      "tags": [
+        "action"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 8,
+      "order": 8,
+      "span": {
+        "start_char": 1524,
+        "end_char": 1736
+      },
+      "text": "Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! 'Das war knapp!', dachte Pia. 'Tut mir leid, Pia...",
+      "entities": [
+        "Tut",
+        "Eier",
+        "Luft",
+        "ihr",
+        "Fehler",
+        "Pia",
+        "Doch",
+        "Bogen",
+        "Rückweg",
+        "sie",
+        "Tat"
+      ],
+      "facts": [
+        {
+          "s": "Tut",
+          "p": "mir",
+          "o": "leid"
+        },
+        {
+          "s": "Eier",
+          "p": "flogen",
+          "o": "in"
+        },
+        {
+          "s": "Fehler",
+          "p": "zu",
+          "o": "machen"
+        },
+        {
+          "s": "Pia",
+          "p": "war",
+          "o": "kurz"
+        },
+        {
+          "s": "Doch",
+          "p": "auf",
+          "o": "dem"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 9,
+      "order": 9,
+      "span": {
+        "start_char": 1737,
+        "end_char": 1928
+      },
+      "text": "Ich habe ein Stück Rhabarber fallen lassen.' Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. 'Komm doch zu uns!', rief Millie. 'Es macht Spaß!', sagte Sarah.",
+      "entities": [
+        "Es",
+        "Rhabarber",
+        "Park",
+        "Sarah",
+        "Pia",
+        "Heimweg",
+        "Millie",
+        "Schlittschuh",
+        "Auf",
+        "Spaß",
+        "Ich",
+        "Komm",
+        "Stück"
+      ],
+      "facts": [
+        {
+          "s": "Es",
+          "p": "macht",
+          "o": "Spaß"
+        },
+        {
+          "s": "Rhabarber",
+          "p": "fallen",
+          "o": "lassen"
+        },
+        {
+          "s": "Park",
+          "p": "Schlittschuh",
+          "o": "liefen"
+        },
+        {
+          "s": "Sarah",
+          "p": "im",
+          "o": "Park"
+        },
+        {
+          "s": "Heimweg",
+          "p": "schaute",
+          "o": "Pia"
+        }
+      ],
+      "tags": [
+        "dialogue",
+        "action"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 10,
+      "order": 10,
+      "span": {
+        "start_char": 1929,
+        "end_char": 2093
+      },
+      "text": "Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. 'Nein, danke', sagte Pia.",
+      "entities": [
+        "Teich",
+        "Sarah",
+        "Pia",
+        "Millie",
+        "Eis",
+        "sie",
+        "Nein"
+      ],
+      "facts": [
+        {
+          "s": "Teich",
+          "p": "rutschten",
+          "o": "und"
+        },
+        {
+          "s": "Millie",
+          "p": "und",
+          "o": "Sarah"
+        },
+        {
+          "s": "sie",
+          "p": "über",
+          "o": "den"
+        },
+        {
+          "s": "sie",
+          "p": "übers",
+          "o": "Eis"
+        }
+      ],
+      "tags": [
+        "dialogue"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 11,
+      "order": 11,
+      "span": {
+        "start_char": 2094,
+        "end_char": 2288
+      },
+      "text": "Beim Abendessen rührte Pia ihr Essen kaum an. 'Ist alles in Ordnung, Spätzchen?', fragte ihr Vater. 'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' 'Angst?",
+      "entities": [
+        "Spätzchen",
+        "Ordnung",
+        "ihr",
+        "Pia",
+        "Ist",
+        "ihr Vater",
+        "Abendessen",
+        "Angst",
+        "Essen",
+        "Vater",
+        "Ich",
+        "Beim"
+      ],
+      "facts": [
+        {
+          "s": "ihr",
+          "p": "Essen",
+          "o": "kaum"
+        },
+        {
+          "s": "Pia",
+          "p": "ihr",
+          "o": "Essen"
+        },
+        {
+          "s": "Ist",
+          "p": "alles",
+          "o": "in"
+        },
+        {
+          "s": "Abendessen",
+          "p": "rührte",
+          "o": "Pia"
+        },
+        {
+          "s": "Essen",
+          "p": "rührte",
+          "o": "Pia"
+        }
+      ],
+      "tags": [
+        "dialogue"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 12,
+      "order": 12,
+      "span": {
+        "start_char": 2289,
+        "end_char": 2519
+      },
+      "text": "Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem Lächeln. Pia versuchte, auch zu lächeln. Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte.",
+      "entities": [
+        "Lächeln",
+        "Nach",
+        "ihr",
+        "Pia",
+        "Zuerst",
+        "Nickerchen",
+        "ihr Vater",
+        "Talentwettbewerb",
+        "Essen",
+        "sie",
+        "Vater",
+        "Hubert"
+      ],
+      "facts": [
+        {
+          "s": "Nach",
+          "p": "dem",
+          "o": "Essen"
+        },
+        {
+          "s": "ihr",
+          "p": "Vater",
+          "o": "mit"
+        },
+        {
+          "s": "Pia",
+          "p": "für",
+          "o": "den"
+        },
+        {
+          "s": "Zuerst",
+          "p": "weckte",
+          "o": "sie"
+        },
+        {
+          "s": "Nickerchen",
+          "p": "gemacht",
+          "o": "hatte"
+        }
+      ],
+      "tags": [
+        "dialogue"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 13,
+      "order": 13,
+      "span": {
+        "start_char": 2520,
+        "end_char": 2567
+      },
+      "text": "Dann holte sie den Salzstreuer vom Küchentisch.",
+      "entities": [
+        "Dann",
+        "Salzstreuer",
+        "Küchentisch",
+        "sie"
+      ],
+      "facts": [
+        {
+          "s": "Dann",
+          "p": "holte",
+          "o": "sie"
+        },
+        {
+          "s": "Salzstreuer",
+          "p": "vom",
+          "o": "Küchentisch"
+        },
+        {
+          "s": "sie",
+          "p": "den",
+          "o": "Salzstreuer"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 14,
+      "order": 14,
+      "span": {
+        "start_char": 2568,
+        "end_char": 2768
+      },
+      "text": "Am Ende befüllte sie einen Luftballon mit Wasser. Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und drüber. Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. 'Da ist sie!",
+      "entities": [
+        "Aula",
+        "Jonglier",
+        "Bauch",
+        "ihr",
+        "Da",
+        "Pia",
+        "Schule",
+        "Musik",
+        "Am",
+        "Luftballon",
+        "Ende",
+        "In",
+        "sie",
+        "Wasser",
+        "Pias"
+      ],
+      "facts": [
+        {
+          "s": "Aula",
+          "p": "der",
+          "o": "Schule"
+        },
+        {
+          "s": "Bauch",
+          "p": "ging",
+          "o": "es"
+        },
+        {
+          "s": "Da",
+          "p": "ist",
+          "o": "sie"
+        },
+        {
+          "s": "Pia",
+          "p": "wartete",
+          "o": "darauf"
+        },
+        {
+          "s": "Schule",
+          "p": "war",
+          "o": "gerammelt"
+        }
+      ],
+      "tags": [
+        "action"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 15,
+      "order": 15,
+      "span": {
+        "start_char": 2769,
+        "end_char": 3002
+      },
+      "text": "Das ist das Mädchen, das immer alles richtig macht!', sagte eine Frau. 'Oh! Bei ihr läuft immer alles perfekt, immer!', rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft. SUPER PIA! Als Nächstes kam der Salzstreuer.",
+      "entities": [
+        "Luft",
+        "Mädchen",
+        "ihr",
+        "Pia",
+        "Musik",
+        "Frau",
+        "Mann",
+        "Oh",
+        "das Mädchen, das immer alles richtig macht",
+        "Als",
+        "Salzstreuer",
+        "Nächstes",
+        "Hubert",
+        "Bei"
+      ],
+      "facts": [
+        {
+          "s": "ihr",
+          "p": "läuft",
+          "o": "immer"
+        },
+        {
+          "s": "Pia",
+          "p": "Hubert",
+          "o": "in"
+        },
+        {
+          "s": "Als",
+          "p": "die",
+          "o": "Musik"
+        },
+        {
+          "s": "Als",
+          "p": "Nächstes",
+          "o": "kam"
+        },
+        {
+          "s": "Nächstes",
+          "p": "kam",
+          "o": "der"
+        }
+      ],
+      "tags": [
+        "dialogue",
+        "action"
+      ],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 16,
+      "order": 16,
+      "span": {
+        "start_char": 3003,
+        "end_char": 3158
+      },
+      "text": "Und zum Schluss der Wasserballon. Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. Doch dann fiel Pia am Salzstreuer etwas Komisches auf...",
+      "entities": [
+        "Schluss",
+        "Wasserballon",
+        "Komisches",
+        "Sache",
+        "Pia",
+        "Doch",
+        "Zuschauer",
+        "Salzstreuer"
+      ],
+      "facts": [
+        {
+          "s": "Schluss",
+          "p": "der",
+          "o": "Wasserballon"
+        },
+        {
+          "s": "Pia",
+          "p": "war",
+          "o": "ganz"
+        },
+        {
+          "s": "Pia",
+          "p": "am",
+          "o": "Salzstreuer"
+        },
+        {
+          "s": "Doch",
+          "p": "dann",
+          "o": "fiel"
+        },
+        {
+          "s": "Zuschauer",
+          "p": "klatschten",
+          "o": "begeistert"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 17,
+      "order": 17,
+      "span": {
+        "start_char": 3159,
+        "end_char": 3345
+      },
+      "text": "Die Körner, die herausrieselten, waren nicht weiß! HATSCHI! Hubert war von seinem eigenen Niesen so überrascht, dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. PENG!",
+      "entities": [
+        "Niesen",
+        "Krallen",
+        "Luftballon",
+        "Hubert",
+        "Körner"
+      ],
+      "facts": [
+        {
+          "s": "Niesen",
+          "p": "so",
+          "o": "überrascht"
+        },
+        {
+          "s": "Krallen",
+          "p": "am",
+          "o": "Luftballon"
+        },
+        {
+          "s": "Hubert",
+          "p": "war",
+          "o": "von"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 18,
+      "order": 18,
+      "span": {
+        "start_char": 3346,
+        "end_char": 3582
+      },
+      "text": "Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. Und was für einen... Die Musik verstummte. Pia wusste nicht, was sie machen sollte. Weinen?",
+      "entities": [
+        "Zum",
+        "Fehler",
+        "Pia",
+        "Musik",
+        "Kopf",
+        "Pfeffer",
+        "Mal",
+        "Weinen",
+        "sie",
+        "Hubert",
+        "Ballonfetzen",
+        "Alles",
+        "Pias"
+      ],
+      "facts": [
+        {
+          "s": "Zum",
+          "p": "ersten",
+          "o": "Mal"
+        },
+        {
+          "s": "Pia",
+          "p": "einen",
+          "o": "Fehler"
+        },
+        {
+          "s": "Pia",
+          "p": "wusste",
+          "o": "nicht"
+        },
+        {
+          "s": "sie",
+          "p": "machen",
+          "o": "sollte"
+        },
+        {
+          "s": "Ballonfetzen",
+          "p": "und",
+          "o": "Pfeffer"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 19,
+      "order": 19,
+      "span": {
+        "start_char": 3583,
+        "end_char": 3790
+      },
+      "text": "Von der Bühne rennen? Die Zuschauer hockten wie versteinert da. Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war! Pia schaute zu Hubert. Der schaute zurück.",
+      "entities": [
+        "Von",
+        "Fehler",
+        "Mädchen",
+        "Pia",
+        "Bühne",
+        "Zuschauer",
+        "Sie",
+        "sie",
+        "Hubert"
+      ],
+      "facts": [
+        {
+          "s": "Von",
+          "p": "der",
+          "o": "Bühne"
+        },
+        {
+          "s": "Fehler",
+          "p": "passiert",
+          "o": "war"
+        },
+        {
+          "s": "Pia",
+          "p": "schaute",
+          "o": "zu"
+        },
+        {
+          "s": "Zuschauer",
+          "p": "hockten",
+          "o": "wie"
+        },
+        {
+          "s": "Sie",
+          "p": "konnten",
+          "o": "nicht"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    },
+    {
+      "beat_id": 20,
+      "order": 20,
+      "span": {
+        "start_char": 3791,
+        "end_char": 3965
+      },
+      "text": "Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen.",
+      "entities": [
+        "Lachen",
+        "Sein",
+        "Kichern",
+        "Hamsterfell",
+        "ihr",
+        "Pia",
+        "Ballonreste",
+        "Ihr",
+        "Glucksen"
+      ],
+      "facts": [
+        {
+          "s": "Sein",
+          "p": "Hamsterfell",
+          "o": "war"
+        },
+        {
+          "s": "Kichern",
+          "p": "wurde",
+          "o": "zu"
+        },
+        {
+          "s": "Hamsterfell",
+          "p": "war",
+          "o": "pitschnass"
+        },
+        {
+          "s": "ihr",
+          "p": "Kichern",
+          "o": "wurde"
+        },
+        {
+          "s": "Pia",
+          "p": "musste",
+          "o": "kichern"
+        }
+      ],
+      "tags": [],
+      "safety_tags": []
+    }
+  ],
+  "entity_registry": {
+    "Pia": {
+      "aliases": [
+        "Pia Piretti",
+        "sie",
+        "ihr",
+        "das Mädchen, das immer alles richtig macht"
+      ],
+      "type": "character"
+    },
+    "Carl": {
+      "aliases": [
+        "ihr Bruder",
+        "ihren Bruder"
+      ],
+      "type": "character"
+    },
+    "Hubert": {
+      "aliases": [
+        "der Hamster",
+        "ihrem Hamster"
+      ],
+      "type": "character"
+    },
+    "Millie": {
+      "aliases": [],
+      "type": "character"
+    },
+    "Sarah": {
+      "aliases": [],
+      "type": "character"
+    },
+    "Vater": {
+      "aliases": [
+        "ihr Vater",
+        "Papa"
+      ],
+      "type": "character"
+    }
+  },
+  "chapter_text": "Pia muss nicht perfekt sein. Für Pia Piretti begann der Freitag wie jeder andere Tag. Sie suchte Socken aus, die zusammenpassten. Und natürlich zog sie jeden Schuh an den richtigen Fuß. Sie vergaß nicht, ihrem Hamster Hubert sein Lieblingsessen zu füttern: Brokkoli. Und als sie das Pausenbrot für ihren Bruder Carl schmierte, nahm sie dafür haargenau so viel Erdnussbutter wie Marmelade. Als sie vor die Tür ging, um ihre Fans zu begrüßen, sagte sie 'Guten Morgen' und 'Dankeschön'. Die Leute fragten, ob sie ihr Bett gemacht hatte. Hatte sie. Sie wollten wissen, ob sie vielleicht ihre Mathehausaufgaben vergessen hatte. Nö. 'Was ist mit dem Talentwettbewerb heute Abend?', wollten sie wissen. 'Von mir aus kann's losgehen!', antwortete Pia lächelnd. Schließlich hatte sie mit ihrer Jongliernummer in den letzten drei Jahren immer gewonnen. Die meisten Menschen in der Stadt wussten nicht einmal, wie Pia wirklich hieß. Sie nannten sie nur 'das Mädchen, das immer alles richtig macht', denn solange man denken konnte, war ihr noch nie ein Fehler passiert. Anders als Pia machte Carl jede Menge Fehler. Er aß seine Wachsmalkreide und malte mit grünen Bohnen. Er tanzte mit den Händen und spielte mit den Füßen Klavier. Für Carl war es das Größte, Dinge falsch zu machen! In der Schule war Pia mit ihren zwei besten Freundinnen, Millie und Sarah, in einem Kochteam. Für ihren Riesenrhabarbermuffin brauchten sie Eier. Pia ging zum Kühlschrank und wählte sorgfältig die größten und schönsten Eier aus, die sie finden konnte. Doch auf dem Rückweg rutschte sie aus. Die Eier flogen in hohem Bogen durch die Luft. Und Pia war kurz davor, ihren ersten Fehler zu machen! Tat sie aber nicht! 'Das war knapp!', dachte Pia. 'Tut mir leid, Pia... Ich habe ein Stück Rhabarber fallen lassen.' Auf dem Heimweg schaute Pia zu, wie Millie und Sarah im Park Schlittschuh liefen. 'Komm doch zu uns!', rief Millie. 'Es macht Spaß!', sagte Sarah. Pia beobachtete, wie sie über den gefrorenen Teich rutschten und schlidderten. Millie und Sarah lachten, während sie übers Eis stolperten. 'Nein, danke', sagte Pia. Beim Abendessen rührte Pia ihr Essen kaum an. 'Ist alles in Ordnung, Spätzchen?', fragte ihr Vater. 'Ich habe Angst, dass ich es heute verpatze', gestand Pia. 'Und alle werden es sehen.' 'Angst? Aber du machst doch nie etwas falsch!', sagte ihr Vater mit einem Lächeln. Pia versuchte, auch zu lächeln. Nach dem Essen machte sich Pia für den Talentwettbewerb bereit. Zuerst weckte sie Hubert, der ein Nickerchen gemacht hatte. Dann holte sie den Salzstreuer vom Küchentisch. Am Ende befüllte sie einen Luftballon mit Wasser. Die Aula der Schule war gerammelt voll! In Pias Bauch ging es drunter und drüber. Pia wartete darauf, dass ihre Jonglier-Musik einsetzte. 'Da ist sie! Das ist das Mädchen, das immer alles richtig macht!', sagte eine Frau. 'Oh! Bei ihr läuft immer alles perfekt, immer!', rief ein Mann. Als die Musik einsetzte, warf Pia Hubert in die Luft. SUPER PIA! Als Nächstes kam der Salzstreuer. Und zum Schluss der Wasserballon. Pia war ganz bei der Sache! Die Zuschauer klatschten begeistert. Doch dann fiel Pia am Salzstreuer etwas Komisches auf... Die Körner, die herausrieselten, waren nicht weiß! HATSCHI! Hubert war von seinem eigenen Niesen so überrascht, dass er sich mit seinen kleinen Krallen am Luftballon festklammerte. PENG! Hubert, kleine Ballonfetzen und Pfeffer: Alles regnete auf Pias Kopf. Zum ersten Mal, solange man denken konnte, hatte Pia einen Fehler gemacht. Und was für einen... Die Musik verstummte. Pia wusste nicht, was sie machen sollte. Weinen? Von der Bühne rennen? Die Zuschauer hockten wie versteinert da. Sie konnten nicht glauben, dass dem Mädchen, das immer alles richtig macht, ein Fehler passiert war! Pia schaute zu Hubert. Der schaute zurück. Sein Hamsterfell war pitschnass und voller kleiner Ballonreste. Pia musste kichern. Ihr Kichern wurde zu einem Glucksen. Und aus dem Glucksen wurde ein richtig lautes Lachen."
+}

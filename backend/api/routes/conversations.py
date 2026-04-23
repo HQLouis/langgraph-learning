@@ -34,7 +34,7 @@ async def create_conversation(
     Create a new conversation session.
 
     Args:
-        request: ConversationCreate with child_id and game_id
+        request: ConversationCreate with child_id
         service: Injected conversation service
 
     Returns:
@@ -42,13 +42,14 @@ async def create_conversation(
     """
     metadata = service.create_conversation(
         child_id=request.child_id,
-        game_id=request.game_id
+        story_id=request.story_id,
+        chapter_id=request.chapter_id,
+        num_planned_tasks=request.num_planned_tasks
     )
 
     return ConversationResponse(
         thread_id=metadata.thread_id,
         child_id=metadata.child_id,
-        game_id=metadata.game_id,
         created_at=metadata.created_at
     )
 
@@ -190,4 +191,48 @@ async def delete_conversation(
         )
 
     return None  # 204 No Content
+
+
+@router.get(
+    "/{thread_id}/contract",
+    responses={
+        200: {"description": "Output contract retrieved"},
+        404: {"model": ErrorResponse, "description": "Conversation or contract not found"}
+    }
+)
+async def get_output_contract(
+    thread_id: str,
+    validate: bool = False,
+    service: ConversationService = Depends(get_conversation_service)
+):
+    """
+    Get the output contract for the last response with optional validation.
+
+    The output contract includes:
+    - The spoken text
+    - Answer type classification
+    - Task information (if applicable)
+    - Grounding with evidence and claims
+    - Confidence score
+
+    Args:
+        thread_id: Unique conversation thread ID
+        validate: Whether to validate evidence against source content
+        service: Injected conversation service
+
+    Returns:
+        Output contract with optional validation results
+
+    Raises:
+        HTTPException: If conversation not found
+    """
+    contract_data = service.get_last_response_contract(thread_id, validate=validate)
+
+    if not contract_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Conversation not found: {thread_id}"
+        )
+
+    return contract_data
 

@@ -1,0 +1,34 @@
+Feature 18: "Auf Interessen des Kindes eingehen" — Engage with the child's interests.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia schmiert auf ein Brot Marmelade. Was isst du gern auf deinem Brot?
+KIND: Käse
+KI: Käse auf dem Brot schmeckt auch lecker! Pia nimmt Marmelade auf das Brot. Was macht sie auf ihr Brot noch dazu?
+
+Anforderung: Die Antwort zu der Geschichte kurz mit der Lebenswelt des Kindes verbinden und weiter zu der Geschichte überführen.
+
+
+Beispiel 2 (PIA):
+
+KI: Pia backt mit ihren Freundinen. Magst du auch backen?
+Kind: Ja
+KI: Magst du vielleicht auch Muffins backen, wie Pia, oder lieber etwas anderes?
+KIND: Kuchen
+KI: Du magst Kuchen backen. In der Geschichte backt Pia Muffins mit ihren Freundinnen. Was brauchen sie dafür?
+
+Anforderung: Interesse am Kind in 2-3 kurzen Sätzen zeigen, in dem man passende Fragen zu der Lebenswelt des Kindes stellt, die sich direkt aus der aktuellen Szene ergeben. Der Dialog soll weiterhin im Thema der Geschichte bleiben.
+
+
+Beispiel 3 (PIA):
+
+KI: Pia geht zur Schule. Gehst du auch gern zur Schule?
+KIND: Nein
+KI: Schade, weil Pia gerne zur Schule geht. Was macht Pia dort?
+
+Anforderung: Die Antwort des Kindes ernst nehmen und kurz darüber austauschen, aber dann zurück zur Handlung führen.

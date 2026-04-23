@@ -7,7 +7,8 @@ from nodes import (
     initialStateLoader,
     masterChatbot,
     immediate_graph_needs_initial_state,
-    load_analysis
+    load_analysis,
+    load_beat_context
 )
 
 
@@ -25,12 +26,14 @@ def create_immediate_response_graph(llm, memory, background_graph_instance):
     # Add nodes with LLM binding
     builder.add_node("initialStateLoader", initialStateLoader)
     builder.add_node("load_analysis", lambda state: load_analysis(state, config, background_graph_instance))
+    builder.add_node("load_beat_context", load_beat_context)
     builder.add_node("masterChatbot", lambda state: masterChatbot(state, llm))
 
     # Add edges
     builder.add_conditional_edges(START, immediate_graph_needs_initial_state)
     builder.add_edge("initialStateLoader", "load_analysis")
-    builder.add_edge("load_analysis", "masterChatbot")
+    builder.add_edge("load_analysis", "load_beat_context")
+    builder.add_edge("load_beat_context", "masterChatbot")
     builder.add_edge("masterChatbot", END)  # masterChatbot now goes directly to END
 
     return builder.compile(checkpointer=memory)

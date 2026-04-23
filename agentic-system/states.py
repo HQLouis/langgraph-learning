@@ -1,9 +1,18 @@
 """
 State definitions for the Lingolino application.
 """
-from typing import Annotated
+import sys
+import os
+from typing import Annotated, Optional
 from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
+
+# Import ResponseContract from backend models (project root may not be in sys.path)
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
+from backend.models.output_contract import ResponseContract
 
 
 class State(TypedDict):
@@ -27,6 +36,20 @@ class State(TypedDict):
     aufgaben: str
     satzbaubegrenzung: str
 
+    # Beat system fields
+    story_id: Optional[str]  # Story identifier for beatpack
+    chapter_id: Optional[str]  # Chapter identifier for beatpack
+    beat_context: Optional[str]  # Formatted beat context for current interaction
+    active_beat_ids: Optional[list]  # List of beat IDs currently in use
+    num_planned_tasks: Optional[int]  # Number of tasks planned for this chapter (default: 5)
+
+    # Beat progress tracking
+    covered_beat_ids: Optional[list]  # Cumulative set of beat IDs discussed so far
+    story_near_end: Optional[bool]  # Whether conversation has reached final beats
+
+    # Output Contract fields
+    response_contract: Optional[ResponseContract]  # Structured output contract for validation
+
 
 class BackgroundState(TypedDict):
     """State for the background analysis graph."""
@@ -46,4 +69,15 @@ class BackgroundState(TypedDict):
     aufgaben: str
     satzbau_analysis: str
     satzbaubegrenzung: str
+
+    # Beat system fields
+    story_id: Optional[str]
+    chapter_id: Optional[str]
+    beat_context: Optional[str]
+    active_beat_ids: Optional[list]
+    num_planned_tasks: Optional[int]
+
+    # Beat progress tracking
+    covered_beat_ids: Optional[list]
+    story_near_end: Optional[bool]
 

@@ -1,0 +1,34 @@
+Feature 14: "Konkrete Sprache statt abstrakter Formulierungen verwenden" — Use concrete language instead of abstract phrasing.
+
+Story: "Pia muss nicht perfekt sein"
+(see stick-to-story-content-test-spec.txt for full story text)
+
+
+Beispiel 1 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia stolpert mit den Eiern, aber sie fängt die Eier wieder auf. Das war knapp! Das heißt: Die Eier wären fast auf den Boden gefallen. Also, sind die Eier gefallen oder hat Pia die Eier noch gefangen?
+KIND: gefangen
+KI: Ja, Pia hat die Eier noch gefangen.
+
+Anforderung: Die KI soll Redewendungen sofort in einfache, konkrete Sprache übersetzen. Die Erklärung soll kurz sein und direkt mit der Handlung verbunden werden.
+
+
+Beispiel 2 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia macht ihrem Bruder ein Pausenbrot. Was schmiert Pia auf das Brot – Marmelade oder Erdnussbutter?
+KIND: beides
+KI: Genau, Marmelade und Erdnussbutter sind auf dem Brot.
+
+Anforderung: Die KI soll immer klar und konkret Objekte benennen.
+
+
+Beispiel 3 (PIA):
+
+Eine mögliche KI Antwort:
+KI: Pia nimmt von Marmelade und Erdnussbutter gleich viel. Auf beiden Seiten vom Brot ist gleich viel drauf. Ist auf einer Seite mehr oder ist es gleich viel?
+KIND: gleich viel
+KI: Genau, es ist gleich viel auf beiden Seiten.
+
+Anforderung: Die KI soll abstrakte Begriffe mit einfachen, anschaulichen Bildern oder Vergleichen erklären, ohne davor anzudeuten, dass gleich eine Erklärung kommt. Erklärungen müssen kurz und konkret sein.

@@ -9,13 +9,19 @@ from datetime import datetime
 class ConversationCreate(BaseModel):
     """Schema for creating a new conversation."""
     child_id: str = Field(..., description="ID of the child (1-3)")
-    game_id: str = Field(..., description="ID of the game (e.g., 0)")
+
+    # Beat system fields (optional - enables closed-world content management)
+    story_id: Optional[str] = Field(None, description="Story ID for beat-based content (optional)")
+    chapter_id: Optional[str] = Field(None, description="Chapter ID for beat-based content (optional)")
+    num_planned_tasks: Optional[int] = Field(5, description="Number of planned tasks for beat distribution (default: 5)")
 
     class Config:
         json_schema_extra = {
             "example": {
                 "child_id": "1",
-                "game_id": "0"
+                "story_id": "mia_und_leo",
+                "chapter_id": "chapter_01",
+                "num_planned_tasks": 5
             }
         }
 
@@ -24,7 +30,6 @@ class ConversationResponse(BaseModel):
     """Schema for conversation creation response."""
     thread_id: str = Field(..., description="Unique thread ID for this conversation")
     child_id: str
-    game_id: str
     created_at: datetime
 
     class Config:
@@ -32,7 +37,6 @@ class ConversationResponse(BaseModel):
             "example": {
                 "thread_id": "conv_abc123def456",
                 "child_id": "1",
-                "game_id": "0",
                 "created_at": "2025-10-20T10:30:00Z"
             }
         }
@@ -61,7 +65,6 @@ class ConversationHistory(BaseModel):
     """Schema for conversation history response."""
     thread_id: str
     child_id: str
-    game_id: str
     messages: list[MessageInHistory]
     created_at: datetime
 
@@ -70,7 +73,6 @@ class ConversationHistory(BaseModel):
             "example": {
                 "thread_id": "conv_abc123",
                 "child_id": "1",
-                "game_id": "0",
                 "messages": [
                     {"role": "human", "content": "Hello!"},
                     {"role": "ai", "content": "Hi there! How can I help you?"}
@@ -100,4 +102,11 @@ class HealthResponse(BaseModel):
     app_name: str
     version: str
     timestamp: datetime
+
+
+class StoryListResponse(BaseModel):
+    """Schema for available stories endpoint."""
+    stories: dict[str, list[str]] = Field(
+        ..., description="Mapping of story_id to list of chapter_ids"
+    )
 
