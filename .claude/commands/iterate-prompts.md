@@ -1,114 +1,148 @@
-You are guiding the iterative prompt engineering process for the Lingolino dialog system.
+You are guiding the iterative prompt engineering loop for the Lingolino dialog system, using the example-centric matrix test architecture.
 
 ## Goal
 
-Adjust prompts in `agentic-system/local_fallback_prompts.py` to make the dialog system pass as many feature tests as possible, without overfitting to specific test scenarios. Prompts must remain general-purpose and flexible.
+Adjust prompts in `agentic-system/local_fallback_prompts.py` (and related
+coded nudges in `agentic-system/nodes.py` when prompt changes aren't
+enough) so that as many matrix cells as possible pass. Prompts must stay
+general — never overfit to a specific SubExample.
 
-## Context Files
+## Context files
 
-- **Architecture**: `dialogue-system-engineering/architecture.md`
-- **Change log**: `dialogue-system-engineering/change_log.md` — append every change here
-- **Architectural improvements**: `dialogue-system-engineering/architectural-improvements.md` — for changes beyond prompt engineering
-- **Prompts**: `agentic-system/local_fallback_prompts.py`
-- **Master node**: `agentic-system/nodes.py` (masterChatbot function)
-- **Test config**: `tests/feature-testing/ft_config.py`
+- Architecture draft: `dialogue-system-engineering/example-centric-testing-draft.md`
+- Change log: `dialogue-system-engineering/change_log.md` — append every change
+- Architectural improvements: `dialogue-system-engineering/architectural-improvements.md` — for changes beyond prompt engineering
+- Prompts: `agentic-system/local_fallback_prompts.py`
+- Master node: `agentic-system/nodes.py`
+- Test config: `tests/feature-testing/ft_config.py`
+- Registry: `tests/feature-testing/_registry/requirements.yaml`, `.../examples.jsonl`
 
-## Process
+## Tiered inner loop
 
-### Phase 1 — Baseline (skip if baseline already exists in change_log.md)
+Per the draft §2.3a, iteration works on two tiers:
 
-1. Run the full test suite to establish current pass/fail state:
-   ```
-   pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short 2>&1 | tail -60
-   ```
-2. Record results in `dialogue-system-engineering/change_log.md` as the baseline entry.
+1. **Core × Core** (inner loop) — `~450` cells, finishes in minutes.
+   This is where most prompt iteration happens.
+2. **Extended / All** (regression loop) — full matrix (`~9000` cells).
+   Runs only after core is green, to catch regressions in softer rules.
 
-### Phase 2 — Analysis
+Run commands:
 
-3. Read failing test files to understand what behavior is expected.
-4. Read the current prompts and identify what's missing or conflicting.
-5. Group failing tests by root cause (e.g., "missing transition rule", "sentence variety not addressed").
+```bash
+# Inner loop: core tier, default profile
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=core --matrix-profiles=default --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
 
-### Phase 3 — Targeted Prompt Change
+# Regression: full matrix
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=all --matrix-profiles=default --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
+```
 
-6. Make ONE focused change to `local_fallback_prompts.py`. Keep it general — add rules that improve dialog quality broadly, not rules that match specific test inputs.
-7. Run ONLY the affected test group first (fast feedback):
-   ```
-   pytest tests/feature-testing/<affected-feature>/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short
-   ```
-8. If the targeted tests improve, run the FULL suite to check for regressions:
-   ```
-   pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short 2>&1 | tail -60
-   ```
+The cache (`tests/feature-testing/_matrix/.cache/`) makes re-runs cheap
+when prompts haven't changed in the paths we're testing.
 
-### Phase 4 — Document
+## Cycle protocol
 
-9. Append the change to `dialogue-system-engineering/change_log.md` with:
-   - What changed and why
-   - Test results before and after
-   - Any regressions
+### Phase 1 — Baseline (skip if baseline is already logged)
 
-### Phase 5 — Iterate or Escalate
+Run the core matrix. Record results in `change_log.md` under a timestamped
+"Baseline" entry, with:
+- total cells
+- cells by verdict (PASS / FAIL / N/A)
+- the list of FAIL cells with their requirement ids
 
-10. If tests improved with no regressions → go back to Phase 2 for next failing group.
-11. If prompt changes cause regressions that can't be resolved → revert and try a different approach.
-12. If prompt engineering hits fundamental limits → document in `architectural-improvements.md` and **STOP**. Ask the user for human review before implementing architectural changes.
+### Phase 2 — Diagnose by column, not by folder
+
+Open `tests/feature-testing/reporting/output/matrix_latest.html`. Look
+at the **heatmap column view**:
+
+- Requirement columns that are mostly red → the system systematically
+  violates that rule. **Column-level failures are the highest-leverage
+  targets** — one prompt change can flip many cells at once.
+- Rows that are mostly red → the SubExample's prefix is producing an
+  especially bad response across many requirements. Often a single
+  underlying bug (e.g. wrong task from `aufgaben`) drives this.
+
+Group FAIL cells by:
+- **Prompt gap** — a rule is missing or conflicting in
+  `local_fallback_prompts.py`.
+- **Detection gap** — the LLM ignores the prompt; a coded nudge in
+  `nodes.py` (pattern: `_detect_<condition>`) is needed.
+- **Judge drift** — the judge is being overly strict or inconsistent.
+  Document but do NOT edit the judge criterion without the curator's
+  approval (the curator owns `requirements.yaml`).
+- **Engine flake** — cell flips verdict across runs; note as a known
+  flake, move on.
+
+### Phase 3 — One change, targeted rerun
+
+Make ONE logical change (a prompt rule, OR a new `_detect_*` function,
+OR a tweak to an existing detection nudge). Then rerun the affected
+requirement ONLY:
+
+```bash
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=core --matrix-n-runs=3 \
+    -k R-XX-YY \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
+```
+
+`--matrix-n-runs=3` is important for targeted reruns — it distinguishes
+fixes from flakes.
+
+### Phase 4 — Full-core regression
+
+If the targeted rerun goes green, rerun the full core matrix to catch
+regressions elsewhere. If no regressions, move to Phase 5.
+
+### Phase 5 — Log the change
+
+Append to `change_log.md`:
+- Cycle number, date, what rule/nudge changed and WHY
+- Before and after counts per verdict
+- Any known flakes or new failures
+
+### Phase 6 — Widen
+
+Once core × core is green for 3 consecutive runs, widen to
+`--matrix-tier=extended --matrix-profiles=default`. Same loop. Then
+`--matrix-profiles=extended` for the gender-sensitive sweep.
 
 ## Rules
 
-- **Strategy A first**: Only run Strategy A tests (`-m "llm_feature and not simulated"`) during iteration. Run Strategy B only for final validation.
-- **No overfitting**: Never add prompt rules that reference specific stories, character names, or test scenarios. Rules must be general conversation principles.
-- **One change at a time**: Make one logical change per iteration so you can measure its impact cleanly.
-- **Revert on regression**: If a change breaks more tests than it fixes, revert it immediately.
-- **Temperature**: Ensure `SYSTEM_TEMPERATURE` in `ft_config.py` is set to 0.0 for deterministic testing.
-- **Background workers**: Currently all empty. If you need to activate them, document it as an architectural improvement and ask for review.
-- **Never modify test files**: Tests define the expected behavior. Only modify prompts and system code.
+1. **No overfitting**. Rules must be general conversation principles —
+   never reference specific stories, character names, or SubExample ids.
+2. **One change per cycle** so impact is measurable.
+3. **Revert on regression**. If a change breaks more cells than it fixes,
+   `git checkout` the changed file immediately.
+4. **Strategy B-equivalent** — cells with `needs_background_analysis:
+   true` already include a BG pass; no separate strategy is needed.
+5. **Never modify `requirements.yaml` or `examples.jsonl` during
+   iteration**. Those are the curator's surface — tell the user if a
+   judge criterion seems wrong.
+6. **Temperature 0.0** — check `ft_config.py::SYSTEM_TEMPERATURE`.
 
-## Learnings — When Prompts Are Not Enough
+## Learnings carried over from the old `/iterate-prompts`
 
-Through iterative testing, we've identified patterns where prompt engineering reaches its limits and programmatic mechanisms are needed instead.
+- **Prompt rules can conflict**. When two prompt rules point in
+  opposite directions, the LLM picks unpredictably. Coded detection
+  nudges in `nodes.py` that fire AFTER generation as SystemMessages are
+  more reliable (examples: `_detect_repetitive_starters`,
+  `_detect_repeated_disengagement`, `_detect_story_end`).
+- **Grammar glitches → post-processing**, not prompt tweaks. See
+  `german_grammar_postprocess.py` for the pattern.
+- **Beat system, not keywords**, for story-end detection. Don't add
+  story-specific keywords to `_detect_story_end`.
+- **Simulated-style cells are more variable**. A cell that passes with
+  `needs_background_analysis: false` but fails with it `true` means
+  the BG graph is the problem — inspect `aufgaben` / `satzbaubegrenzung`.
 
-### Rule Conflicts Require Programmatic Resolution
+## Escalation
 
-When prompt rules conflict (e.g., REGEL 7 "ask verification after correction" vs REGEL 8 "don't ask questions at story end"), the LLM inconsistently chooses which rule to follow. **Solution**: Use coded detection nudges in `nodes.py` that fire as late SystemMessages, explicitly stating which rules are overridden. These are more reliable than relying on the LLM to resolve conflicts from the prompt alone.
-
-### Story-End Detection Needs the Beat System
-
-Generic keyword-based story-end detection (e.g., "eingeschlafen", "kichern") only works for known story endings. For a story-agnostic system, the **beat system** should be used to detect when the conversation has reached the final beats of any story. Do NOT add story-specific keywords to `_detect_story_end` in `nodes.py`.
-
-### Simulated Tests Are Inherently More Variable
-
-Strategy B (simulated) tests generate the full conversation from scratch. Even with temp=0, the conversation context diverges from fixture-based scripts, leading to different LLM behavior. If a fixture-based test passes consistently but its simulated counterpart fails:
-1. First check if the LLM response is genuinely wrong or if the judge is being overly strict
-2. If the LLM behavior is borderline, the issue is likely the LLM's generation quality, not the prompt
-3. Programmatic nudges (coded detection + late SystemMessage injection) can help but may not fully resolve it
-
-### Coded Detection Nudges Are More Reliable Than Prompt Rules Alone
-
-For behavioral requirements that the LLM violates despite clear prompt rules, adding a coded detection function in `nodes.py` (pattern: `_detect_<condition>`) that injects a targeted SystemMessage AFTER the conversation is more effective than strengthening prompt text. Examples:
-- `_detect_repetitive_starters`: Catches repeated sentence openings
-- `_detect_repeated_disengagement`: Catches child fatigue signals
-- `_detect_story_end`: Catches story ending markers
-- `_detect_missing_transition_recap`: Ensures smooth transitions in long conversations
-
-Each nudge should be **explicit and directive** (say exactly what to do: "Verabschiede dich SOFORT") rather than referencing rule numbers ("Befolge REGEL 4B").
-
-### LLM Grammar Errors Need Post-Processing, Not Just Prompts
-
-Grammar errors like wrong verb conjugation ("suchst er" → "sucht er") are generation defects, not knowledge gaps. Adding grammar hints to the prompt helps but doesn't eliminate the issue. A regex-based post-processing step (`german_grammar_postprocess.py`) applied before the output contract catches known patterns reliably at <1ms cost.
-
-## Test Run Shortcuts
-
-```bash
-# Full suite, Strategy A only (fast iteration)
-pytest tests/feature-testing/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# Single feature suite
-pytest tests/feature-testing/<feature-name>/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# Full suite including Strategy B (final validation)
-pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# With HTML report
-pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short --json-report --json-report-file=.feature_test_report.json
-```
+After 5 cycles with a requirement column still red, consider:
+1. A new `_detect_*` nudge in `nodes.py`.
+2. An architectural fix (document in `architectural-improvements.md`).
+3. Whether the requirement's applicability rule or judge criterion is
+   the actual problem — flag it to the curator.

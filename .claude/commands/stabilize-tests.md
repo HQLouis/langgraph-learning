@@ -1,121 +1,120 @@
-You are running an automated test stabilization loop for the Lingolino dialog system. Your goal is to make ALL feature tests pass **3 consecutive full-suite runs** with zero failures.
+You are running an automated test stabilization loop for the Lingolino dialog-system matrix. Your goal is to drive the matrix to zero FAIL cells over 3 consecutive full runs.
 
 ## Goal
 
-Iterate in cycles: run tests → analyze failures → fix (prompts or code) → re-run, until the full test suite passes 3 times in a row. This command builds on `/iterate-prompts` but adds persistence and cycle tracking.
+The matrix classifies every (SubExample × Requirement × profile) cell
+as PASS, FAIL, or N/A. N/A counts as PASS for stability purposes. The
+target is **zero FAIL cells across 3 consecutive runs** at the currently
+configured tier.
 
-## Context Files
+Stabilization runs in three stages:
+1. **Stage 1 — core** (`--matrix-tier=core --matrix-profiles=default`):
+   the fast inner loop. Typical size ~450 cells.
+2. **Stage 2 — extended** (`--matrix-tier=all --matrix-profiles=default`):
+   the full matrix at default profiles. Typical size ~9 000 cells.
+3. **Stage 3 — extended profiles** (`--matrix-profiles=extended`):
+   adds gender / age variants for profile-sensitive requirements.
 
-- **Prompts**: `agentic-system/local_fallback_prompts.py`
-- **Master node**: `agentic-system/nodes.py` (masterChatbot, detection nudges)
-- **Change log**: `dialogue-system-engineering/change_log.md`
-- **Architectural improvements**: `dialogue-system-engineering/architectural-improvements.md`
-- **Test config**: `tests/feature-testing/ft_config.py`
+A cell that flips PASS ↔ FAIL across runs is treated as a flake; under
+10 % flake rate it does NOT reset the consecutive-pass counter.
 
-## Cycle Protocol
+## Context files
 
-### Step 1 — Run full Strategy A suite
+- Prompts: `agentic-system/local_fallback_prompts.py`
+- Master node: `agentic-system/nodes.py`
+- Change log: `dialogue-system-engineering/change_log.md`
+- Registry: `tests/feature-testing/_registry/requirements.yaml`, `.../examples.jsonl`
+- Config: `tests/feature-testing/ft_config.py`
+
+## Cycle protocol
+
+### Step 1 — Pick the active stage
+
+Start at Stage 1. Only advance when the current stage achieves 3
+consecutive clean runs.
+
+### Step 2 — Run
 
 ```bash
-pytest tests/feature-testing/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short 2>&1 | tail -80
+# Stage 1
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=core --matrix-profiles=default \
+    --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
+
+# Stage 2
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=all --matrix-profiles=default \
+    --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
+
+# Stage 3
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=all --matrix-profiles=extended \
+    --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
 ```
 
-Record the result: total passed, total failed, which tests failed.
+After the run, open
+`tests/feature-testing/reporting/output/matrix_latest.html` and count
+FAIL cells.
 
-### Step 2 — Check completion condition
+### Step 3 — Advance or diagnose
 
-If **all tests passed**: increment the consecutive-pass counter.
-- If consecutive passes = 3 → **DONE**. Report final results and stop.
-- If consecutive passes < 3 → go to Step 1 (run again without changes to confirm stability).
+- **Zero FAIL** → increment consecutive-pass counter.
+  - Counter = 3 → stage done. Move to next stage (or stop if Stage 3).
+  - Counter < 3 → rerun Step 2 to confirm stability.
+- **≥ 1 FAIL** → reset counter to 0, go to Step 4.
 
-If **any test failed**: reset consecutive-pass counter to 0, go to Step 3.
+### Step 4 — Analyse by column, fix, rerun
 
-### Step 3 — Analyze failures
+For each failing column (requirement), read the heatmap row-by-row to
+see WHICH SubExamples trigger the failure. Classify:
+- **Prompt gap** → add/tighten a rule in `local_fallback_prompts.py`.
+- **Detection gap** → add or refine a `_detect_<condition>` nudge in
+  `nodes.py`.
+- **Flake** → if it only fails once across repeated runs, note as a
+  known flake and continue.
+- **Judge drift** → flag to the curator; do NOT edit the judge
+  criterion yourself.
 
-For each failing test:
-1. Read the test file to understand the expected behavior and judge criterion.
-2. Read the last system response that caused the failure (from test output).
-3. Categorize the failure:
-   - **Prompt gap**: Missing or conflicting rule in `local_fallback_prompts.py`
-   - **Detection gap**: Needs a coded nudge in `nodes.py` (pattern: `_detect_<condition>`)
-   - **Judge issue**: Judge criterion is too strict or ambiguous (DO NOT fix — document for user)
-   - **LLM flake**: Response is borderline, passes sometimes (may need no change — just re-run)
+Make **one** change. Rerun only the affected requirement with
+`--matrix-n-runs=3` and `-k R-XX-YY` to separate the fix from flakes.
+If the fix holds, go back to Step 2 for the full stage rerun.
 
-Group failures by root cause. Prioritize by impact (how many tests share the same root cause).
+### Step 5 — Log
 
-### Step 4 — Apply ONE fix
+Append to `change_log.md`:
+- Cycle number, active stage, change applied, before/after counts.
+- Consecutive-pass counter.
+- Known flakes.
 
-Make exactly ONE logical change. Follow `/iterate-prompts` rules:
-- No overfitting to specific stories or test inputs
-- Keep prompt rules general-purpose
-- Prefer coded detection nudges over prompt rules when the LLM ignores prompt text
+## Cycle tracking
 
-### Step 5 — Targeted re-run
-
-Run ONLY the affected feature group:
-```bash
-pytest tests/feature-testing/<affected-feature>/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short
-```
-
-- If it passes → go to Step 1 (full suite) to check regressions.
-- If it still fails → analyze why, try a different approach or revert.
-
-### Step 6 — Document
-
-Append to `dialogue-system-engineering/change_log.md`:
-- Cycle number
-- What changed and why
-- Targeted test result
-- Full suite result (after Step 1)
-- Consecutive pass count
-
-Then go back to Step 1.
-
-## Cycle Tracking
-
-Maintain a cycle tracker as a task list. Use TaskCreate at the start to create a tracking task, and TaskUpdate after each cycle to record:
-- Cycle N: X passed, Y failed, consecutive passes: Z/3
-- Failures: [list of failing test names]
-- Fix applied: [description]
+Use TaskCreate at the start to track: active stage, consecutive-pass
+counter, list of FAIL cells, and the latest change applied. Update the
+task after every cycle.
 
 ## Rules
 
-1. **Maximum 10 cycles** per invocation. If not stable after 10 cycles, stop and report what's still failing.
-2. **Never modify test files**. Tests define expected behavior.
-3. **Revert on regression**. If a change breaks more tests than it fixes, `git checkout` the changed file immediately.
-4. **LLM flakes**: If a test passes 2/3 runs consistently but fails 1/3, it's flaky. After 2 cycles of the same flake with no prompt fix available, note it as a known flake and move on. Don't burn cycles on inherent LLM variance.
-5. **Judge issues**: If a test fails because the judge is wrong (system response looks correct but judge says FAIL), document it for the user. Do NOT change judge criteria without asking.
-6. **Strategy B last**: Only run Strategy B (`-m simulated`) after achieving 3 consecutive Strategy A passes, as a final validation. Strategy B failures do NOT reset the consecutive-pass counter.
-7. **Temperature**: Verify `SYSTEM_TEMPERATURE` in `ft_config.py` is 0.0 before starting.
-
-## Escalation
-
-If after 5 cycles the same test keeps failing and prompt changes don't help:
-1. Check if it's a coded detection issue (needs a new `_detect_*` nudge in `nodes.py`)
-2. Check if it's an architectural issue (document in `architectural-improvements.md`)
-3. Ask the user before making architectural changes
+1. **Maximum 10 cycles per stage**. If Stage 1 isn't clean after 10
+   cycles, stop and report what's still failing.
+2. **Never modify `requirements.yaml` or `examples.jsonl`** — those are
+   curator state. If a judge criterion is the culprit, surface it and
+   stop.
+3. **Revert on regression** — `git checkout` a file if a change breaks
+   more cells than it fixes.
+4. **Strategy B equivalence** — cells already run BG when their
+   requirement has `needs_background_analysis: true`; there is no
+   separate simulation step.
+5. **Temperature 0.0** — confirm via `ft_config.py::SYSTEM_TEMPERATURE`.
 
 ## Reporting
 
-After completion (3 consecutive passes or 10-cycle limit), provide:
-- Total cycles run
-- Final pass/fail state
+When the stage sequence completes (or the 10-cycle cap is hit), print:
+- Total cycles per stage
+- Final FAIL counts per stage
 - Changes made (with cycle numbers)
-- Known flakes (if any)
-- Recommendations for remaining failures (if any)
-
-## Test Run Commands
-
-```bash
-# Full Strategy A suite (primary iteration loop)
-pytest tests/feature-testing/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# Single feature (targeted after fix)
-pytest tests/feature-testing/<feature>/ -m "llm_feature and not simulated" --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# Final validation with Strategy B
-pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short
-
-# With HTML report (final run)
-pytest tests/feature-testing/ -m llm_feature --n-runs=3 --pass-threshold=0.66 -v --tb=short --json-report --json-report-file=.feature_test_report.json
-```
+- Known flakes and their frequencies
+- Outstanding curator-facing issues (judge criteria, applicability
+  rules, missing SubExamples)

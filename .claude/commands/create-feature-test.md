@@ -1,3 +1,15 @@
+> ⚠️  **DEPRECATED**. The Lingolino test architecture moved from
+> per-feature folders to a unified requirement × SubExample matrix.
+> For a new Anforderung use **`/add-requirement`** — it updates
+> `tests/feature-testing/_registry/requirements.yaml` via the extraction
+> pipeline, with no Python scaffolding.
+>
+> This command is kept only for reference / emergency cases where
+> someone really does want a legacy per-feature folder. Do NOT invoke
+> it by default. Redirect the user to `/add-requirement`, or to
+> `/sync-registry` if the Anforderung text needs to reach the registry
+> first.
+
 You are guiding the user through creating a new feature test for the Lingolino dialog system.
 
 ## Inputs
