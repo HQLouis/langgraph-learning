@@ -199,19 +199,33 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
             session.config.getoption("--pass-threshold") or _cfg.PASS_THRESHOLD
         )
 
+        sidecar_path = json_path.with_suffix(".run_details.json")
         build_report(
             json_path=json_path,
             output_path=stamped_path,
             n_runs=n_runs,
             threshold=threshold,
             model=_cfg.SYSTEM_MODEL,
-            sidecar_path=json_path.with_suffix(".run_details.json"),
+            sidecar_path=sidecar_path,
         )
         # Symlink latest → stamped for easy access
         if latest_path.exists() or latest_path.is_symlink():
             latest_path.unlink()
         latest_path.symlink_to(stamped_path.name)
         print(f"\n📊 HTML report: {latest_path}")
+
+        # Matrix heatmap (no-op if the sidecar holds no matrix entries)
+        try:
+            from reporting.matrix_report import build_matrix_report
+            matrix_stamped = output_dir / f"matrix_{timestamp}.html"
+            matrix_latest = output_dir / "matrix_latest.html"
+            build_matrix_report(sidecar_path, matrix_stamped)
+            if matrix_latest.exists() or matrix_latest.is_symlink():
+                matrix_latest.unlink()
+            matrix_latest.symlink_to(matrix_stamped.name)
+            print(f"🔥 Matrix heatmap: {matrix_latest}")
+        except Exception as exc_m:  # noqa: BLE001
+            print(f"⚠️  Matrix heatmap generation failed: {exc_m}")
     except Exception as exc:  # noqa: BLE001
         print(f"\n⚠️  HTML report generation failed: {exc}")
 

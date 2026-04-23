@@ -109,6 +109,7 @@ _HTML_PAGE = """\
                         padding: 7px 12px; font-size: 0.82rem; font-weight: 600; }}
     .run-card.pass .run-card-header {{ background: #f0faf4; color: #1e7e45; border-bottom: 1px solid #c8ead5; }}
     .run-card.fail .run-card-header {{ background: #fff5f5; color: #c0392b; border-bottom: 1px solid #f5c6c6; }}
+    .run-card.na   .run-card-header {{ background: #f5f5f5; color: #555555; border-bottom: 1px solid #dcdcdc; }}
     .run-card-body {{ padding: 10px 12px; font-size: 0.82rem; color: #444; background: #fefefe; }}
     .run-response {{ font-style: italic; color: #333; white-space: pre-wrap;
                      word-break: break-word; border-left: 3px solid #c8d8e8;
@@ -250,6 +251,28 @@ def _feature_name(node_id: str) -> str:
     return raw.replace("-", " ").title()
 
 
+def _resolve_group_label(node_id: str, sidecar_entry: dict | list | None) -> str:
+    """Prefer matrix.eigenschaft_title_de when present; fall back to folder.
+
+    During migration both legacy per-feature tests and matrix cells share
+    the same report. Matrix cells carry a ``matrix.eigenschaft_title_de``
+    block in the sidecar; legacy cells don't, so we use the folder
+    extractor.
+    """
+
+    if isinstance(sidecar_entry, dict):
+        matrix_meta = sidecar_entry.get("matrix", {})
+        if isinstance(matrix_meta, dict):
+            number = matrix_meta.get("eigenschaft")
+            title = matrix_meta.get("eigenschaft_title_de", "")
+            if title:
+                return (
+                    f"Eigenschaft {number}: {title}" if number is not None
+                    else f"Eigenschaft: {title}"
+                )
+    return _feature_name(node_id)
+
+
 def _extract_run_details(crash_message: str) -> tuple[str, list[tuple[bool, str, str]]]:
     """
     Parse run-level PASS/FAIL entries from crash.message produced by run_n_times().
@@ -328,9 +351,16 @@ def _build_runs_dropdown(runs: list[dict]) -> str:
         reason       = run["reason"]
         conversation  = run.get("conversation", [])
 
-        css_class = "pass" if passed else "fail"
-        icon      = "✅" if passed else "❌"
-        verdict   = "PASS" if passed else "FAIL"
+        # verdict is PASS | FAIL | N/A when the matrix engine populates
+        # it; legacy tests only emit bool passed and we fall back to a
+        # two-way classification.
+        raw_verdict = (run.get("verdict") or "").upper()
+        if raw_verdict == "N/A":
+            css_class, icon, verdict = "na", "⭕", "N/A"
+        elif raw_verdict == "PASS" or (not raw_verdict and passed):
+            css_class, icon, verdict = "pass", "✅", "PASS"
+        else:
+            css_class, icon, verdict = "fail", "❌", "FAIL"
 
         # ── Per-run conversation transcript ──────────────────────────────
         if conversation:
@@ -442,7 +472,7 @@ def build_report(
     feature_groups: dict[str, list[dict]] = defaultdict(list)
     for t in tests:
         node_id = t.get("nodeid", "")
-        fname = _feature_name(node_id)
+        fname = _resolve_group_label(node_id, sidecar.get(node_id))
         feature_groups[fname].append(t)
 
     passed_tests = 0
@@ -473,6 +503,7 @@ def build_report(
             run_details: list[dict] = [
                 {
                     "passed":        r["passed"],
+                    "verdict":       r.get("verdict"),
                     "response_text": r["response_text"],
                     "reason":        r["reason"],
                     "conversation":  r.get("conversation", []),

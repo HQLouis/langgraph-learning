@@ -131,6 +131,19 @@ def registry_dir(request: pytest.FixtureRequest) -> Path:
 
 
 @pytest.fixture(scope="session")
+def matrix_sidecar_path(request: pytest.FixtureRequest) -> Path | None:
+    """Resolve the run-details sidecar path from --json-report-file.
+
+    When pytest-json-report is not configured we return None; the
+    matrix writer treats that as "don't persist".
+    """
+    json_report = request.config.getoption("--json-report-file", default=None)
+    if not json_report:
+        return None
+    return Path(json_report).with_suffix(".run_details.json")
+
+
+@pytest.fixture(scope="session")
 def active_cells(
     registry_dir: Path,
     matrix_tier: str,

@@ -24,16 +24,20 @@ the session.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from _matrix.engine import MatrixCell, evaluate_cell
 from _matrix.production_runners import make_run_background, make_run_master
+from _matrix.sidecar import write_cell_results
 
 
 @pytest.mark.matrix
 @pytest.mark.llm_feature
 @pytest.mark.llm_judge
 def test_cell(
+    request: pytest.FixtureRequest,
     cell: MatrixCell,
     system_llm,
     judge_llm,
@@ -41,12 +45,15 @@ def test_cell(
     matrix_cache,
     matrix_n_runs: int,
     matrix_pass_threshold: float,
+    matrix_sidecar_path: Path | None,
 ):
     """Evaluate one (SubExample × Requirement × profile) cell.
 
     Runs ``matrix_n_runs`` times. The cell passes when the fraction of
     non-failing runs (PASS + N/A) meets or exceeds
-    ``matrix_pass_threshold``.
+    ``matrix_pass_threshold``. Every run — pass or fail — is persisted
+    to the sidecar so the HTML report can show run details even for
+    clean cells.
     """
 
     run_master = make_run_master(system_llm)
@@ -63,6 +70,10 @@ def test_cell(
             judge_llm=judge_llm,
         )
         results.append(result)
+
+    # Persist run details BEFORE asserting so failing cells still show
+    # up in the HTML report.
+    write_cell_results(matrix_sidecar_path, request.node.nodeid, results)
 
     non_failing = sum(1 for r in results if r.verdict.is_non_failing)
     pass_rate = non_failing / len(results)
