@@ -61,6 +61,8 @@ pytest tests/agentic_system/test_beat_system.py::test_function_name -v
 
 **Background Analysis Graph** (`background_graph.py`): Async, non-blocking. 9 parallel worker nodes (grammar, comprehension, vocabulary, speech acts, boredom, sentence structure, etc.) feed into `foerderfokusWorker` → `aufgabenWorker`.
 
+**Evolving data flows — test assumptions must follow.** The data flow between the immediate and background graphs, and between workers inside each graph, is expected to change across iterations. As of v1 of the feature-testing matrix, every background worker output eventually reaches the next `masterChatbot` turn (directly via `aufgaben` / `satzbaubegrenzung`, or indirectly via `aufgabenWorker` / `foerderfokusWorker` consuming upstream analyses). This is why every requirement in the matrix registry defaults to `needs_background_analysis: true`. When the topology changes — for example when a worker is removed, retargeted, or its output stops flowing to the master — the `needs_background_analysis` flag in `tests/feature-testing/_registry/requirements.yaml` MUST be revisited alongside the code change, and the affected requirements re-reviewed. The flag is an optimization hook, not a behavioural toggle; keep it consistent with the graph as the graph evolves.
+
 ### Beat System (`beats.py`)
 
 Core content management enforcing "closed-world" knowledge — the LLM can only discuss content that exists in beats. A `Beat` is the smallest stable content unit (text span, entities, facts, tags). `BeatPack` groups beats per chapter (versioned, hashed). `BeatRetriever` selects relevant beats per turn. `beat_pipeline.py` handles semi-automated beatpack generation.
