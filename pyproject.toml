@@ -28,4 +28,5 @@ markers = [
     "llm_feature: tests that invoke the real dialog system LLM (slow, costs API credits)",
     "llm_judge: tests that use an LLM judge to evaluate response quality",
     "simulated: Strategy B tests — full conversation simulation from scratch (slowest)",
+    "matrix: example × requirement matrix cells (Phase 1+, requires registry with active entries)",
 ]
