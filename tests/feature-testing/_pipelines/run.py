@@ -86,7 +86,12 @@ def main() -> None:
         tmp_examples = tmp / "examples.jsonl"
         tmp_requirements = tmp / "requirements.yaml"
         write_examples_jsonl(subexamples, tmp_examples)
-        write_requirements_yaml(requirements, tmp_requirements)
+        # Preserve curator edits from the committed YAML (if any).
+        write_requirements_yaml(
+            requirements,
+            tmp_requirements,
+            existing_source_path=requirements_path,
+        )
 
         ex_diff, rq_diff = write_diff_report(
             examples_path=examples_path,

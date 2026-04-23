@@ -113,6 +113,12 @@ def build_requirements(eigenschaften: list[Eigenschaft]) -> list[Requirement]:
     out: list[Requirement] = []
     for e in eigenschaften:
         counter = 0
+        # Section-level Anforderungen (present before the first Beispiel)
+        # count as Requirements for the whole section. We attach them to
+        # every Beispiel in example_refs so reports can still trace them.
+        for anforderung in e.section_anforderungen:
+            counter += 1
+            out.append(_make_section_requirement(e, anforderung, counter))
         for b in e.beispiele:
             for anforderung in b.anforderungen:
                 counter += 1
@@ -168,15 +174,94 @@ def _make_requirement(
     )
 
 
+def _make_section_requirement(
+    eigenschaft: Eigenschaft,
+    anforderung_de: str,
+    seq: int,
+) -> Requirement:
+    """Create a Requirement for a section-level Anforderung (no
+    example_refs — it applies to the whole Eigenschaft)."""
+    req = _make_requirement(eigenschaft, _PSEUDO_BEISPIEL, anforderung_de, seq)
+    # Attach all Beispiel labels as refs so reports can trace context.
+    req.example_refs = [b.label for b in eigenschaft.beispiele if b.label]
+    return req
+
+
+# Module-level sentinel — the section-level path doesn't correspond to
+# any single Beispiel.
+class _PseudoBeispiel:
+    label = ""
+
+
+_PSEUDO_BEISPIEL = _PseudoBeispiel()
+
+
+# ---------------------------------------------------------------------------
+# Curator-state preservation
+# ---------------------------------------------------------------------------
+
+
+def _load_existing(path: Path) -> dict[str, dict]:
+    """Index existing requirements by id; empty dict on any I/O issue."""
+    try:
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+    return {r["id"]: r for r in doc.get("requirements", []) if isinstance(r, dict) and "id" in r}
+
+
 # ---------------------------------------------------------------------------
 # Writer
 # ---------------------------------------------------------------------------
 
 
-def write_requirements_yaml(requirements: list[Requirement], out_path: Path) -> None:
-    """Write the YAML registry with ordered keys for reviewable diffs."""
+def write_requirements_yaml(
+    requirements: list[Requirement],
+    out_path: Path,
+    *,
+    preserve_curator_state: bool = True,
+    existing_source_path: Path | None = None,
+) -> None:
+    """Write the YAML registry with ordered keys for reviewable diffs.
+
+    When ``preserve_curator_state`` is True (default) curator-edited
+    fields are carried over from an existing YAML for any Requirement
+    whose ``anforderung_de`` is unchanged. By default we look at
+    ``out_path`` for the old file, but callers that stage writes through
+    a temp directory (see ``_pipelines.run``) should pass the committed
+    path via ``existing_source_path``.
+
+    Fields preserved: ``applicability_rule_de``, ``judge_criterion_en``,
+    ``title_de``, ``status``, ``tier``, ``profile_sensitivity``,
+    ``needs_background_analysis``. When ``anforderung_de`` changes the
+    entry is re-seeded from scratch with ``status: draft``.
+    """
+
+    existing: dict[str, dict] = {}
+    if preserve_curator_state:
+        source = existing_source_path if existing_source_path is not None else out_path
+        if source.exists():
+            existing = _load_existing(source)
 
     def _as_dict(r: Requirement) -> dict:
+        old = existing.get(r.id)
+        if old and old.get("anforderung_de") == r.anforderung_de:
+            # Unchanged source → carry the curator's edits over.
+            return {
+                "id": r.id,
+                "eigenschaft": r.eigenschaft,
+                "eigenschaft_title_de": r.eigenschaft_title_de,
+                "title_de": old.get("title_de", r.title_de),
+                "anforderung_de": r.anforderung_de,
+                "example_refs": r.example_refs,
+                "applicability_rule_de": old.get("applicability_rule_de", r.applicability_rule_de),
+                "judge_criterion_en": old.get("judge_criterion_en", r.judge_criterion_en),
+                "tier": old.get("tier", r.tier),
+                "profile_sensitivity": old.get("profile_sensitivity", r.profile_sensitivity),
+                "needs_background_analysis": old.get("needs_background_analysis", r.needs_background_analysis),
+                "status": old.get("status", r.status),
+            }
+        # New entry or source text changed → emit fresh draft.
         return {
             "id": r.id,
             "eigenschaft": r.eigenschaft,

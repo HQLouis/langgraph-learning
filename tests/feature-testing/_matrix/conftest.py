@@ -74,6 +74,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="Alternate registry directory (default: tests/feature-testing/_registry).",
     )
+    group.addoption(
+        "--matrix-run",
+        action="store_true",
+        default=False,
+        help="Opt in to running matrix cells even without -m matrix. "
+        "Required because cells hit live LLMs and are off by default.",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -151,6 +158,33 @@ def active_cells(
 # ---------------------------------------------------------------------------
 # Parametrization hook — feeds cells into test_matrix.py
 # ---------------------------------------------------------------------------
+
+
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
+    """Skip every test marked ``matrix`` unless the user explicitly opted in.
+
+    Matrix cells make real LLM calls, so the default behaviour when a
+    developer runs ``pytest tests/feature-testing/_matrix`` (to exercise
+    the engine unit tests) must be to exclude the parametrized cells.
+
+    Opt-in is signalled by any of:
+      * ``-m matrix`` (or any ``-m`` expression that mentions ``matrix``)
+      * ``--matrix-run`` (explicit flag registered below)
+    """
+
+    marker_expr: str | None = config.getoption("-m", default=None)
+    explicit_opt_in = bool(config.getoption("--matrix-run", default=False))
+    opted_in = explicit_opt_in or (marker_expr and "matrix" in marker_expr)
+    if opted_in:
+        return
+    skip_marker = pytest.mark.skip(
+        reason="matrix cells require LLM access; re-run with `-m matrix` or `--matrix-run` to execute."
+    )
+    for item in items:
+        if "matrix" in item.keywords:
+            item.add_marker(skip_marker)
 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:

@@ -76,6 +76,10 @@ class Eigenschaft:
     title_de: str
     anchor: str                      # slug from the {#…} suffix in the header
     beispiele: list[Beispiel] = field(default_factory=list)
+    section_anforderungen: list[str] = field(default_factory=list)
+    """Anforderung paragraphs that appear at the top of the section,
+    before any Beispiel. Common in the flüssiger-Übergang, mehr-Kontext,
+    and name-usage-frequency sections."""
     raw_header: str = ""
 
 
@@ -131,6 +135,7 @@ def parse_markdown(md_path: Path) -> tuple[list[Eigenschaft], ParseReport]:
             raw_header=header,
         )
         eigenschaft.beispiele = beispiele
+        eigenschaft.section_anforderungen = _extract_section_anforderungen(body)
         eigenschaften.append(eigenschaft)
 
     report.eigenschaft_count = len(eigenschaften)
@@ -449,6 +454,11 @@ def _split_anforderungen(section: str) -> list[str]:
     Adjacent non-empty lines are joined with a space; blank lines separate
     paragraphs. Leading numbering (``1.``, ``1)``) is stripped so the
     downstream YAML stores the actual requirement text.
+
+    Paragraphs that are obvious noise — isolated ``#`` headers, stray
+    ``.Eigenschaft`` scaffolding — are dropped. Anything shorter than 20
+    characters is treated as noise too; real Anforderungen are full
+    sentences.
     """
 
     section = section.strip()
@@ -472,8 +482,56 @@ def _split_anforderungen(section: str) -> list[str]:
         current.append(clean)
     if current:
         paragraphs.append(" ".join(current).strip())
-    # Drop empties
-    return [p for p in paragraphs if p]
+    return [p for p in paragraphs if _is_real_anforderung(p)]
+
+
+_ANFORDERUNG_NOISE_PREFIXES = (
+    "#", ". Eigenschaft", ".Eigenschaft", "Eigenschaft-",
+)
+
+
+def _is_real_anforderung(paragraph: str) -> bool:
+    """Filter out obvious noise paragraphs produced by the MD's scaffolding.
+
+    Real Anforderungen are always full sentences (> 20 characters) and
+    never start with a markdown-scaffolding marker.
+    """
+    if len(paragraph) < 20:
+        return False
+    stripped = paragraph.lstrip("*# ").strip()
+    if stripped.startswith(_ANFORDERUNG_NOISE_PREFIXES):
+        return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Section-level Anforderung extraction
+# ---------------------------------------------------------------------------
+
+
+def _extract_section_anforderungen(body: str) -> list[str]:
+    """Collect Anforderung paragraphs that appear in the section body
+    BEFORE the first Beispiel.
+
+    The MD occasionally states universal Anforderungen for a whole
+    Eigenschaft (e.g. flüssiger-Übergang) at the top of the section,
+    rather than duplicating them inside each Beispiel. We lift those
+    into the Eigenschaft dataclass so ``extract_requirements`` can still
+    emit Requirement entries for them.
+    """
+
+    first_beispiel = _BEISPIEL_START_RE.search(body)
+    preamble = body[: first_beispiel.start()] if first_beispiel else body
+
+    # Optional explicit "Anforderungen:" marker at the top
+    marker = _ANFORDERUNG_RE.search(preamble)
+    if marker:
+        preamble = preamble[marker.end():]
+
+    # The preamble may also contain a short description sentence before
+    # the Anforderung text. Strip everything up to the first paragraph
+    # break to avoid capturing the section's intro.
+    return _split_anforderungen(preamble)
 
 
 # ---------------------------------------------------------------------------

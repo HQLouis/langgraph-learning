@@ -269,6 +269,52 @@ def test_requirements_yaml_round_trip(tmp_path):
     assert doc["requirements"][0]["status"] == "draft"
 
 
+def test_requirements_yaml_preserves_curator_edits_on_regen(tmp_path):
+    e = _eigenschaft_with_turns([("child", "hallo"), ("system", "Hi!")])
+    reqs = build_requirements([e])
+    out = tmp_path / "requirements.yaml"
+    write_requirements_yaml(reqs, out)
+
+    # Curator hand-edits the YAML: enriches fields, activates entry.
+    loaded = yaml.safe_load(out.read_text(encoding="utf-8"))
+    loaded["requirements"][0]["applicability_rule_de"] = "Gilt immer wenn X passiert."
+    loaded["requirements"][0]["judge_criterion_en"] = "Judge prompt authored by reviewer."
+    loaded["requirements"][0]["status"] = "active"
+    loaded["requirements"][0]["title_de"] = "Short title"
+    out.write_text(yaml.safe_dump(loaded, allow_unicode=True), encoding="utf-8")
+
+    # MD is unchanged → regen must preserve the curator's edits.
+    write_requirements_yaml(reqs, out)
+    after = yaml.safe_load(out.read_text(encoding="utf-8"))
+    assert after["requirements"][0]["status"] == "active"
+    assert after["requirements"][0]["applicability_rule_de"] == "Gilt immer wenn X passiert."
+    assert after["requirements"][0]["judge_criterion_en"] == "Judge prompt authored by reviewer."
+    assert after["requirements"][0]["title_de"] == "Short title"
+
+
+def test_requirements_yaml_reverts_to_draft_when_source_changes(tmp_path):
+    e = _eigenschaft_with_turns([("child", "hallo"), ("system", "Hi!")])
+    reqs = build_requirements([e])
+    out = tmp_path / "requirements.yaml"
+    write_requirements_yaml(reqs, out)
+
+    # Curator activates the entry.
+    loaded = yaml.safe_load(out.read_text(encoding="utf-8"))
+    loaded["requirements"][0]["status"] = "active"
+    loaded["requirements"][0]["applicability_rule_de"] = "curator rule"
+    out.write_text(yaml.safe_dump(loaded, allow_unicode=True), encoding="utf-8")
+
+    # MD source changes → regenerate the Requirement with new anforderung_de.
+    e2 = _eigenschaft_with_turns([("child", "hallo"), ("system", "Hi!")])
+    e2.beispiele[0].anforderungen = ["A totally different Anforderung text."]
+    reqs_new = build_requirements([e2])
+    write_requirements_yaml(reqs_new, out)
+    after = yaml.safe_load(out.read_text(encoding="utf-8"))
+    # Because anforderung_de changed, the entry reverts to fresh draft state.
+    assert after["requirements"][0]["status"] == "draft"
+    assert after["requirements"][0]["applicability_rule_de"].startswith("[DRAFT]")
+
+
 # ---------------------------------------------------------------------------
 # Regen diff
 # ---------------------------------------------------------------------------
@@ -357,5 +403,6 @@ def test_real_md_produces_one_requirement_per_anforderung():
     md = _FEATURE_TESTING_DIR / "Dialogbeispiele für die Eigenschaften.md"
     eigenschaften, _ = parse_markdown(md)
     reqs = build_requirements(eigenschaften)
-    anforderung_count = sum(len(b.anforderungen) for e in eigenschaften for b in e.beispiele)
-    assert len(reqs) == anforderung_count
+    beispiel_anforderungen = sum(len(b.anforderungen) for e in eigenschaften for b in e.beispiele)
+    section_anforderungen = sum(len(e.section_anforderungen) for e in eigenschaften)
+    assert len(reqs) == beispiel_anforderungen + section_anforderungen
