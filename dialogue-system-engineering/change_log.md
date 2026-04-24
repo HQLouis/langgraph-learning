@@ -449,3 +449,35 @@ The behavior is already properly tested by:
 - Topic-switch / apology-pivot on "weiß nicht" or "nein" (Group A — S-0e07, S-d16d-was, S-872c). Likely BG-aufgaben misfire, not a prompt gap in REGEL 13. Needs separate cycle, possibly a coded nudge in `nodes.py`.
 - Data-quality issue: S-4ad18feb00 has a leading "Anmerkung" annotation that shifted all dialog role tags by one (prefix_messages have child/system swapped). Not a prompt problem — flag to curator: `_pipelines/parse_dialogbeispiele.py` should skip "Anmerkung:" lines.
 - Residual Group B: "nee"/"salz"/"vergessen" still sometimes piling info despite the new rule. May need either stronger wording or a coded length/info-count nudge after generation.
+
+---
+
+### [2026-04-24] Cycle 2 — Parser fix: skip "Anmerkung:" annotation lines
+
+**What changed**: `_tokenize_dialogue` in `_pipelines/parse_dialogbeispiele.py` now drops lines that start with `Anmerkung:`, `Hinweis:`, `Kommentar:`, or `Notiz:` (case-insensitive, after bold-marker stripping) before doing role assignment. The regen of `examples.jsonl` then uses the correct role alternation for the Bobo Beispiel 3 under Eigenschaft 7 ("Vielfältige Satzanfänge"), whose `**Anmerkung: Hier war der Aufgaben-Worker stillgelegt!**` preamble had been counted as the first child turn and shifted every subsequent role tag.
+
+**File(s) modified**:
+- `tests/feature-testing/_pipelines/parse_dialogbeispiele.py`
+- `tests/feature-testing/_registry/examples.jsonl` (regenerated: +7 / -9 / ~0)
+- `tests/feature-testing/_registry/extraction_log.md` (regenerated)
+
+**Motivation**: Sidecar inspection of the R-19-01 column (7 FAIL / 19) showed every failing cell came from SubExamples with inverted roles — `[Child]` slots carrying long pedagogical turns and `[System]` slots carrying short one-word replies. The same 9 broken SubExamples were also poisoning 5 of 6 R-20-01 FAILs, plus several R-00-03, R-07-01, R-06-03, and R-08-03 cells. A single upstream data bug drove dozens of column-level FAILs.
+
+**Test results before** (n=1, Phase 4l baselines):
+- R-19-01 column: 7 FAIL / 12 non-FAIL / 19 cells
+- R-20-01 column: 6 FAIL / 13 non-FAIL / 19 cells
+- (Plus secondary spill-over in other columns.)
+
+**Test results after the parser fix + regen** (n=3, pass_threshold=1.0):
+- R-19-01 column: 1 FAIL / 9 non-FAIL / 10 cells (86% FAIL reduction). The one residual FAIL (S-ca3b8db9e0) is unrelated — child says "nee" to `Kennst du Rhabarber?` and the system currently answers with 4 facts instead of accepting the refusal.
+
+**Side effects**:
+- Core-tier SubExample count dropped from 19 to 10 because the 9 removed entries were heuristically tagged `tier: core` by the extractor. The 7 correctly-re-extracted replacements are `tier: extended` by default. Curator action: a future pass can promote one or two of these new SubExamples back to `tier: core` if they cover inner-loop scenarios that lost coverage.
+- No Requirements changed (all 82 survived; `anforderung_de` unchanged so curator state preserved).
+- Because the 9 removed IDs were the failing cells for many columns, column counts across the matrix will shrink slightly on the next full-core run — the apparent "fix" is partly "broken cells removed from the denominator." This is still the right outcome: the broken cells were testing garbage.
+
+**Regressions**: None in the test suite (34 pipeline unit tests still pass). 259 deterministic tests still green.
+
+**Learnings**:
+- Data-quality bugs in the registry can masquerade as systematic prompt defects. Always inspect FAIL prefixes before blaming the prompt.
+- The `_is_annotation()` filter is defensive against a class of preamble-annotation patterns, not just the one line we found — protects against future MD edits that add similar lines.

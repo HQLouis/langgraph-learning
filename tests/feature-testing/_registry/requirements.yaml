@@ -1,7 +1,7 @@
 version: 1
 metadata:
   source: Dialogbeispiele für die Eigenschaften.md
-  generated_at: '2026-04-23T13:16:54+00:00'
+  generated_at: '2026-04-24T07:53:30+00:00'
   generator: _pipelines.extract_requirements
   count: 82
 requirements:

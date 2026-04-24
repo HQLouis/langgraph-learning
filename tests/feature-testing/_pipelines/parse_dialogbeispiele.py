@@ -389,6 +389,20 @@ def _tokenize_dialogue(
     if not raw_lines:
         return [], None
 
+    # Drop preamble / meta-commentary lines before role assignment. Under
+    # implicit alternation a stray "Anmerkung:" paragraph would otherwise
+    # be counted as the first turn, flipping every subsequent role tag —
+    # which is exactly what S-4ad18feb00 and S-4416ab52f1 hit in the Bobo
+    # Beispiel 3 under Eigenschaft 7.
+    def _is_annotation(line: str) -> bool:
+        _, clean = _strip_bold_markers(line.strip())
+        head = clean.lstrip().lower()
+        return head.startswith(("anmerkung:", "anmerkung ", "hinweis:", "hinweis ", "kommentar:", "notiz:"))
+
+    raw_lines = [line for line in raw_lines if not _is_annotation(line)]
+    if not raw_lines:
+        return [], None
+
     # Heuristic: if at least half the non-empty lines start with a role
     # marker we treat the block as explicit.
     marker_hits = sum(1 for line in raw_lines if _ROLE_MARKER_RE.match(line))
