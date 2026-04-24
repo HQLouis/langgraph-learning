@@ -326,7 +326,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-04-02
   eigenschaft: 4
   eigenschaft_title_de: Mehrdeutigkeit/ Unklarheit/
@@ -485,7 +485,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-05-02
   eigenschaft: 5
   eigenschaft_title_de: mehr Kontext
@@ -1702,7 +1702,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-15-02
   eigenschaft: 15
   eigenschaft_title_de: Referenzen klar halten
@@ -1920,10 +1920,10 @@ requirements:
     to the story. Return FAIL if the AI response fails to acknowledge the child's input, or does not connect
     it to the story, or does not transition back to the story. Return N/A if the applicability rule is
     not met.
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-18-02
   eigenschaft: 18
   eigenschaft_title_de: Auf Interessen des Kindes eingehen
