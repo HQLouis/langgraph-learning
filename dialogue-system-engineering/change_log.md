@@ -423,3 +423,29 @@ The behavior is already properly tested by:
 - Run 4: **100/100** (0 failed)
 
 **Regressions**: None
+
+---
+
+### [2026-04-24] Cycle 1 — R-00-03 sentence-modelling tightening
+
+**What changed**: Added an explicit "Eine-Info-Regel bei Kurz-Antworten des Kindes" subsection inside REGEL 13 of `master_system_prompt`. The rule prohibits combining confirmation + new fact + new question in the same response to a 1–3-word child utterance; also explicitly forbids double questions as responses to short answers.
+
+**File(s) modified**: `agentic-system/local_fallback_prompts.py` (REGEL 13 extended)
+
+**Motivation**: R-00-03 ("Die KI darf den Satz des Kindes korrekt modellieren und leicht ergänzen. Die KI darf den Satzbau nicht kompliziert ausbauen oder mehrere neue Informationen auf einmal einführen.") had 8/19 FAIL in the Phase 4l baseline. Sidecar inspection showed three distinct failure modes; the clearest was "Group B — multi-info pile-up on short answers" (cells S-ca3b8db9e0, S-eb587c3308, S-cc57592cec), where the system piles 2–4 new facts plus a new question on top of a one-word child utterance.
+
+**Test results before** (n=1 per Phase 4l baseline):
+- R-00-03 column: 8 FAIL / 11 non-FAIL / 19 cells
+
+**Test results after** (n=3, pass_threshold=1.0 so ALL 3 runs must be non-FAIL):
+- R-00-03 column: 6 FAIL / 13 non-FAIL / 19 cells
+- Cells flipped to PASS: S-ca3b8db9e0, S-d16da404f9, S-4416ab52f1
+- Cells still FAIL: S-8704f6497f, S-0e07a6f704, S-eb587c3308, S-cc57592cec, S-4ad18feb00
+- New at-n=3 FAIL (likely borderline pass at n=1): S-872cc487c1
+
+**Regressions**: None in R-00-03 proper. Full-core regression not yet run — deferred to the next cycle boundary.
+
+**Remaining R-00-03 FAIL themes**:
+- Topic-switch / apology-pivot on "weiß nicht" or "nein" (Group A — S-0e07, S-d16d-was, S-872c). Likely BG-aufgaben misfire, not a prompt gap in REGEL 13. Needs separate cycle, possibly a coded nudge in `nodes.py`.
+- Data-quality issue: S-4ad18feb00 has a leading "Anmerkung" annotation that shifted all dialog role tags by one (prefix_messages have child/system swapped). Not a prompt problem — flag to curator: `_pipelines/parse_dialogbeispiele.py` should skip "Anmerkung:" lines.
+- Residual Group B: "nee"/"salz"/"vergessen" still sometimes piling info despite the new rule. May need either stronger wording or a coded length/info-count nudge after generation.
