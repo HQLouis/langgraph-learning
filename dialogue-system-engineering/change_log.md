@@ -481,3 +481,40 @@ The behavior is already properly tested by:
 **Learnings**:
 - Data-quality bugs in the registry can masquerade as systematic prompt defects. Always inspect FAIL prefixes before blaming the prompt.
 - The `_is_annotation()` filter is defensive against a class of preamble-annotation patterns, not just the one line we found — protects against future MD edits that add similar lines.
+
+---
+
+### [2026-04-24] Cycle 3 — `_detect_short_child_utterance` coded nudge
+
+**What changed**: New detection nudge in `agentic-system/nodes.py` that fires pre-generation when the last child utterance is ≤3 words. Injects a SystemMessage reinforcing REGEL 13's "Eine-Info-Regel" exactly at the turns where the rule matters. The static prompt addition from cycle 1 was landing inconsistently; a coded nudge fires only when relevant and carries the concrete child text so the LLM cannot ignore it.
+
+**File(s) modified**:
+- `agentic-system/nodes.py` — new `_detect_short_child_utterance()` + wire-up in `masterChatbot`.
+
+**Motivation**: Cycle 1's prompt-only change helped but left 5 R-00-03 FAILs. Sidecar inspection showed the LLM still adds filler ("Das ist eine gute Frage, Emma!") between modelling and the follow-up. Per "Learnings carried over" in `/iterate-prompts`: prompt rules that compete lose to coded nudges firing as SystemMessages.
+
+**Test results before** (post-parser-fix full-core):
+- R-00-03 column: 5 FAIL / 5 non-FAIL / 10 cells (n=1)
+
+**Test results after this cycle** (n=3, pass_threshold=1.0):
+- R-00-03 column: 4 FAIL / 6 non-FAIL / 10 cells
+- Cells flipped to PASS at n=3: S-8704f6497f, S-eb587c3308
+
+**Residual FAIL analysis** — 3 of 4 are judge drift / rule conflicts:
+- S-ca3b8db9e0 (child: "nee" to "Kennst du Rhabarber?"): **real R-00-03 defect** — system still dumps 3+ facts about Rhabarber. Prompt+nudge insufficient; may need a post-gen length clamp.
+- S-0e07a6f704 (child: "weiß nicht"): **rule conflict** — "Kein Problem, Emma! Soll ich dir verraten, was in dem Paket war?" correctly follows R-19-01 ("Nein akzeptieren") and REGEL 12 ("konkret helfen") but R-00-03 judge flags it as "not modelling the utterance".
+- S-872cc487c1 (child: "famos?"): **rule conflict** — "Famos bedeutet, dass etwas toll ist. Verstehst du das?" correctly follows R-02-03 / REGEL 1 ("Wort erklären, Verständnisprüfung"). R-00-03 judge flags the verification check as "multiple info".
+- S-cc57592cec (child: "vergessen"): **rule conflict** — "Meinst du, dass Pia vergessen hat, oder hast du es vergessen?" correctly follows R-04-04 ("bei 'vergessen' klären"). R-00-03 judge flags the clarification as "too complex".
+
+**Regressions**: None detected. Unit tests green (186 in agentic_system). Full-core regression not yet re-run post-cycle-3.
+
+**Curator escalation (FLAGGED)**:
+R-00-03's `applicability_rule_de` is "gilt, wenn die KI auf eine einfache oder unvollständige Äußerung des Kindes reagiert" — this fires on essentially every short child utterance, including ones whose primary governing rule is a different requirement (R-02-03, R-04-04, R-19-01, R-01-02). The judge should **return N/A** when another requirement better describes the situation, but it currently returns FAIL.
+
+Proposed curator amendment to R-00-03 applicability rule:
+> Gilt NICHT, wenn die Kurzantwort ein Einverständnisbegriff ist ("nein"/"nee"/"weiß nicht"/"vergessen") oder eine Rückfrage zu einem Wort (z.B. "famos?"). In solchen Fällen regeln andere Anforderungen (R-02-03, R-04-04, R-19-01, R-01-02) die Form der Antwort. R-00-03 gilt nur, wenn das Kind einen inhaltlichen Beitrag macht, den die KI grammatisch modellieren und leicht erweitern soll.
+
+**Next best targets** after curator review:
+- R-05-01 (4 FAIL). Likely same-class judge drift: its "must describe location+character+object in EVERY new question" is overstrict.
+- R-20-01 (2 FAIL). Needs inspection.
+- R-00-03 S-ca3b8db9e0 (the one real residual): post-generation length clamp when child said "nee" to a comprehension yes/no — stream only one sentence of explanation.

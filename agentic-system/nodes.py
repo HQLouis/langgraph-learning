@@ -230,6 +230,43 @@ def _detect_repeated_errors(messages: list, window: int = 8) -> str | None:
     )
 
 
+_SHORT_UTTERANCE_MAX_WORDS = 3
+
+
+def _detect_short_child_utterance(messages: list) -> str | None:
+    """Reinforce REGEL 13 "Eine-Info-Regel" when the last child turn is
+    very short (≤3 words).
+
+    A prompt-rule alone was insufficient: the LLM still adds filler
+    confirmation + new fact + new question on top of one-word answers.
+    Firing a pre-generation nudge *just* on the turns where this is a
+    risk is a narrower signal than rewording the static prompt.
+
+    Returns a nudge string or None.
+    """
+    child_msgs = [m for m in messages if isinstance(m, HumanMessage)]
+    if not child_msgs:
+        return None
+    last = (child_msgs[-1].content or "").strip()
+    if not last:
+        return None
+    word_count = len(last.split())
+    if word_count > _SHORT_UTTERANCE_MAX_WORDS:
+        return None
+    return (
+        '[ACHTUNG — KURZANTWORT DES KINDES (REGEL 13: EINE-INFO-REGEL)]\n'
+        f'Das Kind hat gerade sehr kurz geantwortet ("{last[:60]}"). '
+        'Die nächste Antwort MUSS die Einwort-/Kurzantwort in EINEM vollständigen '
+        'Satz modellieren und dann ENTWEDER genau EINE einfache Folgefrage stellen '
+        'ODER genau EINEN einzelnen neuen Handlungsfakt nennen — nicht beides.\n'
+        '- Verboten: Bestätigung + neuer Fakt + neue Frage in derselben Antwort.\n'
+        '- Verboten: Füllsätze wie "Das ist eine gute Idee, <Name>." zwischen Modell und Frage.\n'
+        '- Verboten: Doppelfragen ("Meinst du A oder B?") als Reaktion auf eine Einwort-Antwort.\n'
+        'Wenn das Kind "nein"/"nee"/"weiß nicht"/"vergessen" gesagt hat: '
+        'Akzeptiere das kurz (REGEL 11), gib DANN entweder die Antwort ODER einen kleinen Hinweis — nicht beides.'
+    )
+
+
 def _detect_missing_transition_recap(messages: list, threshold: int = 24) -> str | None:
     """
     In long conversations (≥threshold messages), the in-context pattern of
@@ -402,6 +439,12 @@ def masterChatbot(state: State, llm):
     if recap_nudge:
         messages.append(SystemMessage(content=recap_nudge))
         logger.info("masterChatbot: Injected transition-recap nudge")
+
+    # Detect short child utterance → reinforce REGEL 13 one-info rule
+    short_utterance_nudge = _detect_short_child_utterance(state["messages"])
+    if short_utterance_nudge:
+        messages.append(SystemMessage(content=short_utterance_nudge))
+        logger.info("masterChatbot: Injected short-utterance (REGEL 13) nudge")
 
     # Get natural language response (no JSON formatting)
     logger.info("masterChatbot: Starting LLM invocation for natural response")
