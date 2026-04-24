@@ -518,3 +518,46 @@ Proposed curator amendment to R-00-03 applicability rule:
 - R-05-01 (4 FAIL). Likely same-class judge drift: its "must describe location+character+object in EVERY new question" is overstrict.
 - R-20-01 (2 FAIL). Needs inspection.
 - R-00-03 S-ca3b8db9e0 (the one real residual): post-generation length clamp when child said "nee" to a comprehension yes/no — stream only one sentence of explanation.
+
+---
+
+### [2026-04-24] Cycle 4 — R-05-01 diagnosis: judge drift, NOT a prompt defect
+
+**Finding**: All 4 R-05-01 FAILs in the post-cycle-3 baseline are judge drift. No prompt change made this cycle.
+
+**Why no change was made**:
+The R-05-01 judge criterion requires "a location, at least one character, and at least one concrete object" in EVERY AI response that introduces a new question-task. In practice this fires on almost every turn, conflicting with:
+- R-00-03's "Eine-Info-Regel" (don't add extra info beyond modelling)
+- R-19-01 (when child refuses, accept and move on — not "build a scene")
+- REGEL 13's simple-language-level-matching
+
+Per-cell analysis:
+- **S-8704f6497f "was"**: response "Es ist eine große, rote Tomate. Pia mag Tomaten sehr gerne. Was magst du denn gerne essen, Emma?" names a concrete object (Tomate) and character (Pia) but not an explicit "location". Arguably a perfect short modelling response.
+- **S-d16da404f9 "nein"**: response "Kein Problem, Emma! Möchtest du lieber ein Ratespiel spielen?" correctly follows R-19-01 (accept refusal) — R-05-01 should return N/A here.
+- **S-eb587c3308 "salz"**: "Ja, genau, Emma! Pia jongliert mit Salzstreuern. Wie nennen die Leute Pia?" names a character and object but is correctly terse for a one-word child turn — R-05-01 should return N/A because the AI is confirming, not introducing a new scene.
+- **S-47c94ad3ec "ja"**: "Was meinst du mit ja, Emma? Meinst du, Bobo und Papa haben Farbe benutzt oder Papier?" is a clarification after an ambiguous child turn — also should be N/A per the Anforderung's "simple follow-up questions" carve-out.
+
+**Curator escalation (FLAGGED)**:
+R-05-01's applicability rule already says "gilt nicht für einfache Bestätigungen, kurze Übergänge oder reine Informationsfragen ohne Szenenbezug", but the judge is not honouring that carve-out. Either:
+
+1. The judge_criterion_en drops the N/A path from the applicability rule. Proposed tightening:
+   > Return N/A if the AI's response is confirming a child's answer, accepting a refusal, clarifying an ambiguous child turn, or otherwise not introducing a NEW pedagogical scene that requires a fresh mental image.
+
+2. Or the applicability condition should be restricted to turns where the AI is introducing a brand-new task/exercise (not just continuing a conversational thread).
+
+Both changes are curator turf; this cycle adds no code change but logs the diagnosis so the next curator pass can resolve R-05-01's over-triggering.
+
+**Status at this checkpoint** (post-cycle-3, full-core baseline):
+- 228 passed / 22 failed across 250 cells (n=1)
+- Highest FAIL columns: R-00-03 (5→4 after cycle 3), R-05-01 (4, all judge drift), R-20-01 (2), R-07-01 (2), R-02-01 (2), R-03-01 (2), R-08-03 (1), R-04-01 (1), R-19-01 (1), R-01-02 (1), R-15-01 (1).
+
+**Curator work queued** before next meaningful prompt iteration:
+- R-00-03 applicability rule: add exclusions for "nein"/"weiß nicht"/"vergessen"/word-clarification child turns.
+- R-05-01 judge_criterion_en: explicit N/A clause for confirmations, refusal-acceptance, and clarifications.
+- Consider rerunning enrichment pipeline on R-00-03 and R-05-01 with the refined Anforderung context.
+
+**Next cycle candidates** (real prompt defects, not judge drift):
+- R-00-03 S-ca3b8db9e0 (rhabarber info-dump) — post-generation length clamp.
+- R-20-01 residuals (2 FAIL) — inspect.
+- R-07-01 residuals (2 FAIL) — inspect.
+- R-03-01 residuals (2 FAIL) — inspect.
