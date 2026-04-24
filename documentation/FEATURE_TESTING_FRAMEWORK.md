@@ -59,14 +59,23 @@ runs every active SubExample × Requirement × profile combination.
 | `1fb6479` | 4j | Delete 4 more legacy folders (`responding-to-answer`, `child-name-and-gender`, `child-prompts-ai`, `stick-to-story-content`) |
 | `4f77f94` | 4k | Activate 2 anchor requirements for E01 + Satzbau appendix |
 | `457a333` | 4l | Delete final 2 legacy folders (`corrective-feedback`, `explanation-correction-verification`) — matrix is now sole suite |
+| `c4733b1` | — | Docs: Phase 4 complete — update CLAUDE.md and go-to doc |
+| `4b3b49c` | Iter-1 | `/iterate-prompts` cycle 1: REGEL 13 one-info rule for short child answers |
+| `c6f65b2` | Iter-2 | Cycle 2: parser drops `Anmerkung:` lines; regen fixes role inversion (−6 R-19-01 FAIL) |
+| `700dc28` | Iter-3 | Cycle 3: `_detect_short_child_utterance` coded nudge |
+| `746d2ad` | Iter-4 | Cycle 4: R-05-01 diagnosis — judge drift, flagged to curator |
 
 ### 1.3 Current state on this branch
 
 - **82 requirements** in `requirements.yaml` (across 22 Eigenschaften).
   - **25 active**, 57 draft (all LLM-enriched, awaiting curator review before joining the matrix).
-- **295 SubExamples** in `examples.jsonl` (deduplicated from ~795 candidate turns; 19 are `tier: core`).
+- **293 SubExamples** in `examples.jsonl` (regen after cycle 2 parser fix: 10 `tier: core`, 283 `tier: extended`).
 - **0 legacy feature folders** remain — Phase 4 complete. The matrix is the sole suite for LLM-behaviour signal.
-- **Matrix runs end-to-end**: accumulated ~45 min of batched smoke runs during Phases 4e–4l verified 20 newly-activated anchor Requirements end-to-end.
+- **Full-core baseline after 4 iteration cycles** (n=1, pass_threshold=1.0): 228 passed / 22 failed across 250 cells in 33 min. FAIL count down from ~47 pre-cycles.
+- **Curator escalations open** (do not edit `requirements.yaml` during prompt iteration):
+  - R-00-03 `applicability_rule_de` is too broad: overlaps with R-02-03, R-04-04, R-19-01, R-01-02 and fires on "nein"/"weiß nicht"/"vergessen"/word-clarification child turns that are primarily governed by those other requirements.
+  - R-05-01 `judge_criterion_en` enforces location+character+object on EVERY new question-task, not honouring the applicability rule's "simple confirmations / clarifications" carve-out.
+  - Both proposals are drafted in `dialogue-system-engineering/change_log.md` under the Cycle 3 and Cycle 4 entries.
 
 ---
 

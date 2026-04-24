@@ -561,3 +561,15 @@ Both changes are curator turf; this cycle adds no code change but logs the diagn
 - R-20-01 residuals (2 FAIL) — inspect.
 - R-07-01 residuals (2 FAIL) — inspect.
 - R-03-01 residuals (2 FAIL) — inspect.
+
+---
+
+### [2026-04-24] Extended profile sweep — gender-sensitive requirements
+
+**What ran**: `pytest --matrix-tier=core --matrix-profiles=extended -k "R-11-01 or R-17-01"` — the two active profile_sensitive=gender requirements × 10 core SubExamples × 2 profiles (Emma/6/weiblich + Jonas/7/männlich) = 40 cells.
+
+**Result**: 40 passed / 0 failed in 11:23.
+
+**Conclusion**: R-11-01 ("Geschlecht des Kindes berücksichtigen") and R-17-01 ("Kind nicht in Tiere/anderes Geschlecht versetzen") hold under the variant profile. No gender-handling defects in the inner loop under profile sweep.
+
+**Next**: tier=all profiles=default to exercise the ~7000 extended-tier cells for broader regression signal. Expected wall-clock: hours.
