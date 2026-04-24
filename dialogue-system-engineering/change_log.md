@@ -573,3 +573,37 @@ Both changes are curator turf; this cycle adds no code change but logs the diagn
 **Conclusion**: R-11-01 ("Geschlecht des Kindes berücksichtigen") and R-17-01 ("Kind nicht in Tiere/anderes Geschlecht versetzen") hold under the variant profile. No gender-handling defects in the inner loop under profile sweep.
 
 **Next**: tier=all profiles=default to exercise the ~7000 extended-tier cells for broader regression signal. Expected wall-clock: hours.
+
+---
+
+### [2026-04-24] Extended-tier stratified sanity sample
+
+**What ran**: `--matrix-tier=all --matrix-profiles=default` restricted via `-k` to 20 stratified SubExamples (one shortest-prefix per source Beispiel × 25 active requirements) = 500 cells. Full tier=all run was started but killed after 1 hour / ~6% progress — the 7325-cell full matrix would take ~14 hours at observed throughput (~9s/cell), which does not fit autonomous mode. The 500-cell stratified sample gives a representative snapshot at ~12 min/100 cells.
+
+**Result**: 440 passed / 60 failed in 1:00:00 (88.0% non-FAIL rate).
+
+**Column breakdown** (FAIL count / 20 Beispiele):
+
+| Column | FAIL | % | Column | FAIL | % |
+|--------|-----:|--:|--------|-----:|--:|
+| R-00-03 | 13 | 65 | R-04-01 |  4 | 20 |
+| R-05-01 | 12 | 60 | R-03-01 |  4 | 20 |
+| R-00-02 |  9 | 45 | R-06-03 |  3 | 15 |
+| R-08-03 |  8 | 40 | R-01-02 |  3 | 15 |
+| (others 0–1) | ≤1 | ≤5 | | | |
+
+**Key finding**: The curator-flagged judge-drift columns (R-00-03, R-05-01) dominate the FAIL distribution, confirming that their applicability rules are the single highest-leverage blocker to reducing extended-tier FAIL counts. Cycles 1–4 lifted the prompt/nudge side as far as it can go without overfitting; the applicability rules now need to land before more prompt iteration pays off.
+
+**Secondary columns worth attention after curator work**:
+- R-00-02 (satzbau complexity): 9 FAIL. Not previously iterated on. Likely shares REGEL 13's territory — may be subsumed once R-00-03 applicability is tightened. Needs its own diagnostic pass.
+- R-08-03 (don't extend the story): 8 FAIL. Pre-existing defect column, partially addressed by `_detect_story_end`. Extended sample shows it's still a real problem on the long tail.
+- R-04-01 (handle child's unclear/short responses): 4 FAIL. Likely overlap with R-00-03 / R-02-03.
+
+**Profile-sensitive gender sweep** (from the earlier entry): R-11-01 and R-17-01 both clean at 40/40 across both default and variant profiles. No gender-handling regressions.
+
+**Session outcome** (/iterate-prompts + extended regression):
+- 4 commits of material improvement: REGEL 13 prompt addition, parser fix for "Anmerkung:" preambles, `_detect_short_child_utterance` nudge, R-05-01 diagnosis.
+- 2 curator escalations drafted (R-00-03, R-05-01 applicability rules).
+- Gender sweep clean.
+- Extended tier shows 88% non-FAIL; remaining FAILs cluster on the 2 curator-flagged columns + 2 known defect columns.
+- Full core regression: 228/250 PASS (unchanged from cycles' baseline; the nudge didn't regress anything).
