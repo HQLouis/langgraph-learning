@@ -119,9 +119,9 @@ Dynamic prompt loading from AWS S3 with TTL-based caching (15s). Falls back to l
    - Config in `tests/feature-testing/ft_config.py` (`MATRIX_*` flags, plus the legacy `N_RUNS`/`PASS_THRESHOLD` still used by the remaining feature folders).
    - **Story fixtures**: `FIXTURE_*_AUDIO_BOOK`, `FIXTURE_*_STORY_ID`, `FIXTURE_*_CHAPTER_ID` live in `feature_testing_utils.py` (single source of truth). Beatpacks at `tests/agentic_system/content/stories/<story_id>/<chapter_id>/beatpack.v1.json`. Beat manager is auto-initialised for all feature tests via the outer `conftest.py`.
 
-3. **Legacy per-feature folders** (e.g. `tests/feature-testing/<feature>/`): 14 folders still on disk during the matrix migration (Phase 4). They use the old Strategy A / Strategy B layout (fixture-based vs simulated, `--n-runs` / `--pass-threshold`, markers `contract`, `llm_feature`, `llm_judge`, `simulated`). They are retired in batches as their Eigenschaften reach full matrix coverage.
+3. **Functional tests** (`functional-testing/`): Stream and response format validation.
 
-4. **Functional tests** (`functional-testing/`): Stream and response format validation.
+> The old per-feature folder layout (`tests/feature-testing/<feature>/` with Strategy A / Strategy B test classes) was fully retired in Phase 4 of this branch. The matrix is now the sole source of LLM-behaviour signal.
 
 ## Key Configuration
 

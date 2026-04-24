@@ -50,14 +50,23 @@ runs every active SubExample × Requirement × profile combination.
 | `961b1d1` | 4b | Delete 5 legacy folders (`accept-no`, `no-repeat-prompts`, `sentence-structure`, `story-not-extended`, `transition-between-tasks`) — coverage verified by live matrix run |
 | `3e40f4a` | 4c | Activate 6 anchor requirements for E02, E07, E09, E21 (incl. tier promotion R-09-01, R-21-01 → core) |
 | `d2c2f3a` | 4d | Delete 4 more legacy folders (`respond-to-dont-know`, `story-summary`, `different-sentence-starters`, `name-usage-frequency`) |
+| `c718ace` | — | Comprehensive go-to doc (this file) + CLAUDE.md update |
+| `d1af8e3` | 4e | Activate 4 anchor requirements for E04, E05, E15, E18 |
+| `dd38567` | 4f | Delete 4 more legacy folders (`ensure-clarity`, `answers-have-sufficient-context`, `clear-references`, `child-interests`) |
+| `7bbf753` | 4g | Activate 4 anchor requirements for E10, E14, E17, E20 |
+| `ac31320` | 4h | Delete 4 more legacy folders (`incorrect-story-facts`, `concrete-language`, `no-role-transfer`, `make-suggestions`) |
+| `1cc443d` | 4i | Activate 4 anchor requirements for E03, E11, E12, E13 |
+| `1fb6479` | 4j | Delete 4 more legacy folders (`responding-to-answer`, `child-name-and-gender`, `child-prompts-ai`, `stick-to-story-content`) |
+| `4f77f94` | 4k | Activate 2 anchor requirements for E01 + Satzbau appendix |
+| `457a333` | 4l | Delete final 2 legacy folders (`corrective-feedback`, `explanation-correction-verification`) — matrix is now sole suite |
 
 ### 1.3 Current state on this branch
 
 - **82 requirements** in `requirements.yaml` (across 22 Eigenschaften).
-  - **11 active**, 71 draft (all LLM-enriched but awaiting curator review).
+  - **25 active**, 57 draft (all LLM-enriched, awaiting curator review before joining the matrix).
 - **295 SubExamples** in `examples.jsonl` (deduplicated from ~795 candidate turns; 19 are `tier: core`).
-- **14 legacy feature folders** still on disk; the matrix already covers their Eigenschaften — they are queued for retirement in further batches.
-- **Matrix runs end-to-end**: last live smoke run was 209 cells (11 active reqs × 19 core SubExamples × default profile) in 18 min, 189 non-FAIL / 20 FAIL. All four newly-activated anchors verified.
+- **0 legacy feature folders** remain — Phase 4 complete. The matrix is the sole suite for LLM-behaviour signal.
+- **Matrix runs end-to-end**: accumulated ~45 min of batched smoke runs during Phases 4e–4l verified 20 newly-activated anchor Requirements end-to-end.
 
 ---
 
@@ -488,7 +497,7 @@ tests/feature-testing/
 │   ├── matrix_report.py                           # NEW heatmap renderer
 │   └── output/                                    # gitignored HTML output
 │
-└── <legacy feature folders>/                      # 14 remaining; queued for retirement once their Eigenschaften are fully active in the matrix
+                                                    # (no legacy feature folders — Phase 4 retired all of them)
 ```
 
 ---
@@ -559,10 +568,10 @@ Per `dialogue-system-engineering/example-centric-testing-draft.md` §5:
 |---|---|---|
 | 0 — Pipelines + registry | **DONE** | `f63731c` |
 | 1 — Matrix engine + cache | **DONE** | `e838a81` |
-| 2 — Activate seed requirements | **DONE** | `3afa2f7`, `3e40f4a` (5 + 6 = 11 active out of 82) |
-| 3 — Migrate all Anforderungen | **DONE for extraction**; LLM-enrichment ran for all 77 drafts (`a1087c1`); curator review pending for 71. |
-| 4 — Retire legacy folders in batches | **IN PROGRESS** — 9 folders deleted (`961b1d1`, `d2c2f3a`); 14 remain. |
-| 5 — Matrix is the only suite | not started — gated on Phase 4 completion. |
+| 2 — Activate seed requirements | **DONE** | 25 active requirements of 82 (Phases 2, 4c, 4e, 4g, 4i, 4k). |
+| 3 — Migrate all Anforderungen | **DONE for extraction**; LLM-enrichment ran for all 77 drafts (`a1087c1`); curator review pending for the 57 still drafts. |
+| 4 — Retire legacy folders in batches | **DONE** — all legacy folders retired across `961b1d1`, `d2c2f3a`, `dd38567`, `ac31320`, `1fb6479`, `457a333`. |
+| 5 — Matrix is the only suite | **DONE** — no legacy per-feature pytest folders remain. |
 
 ---
 
