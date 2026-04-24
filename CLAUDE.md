@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Lingolino** — an AI-powered German language learning system for children (ages 3-12). Uses LangGraph for conversational orchestration with a dual-graph architecture: an immediate response graph (real-time, user-facing) and a background analysis graph (9 parallel workers analyzing grammar, comprehension, vocabulary, boredom, etc.).
 
-Primary LLM: Google Gemini 2.0 Flash. Backend: FastAPI with SSE streaming. Infrastructure: AWS ECS/Fargate via Terraform.
+Primary LLM: Google Gemini 2.5 Flash (centralised in `agentic-system/model_config.py::DEFAULT_LLM_MODEL`; override per-environment via `LINGOLINO_LLM_MODEL`). Backend: FastAPI with SSE streaming. Infrastructure: AWS ECS/Fargate via Terraform.
 
 ## Commands
 
@@ -27,30 +27,43 @@ docker-compose up
 
 # --- Tests ---
 
-# Unit tests (agentic system)
+# Unit tests (agentic system) — deterministic, no LLM
 pytest tests/agentic_system/
 
-# Contract tests only (fast, deterministic)
-pytest tests/feature-testing/ -m contract
+# Pipeline + matrix unit tests (no LLM)
+pytest tests/feature-testing/_pipelines/
+pytest tests/feature-testing/_matrix/test_engine_unit.py tests/feature-testing/_matrix/test_sidecar_unit.py
 
-# LLM feature tests (slow, costs API credits)
-pytest tests/feature-testing/ -m llm_feature
+# Matrix cells (LIVE LLM — off by default; opt-in via -m matrix or --matrix-run)
+pytest tests/feature-testing/_matrix -m matrix \
+    --matrix-tier=core --matrix-profiles=default --matrix-n-runs=1 \
+    --json-report --json-report-file=.matrix.json 2>&1 | tail -30
 
-# All feature tests with custom params
-pytest tests/feature-testing/ --n-runs=10 --pass-threshold=0.9
-
-# Specific feature folder
-pytest tests/feature-testing/child-name-and-gender/
+# Re-run a single requirement column at n=3 (separates fix from flake)
+pytest tests/feature-testing/_matrix -m matrix --matrix-n-runs=3 -k R-XX-YY \
+    --json-report --json-report-file=.matrix.json
 
 # Functional/stream tests
 pytest functional-testing/
 
-# Single test file
+# Single test file / function
 pytest tests/agentic_system/test_beat_system.py
-
-# Single test function
 pytest tests/agentic_system/test_beat_system.py::test_function_name -v
 ```
+
+**Registry pipelines** (regenerate the matrix's source-of-truth artefacts):
+
+```bash
+# Sync registry from Dialogbeispiele.md
+PYTHONPATH=tests/feature-testing python -m _pipelines.run            # or /sync-registry
+PYTHONPATH=tests/feature-testing python -m _pipelines.run --dry-run  # diff preview only
+
+# LLM-enrich draft requirements (Gemini 2.5 Flash)
+PYTHONPATH=tests/feature-testing python -m _pipelines.enrich_requirements
+PYTHONPATH=tests/feature-testing python -m _pipelines.enrich_requirements --only R-19-02,R-19-03
+```
+
+See `documentation/FEATURE_TESTING_FRAMEWORK.md` for the full go-to guide.
 
 ## Architecture
 
@@ -89,20 +102,26 @@ Dynamic prompt loading from AWS S3 with TTL-based caching (15s). Falls back to l
 
 ## Testing Framework
 
+> **Authoritative reference:** `documentation/FEATURE_TESTING_FRAMEWORK.md`. Read that first before iterating on tests, prompts, or the registry.
+
 ### Three test categories
 
-1. **Unit tests** (`tests/agentic_system/`): Deterministic module-level tests (beat system, prompt repo, output contract).
+1. **Unit tests** (`tests/agentic_system/`, `tests/feature-testing/_pipelines/`, `tests/feature-testing/_matrix/test_*_unit.py`): Deterministic, no LLM. Cover the beat system, prompt repo, output contract, MD parser, extraction/enrichment pipelines, matrix engine, and sidecar/report writers.
 
-2. **Feature tests** (`tests/feature-testing/`): Probabilistic LLM testing framework. Two strategies:
-   - **Strategy A (fixture-based)**: Pre-built state + hardcoded conversation, fast (~0.5s).
-   - **Strategy B (simulated)**: Full conversation from scratch with real LLM, slow (~10-30s).
-   - Each test runs N times (default 5), must pass ≥80% (configurable via `--n-runs`, `--pass-threshold`).
-   - Tests organized by feature folder. Markers: `contract`, `llm_feature`, `llm_judge`, `simulated`.
-   - Config in `tests/feature-testing/ft_config.py`.
-   - **Story fixtures**: All story text constants (`FIXTURE_*_AUDIO_BOOK`, `FIXTURE_*_STORY_ID`, `FIXTURE_*_CHAPTER_ID`) are centralized in `feature_testing_utils.py` as the single source of truth. Test files import from there — never define story text locally. Beatpacks are generated from these same texts via `scripts/generate_test_beatpacks.py`. See `tests/feature-testing/SETUP_GUIDE.md` for full setup instructions.
-   - **Beat system in tests**: The beat manager is auto-initialized for all feature tests via `conftest.py`. Beatpack fixtures live at `tests/agentic_system/content/stories/<story_id>/<chapter_id>/beatpack.v1.json`.
+2. **Feature tests — example × requirement matrix** (`tests/feature-testing/_matrix/`): the primary signal for LLM behaviour.
+   - One parametrized `test_cell` per `(SubExample × Requirement × profile)`. Cells marked `@pytest.mark.matrix` and **off by default** — opt-in via `-m matrix` or `--matrix-run` (see `_matrix/conftest.py::pytest_collection_modifyitems`).
+   - Each cell: build state from `SubExample.prefix_messages` → optionally run BG graph → `masterChatbot` → one combined applicability+verdict judge call → `PASS | FAIL | N/A`.
+   - **N/A counts as PASS** for thresholds; rendered as a grey badge in the report. Cell passes when `pass_rate >= matrix_pass_threshold` (default 1.0 at `n_runs=1` — any FAIL flips red).
+   - Two-layer content-addressable cache at `tests/feature-testing/_matrix/.cache/` (BG state + master response). Judge calls are not cached.
+   - Tier (`core | extended`) and profile (`default | extended | all`) filters keep the inner loop fast.
+   - Curator surface: `tests/feature-testing/_registry/requirements.yaml` (`status`, `tier`, enrichment fields). Source of truth: `tests/feature-testing/Dialogbeispiele für die Eigenschaften.md` — never hand-write entries in `requirements.yaml` or `examples.jsonl` for new requirements; always go through the MD + `_pipelines.run`.
+   - Slash commands: `/sync-registry`, `/add-requirement`, `/iterate-prompts`, `/stabilize-tests`.
+   - Config in `tests/feature-testing/ft_config.py` (`MATRIX_*` flags, plus the legacy `N_RUNS`/`PASS_THRESHOLD` still used by the remaining feature folders).
+   - **Story fixtures**: `FIXTURE_*_AUDIO_BOOK`, `FIXTURE_*_STORY_ID`, `FIXTURE_*_CHAPTER_ID` live in `feature_testing_utils.py` (single source of truth). Beatpacks at `tests/agentic_system/content/stories/<story_id>/<chapter_id>/beatpack.v1.json`. Beat manager is auto-initialised for all feature tests via the outer `conftest.py`.
 
-3. **Functional tests** (`functional-testing/`): Stream and response format validation.
+3. **Legacy per-feature folders** (e.g. `tests/feature-testing/<feature>/`): 14 folders still on disk during the matrix migration (Phase 4). They use the old Strategy A / Strategy B layout (fixture-based vs simulated, `--n-runs` / `--pass-threshold`, markers `contract`, `llm_feature`, `llm_judge`, `simulated`). They are retired in batches as their Eigenschaften reach full matrix coverage.
+
+4. **Functional tests** (`functional-testing/`): Stream and response format validation.
 
 ## Key Configuration
 
