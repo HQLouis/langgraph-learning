@@ -1272,10 +1272,10 @@ requirements:
     \ of memory or understanding.\n    Return FAIL if the system's response does not correct the error,\
     \ or corrects it but fails to ask for confirmation.\n    Return N/A if the child's previous utterance\
     \ did not contain a factual error about the story."
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-10-02
   eigenschaft: 10
   eigenschaft_title_de: Kind gibt falsche Angaben zum Buchtext
@@ -1631,7 +1631,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-14-02
   eigenschaft: 14
   eigenschaft_title_de: Konkrete Sprache statt abstrakter Formulierungen verwenden.
@@ -1851,7 +1851,7 @@ requirements:
   tier: core
   profile_sensitivity: gender
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-17-02
   eigenschaft: 17
   eigenschaft_title_de: Kind nicht in Tiere/anderes Geschlecht versetzen
@@ -2105,7 +2105,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-20-02
   eigenschaft: 20
   eigenschaft_title_de: eigenen Vorschlag machen
