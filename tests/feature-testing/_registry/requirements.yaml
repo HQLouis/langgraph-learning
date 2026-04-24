@@ -154,7 +154,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-02-02
   eigenschaft: 2
   eigenschaft_title_de: 'Reagieren auf - Kind: “weiß nicht”'
@@ -177,7 +177,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-02-03
   eigenschaft: 2
   eigenschaft_title_de: 'Reagieren auf - Kind: “weiß nicht”'
@@ -199,7 +199,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-03-01
   eigenschaft: 3
   eigenschaft_title_de: Auf die Antwort des Kindes eingehen -seine Meinung und Gefühle berücksichtigen
@@ -990,7 +990,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-07-02
   eigenschaft: 7
   eigenschaft_title_de: Vielfältige Satzanfänge
@@ -1191,10 +1191,10 @@ requirements:
     follow-up question. Return FAIL if the story is a detailed, full retelling, or if no follow-up question
     is posed, or if the follow-up question is too restrictive. Return N/A if the child did not ask the
     AI to repeat the story.
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-09-02
   eigenschaft: 9
   eigenschaft_title_de: Kurzfassung des Textes wiedergeben
@@ -2212,10 +2212,10 @@ requirements:
     response, and the applicability rule is met. Return N/A if the applicability rule is not met (i.e.,
     the child's name was not in the immediately preceding system response, or the current response is
     a greeting, farewell, prompt for unresponsiveness, or special praise).
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-00-01
   eigenschaft: null
   eigenschaft_title_de: Satzbau berücksichtigen
