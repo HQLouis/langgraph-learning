@@ -48,10 +48,10 @@ requirements:
     or agreement after explaining a new word or concept. Return FAIL if the AI explains a new word or
     concept but then proceeds with the regular conversation without first checking the child's understanding
     or agreement. Return N/A if the AI has not just explained a new word or concept to the child.
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-01-03
   eigenschaft: 1
   eigenschaft_title_de: Übergang von einer Wortbedeutung
@@ -2287,10 +2287,10 @@ requirements:
     new pieces of information simultaneously. Return N/A if the applicability rule is not met, meaning
     the AI's response does not follow a simple or incomplete utterance from the child that it is expected
     to expand upon.
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-00-04
   eigenschaft: null
   eigenschaft_title_de: Satzbau berücksichtigen
