@@ -225,10 +225,10 @@ requirements:
     to the main topic within 2-3 turns. Return FAIL if the applicability rule is met, but the AI fails
     to initiate this engagement, or if it does so incorrectly, or if it exceeds the 2-3 turn limit without
     returning to the main topic. Return N/A if the applicability rule is not met.
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-03-02
   eigenschaft: 3
   eigenschaft_title_de: Auf die Antwort des Kindes eingehen -seine Meinung und Gefühle berücksichtigen
@@ -1347,10 +1347,10 @@ requirements:
     AI uses gender-inappropriate language or assigns a character role implying a different gender than
     the child's. Return N/A if no gender is defined for the child in the test case settings, or if the
     AI does not directly address the child and does not assign a gender-specific role.
-  tier: extended
+  tier: core
   profile_sensitivity: gender
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-11-02
   eigenschaft: 11
   eigenschaft_title_de: Geschlecht des Kindes berücksichtigen
@@ -1418,10 +1418,10 @@ requirements:
     \ if the AI ignores the request, misunderstands it, or provides an irrelevant response.\n    Return\
     \ N/A if the child's preceding utterance did not contain an explicit or implicit request for the AI\
     \ to answer or provide help."
-  tier: extended
+  tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-12-02
   eigenschaft: 12
   eigenschaft_title_de: Kind fordert KI auf
@@ -1522,7 +1522,7 @@ requirements:
   tier: core
   profile_sensitivity: none
   needs_background_analysis: true
-  status: draft
+  status: active
 - id: R-13-02
   eigenschaft: 13
   eigenschaft_title_de: sich an Szenen, Orte oder Figuren im Buch halten
